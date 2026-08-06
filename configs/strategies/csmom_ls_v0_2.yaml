@@ -1,0 +1,51 @@
+schema_version: 1
+strategy:
+  id: CSMOM-LS-v0.2
+  status: PROPOSED
+  live_authorized: false
+  description: Weekly matched-gross long-short cross-sectional intermediate momentum
+
+runtime:
+  strategy_id: CSMOM-LS-v0.2
+  min_price: 10.0
+  min_market_cap: 2000000000.0
+  min_adv60: 25000000.0
+  min_valid_sessions: 300
+  max_annualized_volatility: 0.80
+  score_threshold: 0.75
+  max_longs: 3
+  max_shorts: 3
+  max_names_per_sector_per_side: 2
+  min_cross_section: 20
+  mom_12_1_weight: 0.60
+  mom_6_1_weight: 0.40
+  target_side_gross: 0.50
+  max_single_name_weight: 0.20
+  max_absolute_net_exposure: 0.10
+  decision_delay_minutes: 30
+  execution_start: "10:00"
+  execution_end: "10:30"
+
+research_contract:
+  universe_refresh: MONTHLY
+  entry_rebalance: WEEKLY_FIRST_ELIGIBLE_SESSION
+  exit_evaluation: DAILY_AFTER_VALIDATED_CLOSE
+  primary_fill_benchmark: NEXT_SESSION_10_00_TO_10_30_ET_VWAP
+  minimum_holding_sessions: 10
+  maximum_holding_sessions: 63
+  rank_buffer_exit_percentile: 0.30
+  earnings_policy: EXIT_BEFORE_SCHEDULED_EARNINGS
+  short_live_status: PROHIBITED_PENDING_ACCOUNT_BORROW_AND_BROKER_VALIDATION
+  fractional_shares_assumed: false
+
+sensitivity_grid:
+  method: ONE_PARAMETER_AT_A_TIME
+  score_threshold: [0.50, 0.75, 1.00]
+  momentum_weights:
+    - [1.00, 0.00]
+    - [0.75, 0.25]
+    - [0.60, 0.40]
+    - [0.50, 0.50]
+  minimum_holding_sessions: [5, 10, 15]
+  maximum_holding_sessions: [42, 63, 84]
+  rank_buffer_exit_percentile: [0.20, 0.30, 0.40]
