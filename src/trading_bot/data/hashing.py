@@ -20,7 +20,7 @@ def _canonicalize(value: Any) -> Any:
         return {str(key): _canonicalize(value[key]) for key in sorted(value, key=str)}
     if isinstance(value, (list, tuple)):
         return [_canonicalize(item) for item in value]
-    if isinstance(value, set):
+    if isinstance(value, (set, frozenset)):
         return sorted((_canonicalize(item) for item in value), key=repr)
     if isinstance(value, datetime):
         return value.isoformat()

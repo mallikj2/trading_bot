@@ -1,26 +1,44 @@
-# Phase 02 Historical Sector Classification Bundle
+# Phase 02 Complex Corporate-Action and Total-Return Bundle
 
-Repository-ready incremental bundle for the Phase 02 historical sector task.
+This is a cumulative repository overlay for the Quant Trading Bot project. It contains the Phase 02 kernel, production adapters, historical-sector implementation, and the new complex corporate-action/point-in-time total-return implementation.
 
-## Apply after
+## Merge destination
 
-- Phase 01 v0.2 approved strategy bundle;
-- Phase 02 minimum data kernel;
-- Phase 02 production provider adapters.
+Copy the bundle contents into the repository root.
 
-## Contents
+Important new or changed paths:
 
-- SEC Archives text transport and complete-submission client;
-- filing-header SIC parser for legacy SGML and modern EDGAR headers;
-- frozen Fama–French 12-sector mapping;
-- point-in-time sector interval builder and selector;
-- adversarial unit and universe-integration tests;
-- source evaluation, data contract, phase report, configuration, and project patches.
+```text
+src/trading_bot/data/total_returns.py
+src/trading_bot/data/strategy_inputs.py
+src/trading_bot/data/contracts.py
+src/trading_bot/data/hashing.py
+src/trading_bot/strategies/csmom_ls_v0_2.py
+tests/unit/data/test_total_returns.py
+tests/integration/data/test_total_return_strategy_pipeline.py
+tests/unit/strategies/test_csmom_ls_v0_2.py
+configs/data/corporate_action_total_return.yaml
+docs/data/CORPORATE_ACTION_TOTAL_RETURN_CONTRACT.md
+docs/data/POINT_IN_TIME_TOTAL_RETURN_ALGORITHM.md
+docs/phases/PHASE_02_COMPLEX_CORPORATE_ACTION_TOTAL_RETURN.md
+```
 
-## Validation
+## Validate
 
-See `VALIDATION_RESULTS.md`.
+```bash
+PYTHONPATH=src python -m pytest -q
+PYTHONPATH=src python -m compileall -q src tests
+```
 
-## Important limitation
+Expected test result for this bundle:
 
-This package does not claim full-universe SEC sector coverage. Run the configured coverage gate with a compliant `SEC_USER_AGENT` containing a real monitored contact email before final Phase 02 approval.
+```text
+119 passed, 12 subtests passed
+```
+
+## Status
+
+- Complex corporate-action implementation: PASS.
+- Provider completeness and retention evidence: CONDITIONAL / OPEN.
+- Phase 02 overall: ACTIVE.
+- Phase 03 final acceptance backtest, paper trading, and live trading: not authorized.

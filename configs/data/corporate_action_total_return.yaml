@@ -1,0 +1,103 @@
+schema_version: 1
+contract_id: PHASE02-CORPORATE-ACTION-TOTAL-RETURN-v0.1
+strategy_id: CSMOM-LS-v0.2
+status: IMPLEMENTED_LOCAL_VALIDATION_PASS
+
+point_in_time:
+  selector: LATEST_AVAILABLE_REVISION_PER_ACTION_ID
+  eligibility: available_at <= decision_at
+  future_fallback: PROHIBITED
+  cancelled_revision: REMOVE_ACTION_ONLY_FROM_DECISIONS_AT_OR_AFTER_CANCELLATION_AVAILABILITY
+  coverage_record_required: true
+  complete_coverage_required: true
+  coverage_through: DECISION_TIMESTAMP
+
+price_series:
+  raw_tradable_price:
+    field: raw_close
+    use: EXECUTION_AND_RAW_DOLLAR_VOLUME
+    adjusted: false
+  price_eligibility:
+    field: price_eligibility_close
+    source: CURRENT_SESSION_RAW_CLOSE
+    rationale: CURRENT_SESSION_AS_OF_SPLIT_ADJUSTED_CLOSE_WITHOUT_FUTURE_SPLIT_REWRITE
+  split_adjusted:
+    field: split_adjusted_close
+    use: AUDIT_AND_RECONCILIATION
+  total_return_adjusted:
+    field: total_return_adjusted_close
+    use: AUDIT_AND_FACTOR_RECONCILIATION
+  strategy_return_series:
+    field: adjusted_close
+    source: FORWARD_TOTAL_RETURN_INDEX
+    base_index: 100
+    use: MOMENTUM_VOLATILITY_TREND_CORRELATION_BENCHMARKS
+
+continuing_actions:
+  supported:
+    - SPLIT
+    - REVERSE_SPLIT
+    - CASH_DIVIDEND
+    - STOCK_DIVIDEND
+    - SPINOFF
+  event_value_formula: EX_CLOSE_X_SHARE_MULTIPLIER_PLUS_CASH_PLUS_NONCASH_VALUE
+  backward_total_return_factor: EX_CLOSE_DIVIDED_BY_EVENT_VALUE
+  backward_split_factor: ONE_DIVIDED_BY_SHARE_MULTIPLIER
+  ex_date_bar_required: true
+  prior_bar_required: true
+
+terminal_actions:
+  supported:
+    - MERGER
+    - ACQUISITION
+    - DELISTING
+    - LIQUIDATION
+    - BANKRUPTCY
+  terminal_value: CASH_PLUS_POINT_IN_TIME_NONCASH_CONSIDERATION
+  same_day_parent_bar: BLOCK_AMBIGUOUS
+  explicit_zero_recovery_allowed: true
+  terminal_series_behavior: APPEND_TERMINAL_RETURN_AND_STOP_PARENT_SERIES
+
+valuations:
+  reporting_currency: USD
+  fx_conversion: NOT_IMPLEMENTED_FAIL_CLOSED
+  distribution_valuation_required_for:
+    - SPINOFF
+  terminal_valuation_required_for:
+    - STOCK_CONSIDERATION_MERGER
+    - STOCK_CONSIDERATION_ACQUISITION
+    - TERMINAL_ACTION_WITHOUT_EXPLICIT_CASH
+  available_at_rule: VALUATION_AVAILABLE_AT_LESS_THAN_OR_EQUAL_TO_DECISION_AT
+  value_basis: PER_OLD_PARENT_SHARE
+
+position_effects:
+  signed_quantity: true
+  long_cash_distribution: POSITIVE_CASH_FLOW
+  short_cash_distribution: NEGATIVE_CASH_FLOW
+  splits_and_stock_dividends: TRANSFORM_PARENT_QUANTITY
+  spinoff: CREATE_SIGNED_CHILD_POSITION
+  stock_merger: CREATE_SIGNED_SUCCESSOR_POSITION
+  terminal_action: ZERO_PARENT_QUANTITY
+
+unsupported_material_actions:
+  - TENDER_OFFER
+  - RIGHTS_DISTRIBUTION
+
+fail_closed:
+  missing_coverage: BLOCK_BUILD
+  incomplete_coverage: BLOCK_BUILD
+  missing_ex_date_bar: BLOCK_BUILD
+  missing_prior_bar: BLOCK_BUILD
+  missing_distribution_valuation: BLOCK_BUILD
+  missing_terminal_valuation: BLOCK_BUILD
+  currency_mismatch: BLOCK_BUILD
+  conflicting_latest_revision: BLOCK_BUILD
+  mixed_terminal_and_continuing_same_session: BLOCK_BUILD
+  multiple_terminal_actions_same_session: BLOCK_BUILD
+  unsupported_material_action: BLOCK_BUILD
+
+versioning:
+  build_hash: SHA256_CANONICAL_INPUTS
+  adjustment_version_required: true
+  raw_snapshot_lineage_required: true
+  provider_revision_overwrite: PROHIBITED

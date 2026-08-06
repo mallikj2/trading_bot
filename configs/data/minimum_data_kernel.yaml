@@ -36,9 +36,11 @@ point_in_time:
 
 corporate_actions:
   raw_prices_preserved: true
-  supported_kernel_adjustment: SPLIT_AND_REVERSE_SPLIT
+  supported_kernel_adjustment: POINT_IN_TIME_COMPLEX_ACTION_AND_TOTAL_RETURN_ENGINE
   adjustment_semantics: AS_OF_DECISION_EFFECTIVE_AND_AVAILABLE_ACTIONS_ONLY
   revisions: LATEST_KNOWN_PER_ACTION_ID
+  complete_coverage_record_required: true
+  separate_raw_split_and_total_return_series: true
   unknown_material_action: BLOCK_INSTRUMENT
 
 universe:

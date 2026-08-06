@@ -155,14 +155,29 @@ def _validate_input(frame: pd.DataFrame) -> pd.DataFrame:
             f"{sample.to_dict(orient='records')}"
         )
 
-    numeric_columns = ["raw_close", "adjusted_close", "raw_volume", "market_cap"]
+    # Phase 02 separates the current-session price eligibility field from the
+    # total-return series used by momentum, volatility, and trend. Existing
+    # callers remain compatible by falling back to adjusted_close.
+    if "price_eligibility_close" not in data.columns:
+        data["price_eligibility_close"] = data["adjusted_close"]
+
+    numeric_columns = [
+        "raw_close",
+        "adjusted_close",
+        "price_eligibility_close",
+        "raw_volume",
+        "market_cap",
+    ]
     for column in numeric_columns:
         data[column] = pd.to_numeric(data[column], errors="coerce")
     if data[numeric_columns].isna().any().any():
         raise StrategyInputError("required numeric fields contain null or non-numeric values")
     if (~np.isfinite(data[numeric_columns].to_numpy(dtype=float))).any():
         raise StrategyInputError("required numeric fields contain non-finite values")
-    if (data[["raw_close", "adjusted_close", "market_cap"]] <= 0).any().any():
+    if (
+        data[["raw_close", "adjusted_close", "price_eligibility_close", "market_cap"]]
+        <= 0
+    ).any().any():
         raise StrategyInputError("prices and market_cap must be positive")
     if (data["raw_volume"] < 0).any():
         raise StrategyInputError("raw_volume cannot be negative")
@@ -237,7 +252,7 @@ def compute_features(
         & data["security_type"].eq("COMMON_STOCK")
         & data["data_quality_status"].eq("VALID")
         & ~data["entry_blocked"]
-        & data["adjusted_close"].ge(cfg.min_price)
+        & data["price_eligibility_close"].ge(cfg.min_price)
         & data["market_cap"].ge(cfg.min_market_cap)
         & data["adv60"].ge(cfg.min_adv60)
         & data["valid_session_count"].ge(cfg.min_valid_sessions)

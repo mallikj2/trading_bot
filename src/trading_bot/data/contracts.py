@@ -46,9 +46,20 @@ class CorporateActionType(str, Enum):
     SPINOFF = "SPINOFF"
     MERGER = "MERGER"
     ACQUISITION = "ACQUISITION"
+    TENDER_OFFER = "TENDER_OFFER"
+    RIGHTS_DISTRIBUTION = "RIGHTS_DISTRIBUTION"
+    BANKRUPTCY = "BANKRUPTCY"
+    LIQUIDATION = "LIQUIDATION"
     SYMBOL_CHANGE = "SYMBOL_CHANGE"
     DELISTING = "DELISTING"
     RELISTING = "RELISTING"
+
+
+class CorporateActionStatus(str, Enum):
+    ANNOUNCED = "ANNOUNCED"
+    CONFIRMED = "CONFIRMED"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
 
 
 class EarningsTiming(str, Enum):
@@ -177,6 +188,11 @@ class CorporateAction:
     split_old_shares: Decimal | None = None
     cash_amount: Decimal | None = None
     currency: str | None = None
+    stock_ratio: Decimal | None = None
+    child_instrument_id: UUID | None = None
+    successor_instrument_id: UUID | None = None
+    announced_at: datetime | None = None
+    status: CorporateActionStatus = CorporateActionStatus.CONFIRMED
     metadata: Mapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -193,11 +209,37 @@ class CorporateAction:
                 raise DataContractError("split actions require new and old share quantities")
             if self.split_new_shares <= 0 or self.split_old_shares <= 0:
                 raise DataContractError("split quantities must be positive")
+        if self.announced_at is not None:
+            announced = require_aware(self.announced_at, "announced_at")
+            object.__setattr__(self, "announced_at", announced)
         if self.action_type == CorporateActionType.CASH_DIVIDEND:
             if self.cash_amount is None or self.cash_amount < 0:
                 raise DataContractError("cash dividends require a non-negative cash amount")
             if not self.currency:
                 raise DataContractError("cash dividends require currency")
+        if self.action_type == CorporateActionType.STOCK_DIVIDEND:
+            if self.stock_ratio is None or self.stock_ratio <= 0:
+                raise DataContractError("stock dividends require a positive stock_ratio")
+        if self.action_type == CorporateActionType.SPINOFF:
+            if self.stock_ratio is None or self.stock_ratio <= 0:
+                raise DataContractError("spinoffs require a positive stock_ratio")
+            if self.child_instrument_id is None:
+                raise DataContractError("spinoffs require child_instrument_id")
+        if self.action_type in {CorporateActionType.MERGER, CorporateActionType.ACQUISITION}:
+            if self.cash_amount is None and self.stock_ratio is None:
+                raise DataContractError("merger/acquisition requires cash or stock consideration")
+            if self.stock_ratio is not None and self.stock_ratio < 0:
+                raise DataContractError("stock consideration ratio cannot be negative")
+            if self.stock_ratio and self.successor_instrument_id is None:
+                raise DataContractError("stock consideration requires successor_instrument_id")
+        if self.action_type in {
+            CorporateActionType.DELISTING,
+            CorporateActionType.LIQUIDATION,
+            CorporateActionType.BANKRUPTCY,
+        } and self.cash_amount is not None and self.cash_amount < 0:
+            raise DataContractError("terminal cash consideration cannot be negative")
+        if self.cash_amount is not None and self.currency is None:
+            raise DataContractError("cash-bearing corporate actions require currency")
 
 
 @dataclass(frozen=True, slots=True)

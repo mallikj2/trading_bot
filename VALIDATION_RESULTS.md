@@ -1,37 +1,125 @@
-# Validation Results — Phase 02 Historical Sector Classification
+# Validation Results — Phase 02 Complex Corporate Actions and Point-in-Time Total Return
 
-**Date:** 2026-08-05  
-**Result:** IMPLEMENTATION PASS / COVERAGE CONDITIONAL
+**Validated:** 2026-08-05 America/New_York  
+**Task result:** IMPLEMENTATION PASS / PROVIDER COVERAGE CONDITIONAL  
+**Phase result:** ACTIVE
 
-## Phase 02 suite
+## Scope
 
-```text
-70 passed, 12 subtests passed
+Validation covered the cumulative repository overlay containing:
+
+- the approved Phase 01 `CSMOM-LS-v0.2` reference strategy;
+- the Phase 02 minimum data kernel;
+- production Massive and SEC adapters;
+- filing-level historical sector classification;
+- complex corporate-action and point-in-time total-return processing.
+
+No credentialed Massive payload, provider retention approval, or full-universe complex-action coverage report was available. No provider completeness or accuracy claim is made.
+
+## Full merged regression
+
+Command:
+
+```bash
+PYTHONPATH=src python -m pytest -q
 ```
 
-Coverage includes:
-
-- existing minimum data kernel tests;
-- existing production adapter tests;
-- eight new historical-sector unit tests;
-- one new SEC-sector-to-monthly-universe integration test;
-- twelve explicit FF12 taxonomy boundary subtests.
-
-## Merged Phase 01 + Phase 02 regression
+Result:
 
 ```text
-89 passed, 12 subtests passed
+119 passed, 12 subtests passed in 12.41s
 ```
 
-This includes all 19 approved Phase 01 strategy tests.
+## Test breakdown
 
-## Static validation
+Phase 01 strategy suite:
 
-- Python compilation: PASS
-- YAML parsing: PASS
-- SHA-256 bundle manifest: PASS
-- ZIP integrity: PASS
+```text
+20 passed
+```
 
-## Not executed
+This comprises the 19 previously approved strategy tests plus one Phase 02 interface test proving that `price_eligibility_close` is separate from the total-return `adjusted_close` series.
 
-A full-universe SEC Archives crawl was not executed because the environment did not contain a project-owned `SEC_USER_AGENT` with a real monitored contact email. No full-coverage claim is made.
+Phase 02 data and integration suite:
+
+```text
+99 passed, 12 subtests passed
+```
+
+New corporate-action coverage includes:
+
+- two-for-one split and reverse-split economics;
+- future split invisibility at an earlier decision;
+- cash-dividend total return and short liability;
+- stock-dividend quantity and price factors;
+- spinoff valuation and signed child positions;
+- cash-and-stock merger terminal return and successor position;
+- explicit zero-recovery delisting;
+- action cancellation and later revision behavior;
+- incomplete coverage rejection;
+- unsupported tender and rights-event policy;
+- missing ex-date and prior-bar rejection;
+- currency mismatch rejection;
+- deterministic build and position-effect hashes;
+- reconciliation of back-adjusted returns with the forward total-return index;
+- split-safe raw dollar volume through the Phase 01 feature pipeline;
+- absence of artificial split and dividend momentum jumps;
+- six machine-readable registered economic-event fixtures.
+
+## Compilation
+
+Command:
+
+```bash
+PYTHONPATH=src python -m compileall -q src tests
+```
+
+Result: PASS.
+
+## Configuration parsing
+
+Six YAML files parsed successfully:
+
+```text
+configs/data/corporate_action_total_return.yaml
+configs/data/historical_sector_classification.yaml
+configs/data/minimum_data_kernel.yaml
+configs/data/production_provider_adapters.yaml
+configs/data/provider_representative_cases.yaml
+configs/strategies/csmom_ls_v0_2.yaml
+```
+
+## Determinism and integrity
+
+- identical selected inputs produce identical `build_hash` values;
+- revised corporate-action inputs change the build hash;
+- same-key conflicting revisions fail closed;
+- raw files and provider snapshots remain immutable;
+- all package files are covered by `MANIFEST.sha256`;
+- manifest verification and ZIP integrity checks passed.
+
+## Important interface correction
+
+The approved strategy previously used `adjusted_close` both for total-return features and the USD 10 price threshold. The normalized Phase 02 interface now provides:
+
+```text
+adjusted_close = forward total-return index
+price_eligibility_close = current-session raw close
+```
+
+This preserves the intended strategy economics while preventing a later split or accumulated distribution from rewriting historical price eligibility. Backward compatibility remains for development callers that omit the new field, but research-tier data must supply it.
+
+## Remaining external evidence
+
+- credentialed Massive representative-case trial;
+- provider storage and post-cancellation retention approval;
+- representative provider reconciliation for splits and dividends;
+- at least one provider-sourced merger and spinoff reconciliation;
+- delisting and terminal-value coverage samples;
+- full-universe action-coverage completeness statistics;
+- full SEC historical-sector coverage scan;
+- revision-aware historical earnings schedules;
+- spread calibration;
+- short-borrow availability and fee modeling.
+
+Phase 03 final acceptance testing, paper trading, and live trading remain unauthorized.

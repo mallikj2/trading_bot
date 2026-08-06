@@ -302,3 +302,14 @@ def test_sector_cap_skips_third_name_from_same_sector() -> None:
     )
     selected = select_candidates(manual, date, config)
     assert selected["instrument_id"].tolist() == ["A", "B", "D"]
+
+
+def test_price_eligibility_is_separate_from_total_return_series() -> None:
+    frame = make_panel()
+    frame["price_eligibility_close"] = frame["raw_close"]
+    latest = frame["session_date"].max()
+    frame.loc[frame["session_date"].eq(latest), "price_eligibility_close"] = 5.0
+    features = compute_features(frame)
+    day = features.loc[features["session_date"].eq(latest)]
+    assert not day["base_eligible"].any()
+    assert (day["adjusted_close"] > 5.0).all()

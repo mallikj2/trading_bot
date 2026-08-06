@@ -1,0 +1,56 @@
+[
+  {
+    "case_id": "two_for_one_split",
+    "previous_raw_close": "100",
+    "ex_close": "50",
+    "share_multiplier": "2",
+    "cash_per_old_share": "0",
+    "noncash_value_per_old_share": "0",
+    "expected_gross_return": "1"
+  },
+  {
+    "case_id": "one_for_ten_reverse_split",
+    "previous_raw_close": "10",
+    "ex_close": "100",
+    "share_multiplier": "0.1",
+    "cash_per_old_share": "0",
+    "noncash_value_per_old_share": "0",
+    "expected_gross_return": "1"
+  },
+  {
+    "case_id": "cash_dividend",
+    "previous_raw_close": "100",
+    "ex_close": "98",
+    "share_multiplier": "1",
+    "cash_per_old_share": "1",
+    "noncash_value_per_old_share": "0",
+    "expected_gross_return": "0.99"
+  },
+  {
+    "case_id": "ten_percent_stock_dividend",
+    "previous_raw_close": "100",
+    "ex_close": "90.90909090909090909090909091",
+    "share_multiplier": "1.1",
+    "cash_per_old_share": "0",
+    "noncash_value_per_old_share": "0",
+    "expected_gross_return": "1.000000000000000000000000000"
+  },
+  {
+    "case_id": "spinoff_distribution",
+    "previous_raw_close": "100",
+    "ex_close": "80",
+    "share_multiplier": "1",
+    "cash_per_old_share": "0",
+    "noncash_value_per_old_share": "20",
+    "expected_gross_return": "1"
+  },
+  {
+    "case_id": "mixed_split_and_cash",
+    "previous_raw_close": "100",
+    "ex_close": "49",
+    "share_multiplier": "2",
+    "cash_per_old_share": "1",
+    "noncash_value_per_old_share": "0",
+    "expected_gross_return": "0.99"
+  }
+]

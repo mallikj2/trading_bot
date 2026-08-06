@@ -42,22 +42,31 @@ Raw bars are not adjusted in place.
 
 ## Corporate-action contract
 
-The kernel supports as-of split and reverse-split adjustment. A split affects a historical raw price only when:
+The kernel now requires revision-aware, point-in-time action processing. Every
+build must have complete coverage evidence through the decision timestamp. An
+empty action list without coverage is invalid.
 
-```text
-price_observed_at < action.effective_at <= decision_at
-and action.available_at <= decision_at
-```
+Supported continuing actions are splits, reverse splits, cash dividends, stock
+dividends, and spinoffs. Supported terminal actions are mergers, acquisitions,
+delistings, liquidations, and bankruptcies. Noncash distributions and stock
+consideration require explicit point-in-time valuations.
 
-For a split with `new_shares / old_shares = R`, the historical price factor is:
+The data layer stores separately:
 
-```text
-old_shares / new_shares = 1 / R
-```
+- raw tradable close;
+- current-session price-eligibility close;
+- split-adjusted close;
+- total-return-adjusted close;
+- forward total-return index.
 
-When the same action has revisions, the latest revision known by the decision timestamp is selected.
+The latest action or valuation revision satisfying `available_at <= decision_at`
+is selected. Later corrections and cancellations create new versions and cannot
+rewrite an earlier frozen build. Tender offers, rights distributions, ambiguous
+same-session terminal events, missing ex-date bars, missing prior bars, missing
+valuations, and currency mismatches fail closed.
 
-Cash dividends, spinoffs, mergers, tender offers, and other actions are represented by the contract but require later total-return and lifecycle processors. They may not be silently ignored by provider adapters.
+See `CORPORATE_ACTION_TOTAL_RETURN_CONTRACT.md` for the full equations and
+position-transformation rules.
 
 ## Dataset-manifest contract
 
@@ -81,7 +90,7 @@ The builder implements the approved Phase 01 boundaries:
 |---|---:|
 | Exchange | NYSE or Nasdaq |
 | Security type | Common stock |
-| Adjusted close | At least USD 10 |
+| Current-session price-eligibility close | At least USD 10 |
 | Point-in-time market cap | At least USD 2 billion |
 | Median ADV60 | At least USD 25 million |
 | Valid history | At least 300 sessions |
