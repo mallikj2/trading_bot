@@ -1,0 +1,49 @@
+schema_version: 1
+trial_id: PHASE02-CREDENTIALED-REPRESENTATIVE-CASES-v0.2
+status: NOT_RUN_CREDENTIALS_MISSING
+
+reference_dates:
+  universe_snapshots:
+    - 2017-06-30
+    - 2020-03-31
+    - 2022-06-30
+    - 2025-12-31
+
+cases:
+  symbol_changes:
+    - {identifier: BBG000MM2P62, expected_symbols: [FB, META], purpose: TICKER_EVENT_CONTINUITY}
+  splits:
+    - {ticker: AAPL, execution_date: 2020-08-31, purpose: FORWARD_SPLIT}
+    - {ticker: TSLA, execution_date: 2020-08-31, purpose: FORWARD_SPLIT}
+  reverse_splits:
+    - {ticker: C, execution_date: 2011-05-09, purpose: REVERSE_SPLIT}
+  dividends:
+    - {ticker: AAPL, purpose: CASH_DIVIDEND_FIELDS}
+  market_cap:
+    - {ticker: AAPL, as_of_date: 2020-03-31, purpose: HISTORICAL_AS_OF_SEMANTICS}
+  sector:
+    - {ticker: META, as_of_date: 2020-03-31, purpose: HISTORICAL_SIC_AS_OF_SEMANTICS}
+  intraday:
+    - {ticker: AAPL, session_date: 2025-07-03, purpose: EARLY_CLOSE_AND_1000_1030_VWAP}
+  sec_shares:
+    - {ticker: AAPL, cik: "0000320193", purpose: ACCESSION_ACCEPTANCE_AND_SHARES}
+
+minimum_evidence_counts:
+  delisted_securities: 5
+  symbol_or_identity_changes: 5
+  split_or_reverse_split_events: 5
+  cash_dividend_events: 5
+  merger_or_spinoff_events: 1
+  ticker_reuse_cases: 1
+  early_close_sessions: 2
+
+pass_conditions:
+  - ALL_RAW_PAYLOADS_IMMUTABLY_STORED
+  - ALL_REQUEST_PARAMETERS_RECORDED_WITH_SECRETS_REDACTED
+  - ALL_EXPECTED_IDENTIFIERS_PRESENT
+  - NO_CURRENT_STATE_FALLBACK_FOR_HISTORICAL_DATE
+  - DAILY_AND_INTRADAY_TIMESTAMPS_MAP_TO_VERSIONED_SESSIONS
+  - INCOMPLETE_VWAP_WINDOW_PRODUCES_NO_FILL
+  - SEC_SHARE_FACTS_JOIN_TO_ACCEPTANCE_TIMESTAMP
+  - AMBIGUOUS_SHARE_CLASS_FACTS_BLOCK
+  - PROVIDER_LICENSE_RETENTION_REVIEW_APPROVED

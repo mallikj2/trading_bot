@@ -1,0 +1,3 @@
+# No third-party runtime dependencies are added.
+# Python 3.11+ is required.
+# Test/config validation used PyYAML 6.x from the development environment.

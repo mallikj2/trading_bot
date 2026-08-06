@@ -1,127 +1,128 @@
-# Validation Results
+# Validation Results — Phase 02 Production Provider Adapters
 
-**Bundle:** Phase 02 Minimum Data Kernel  
-**Validated:** 2026-08-05  
-**Task result:** PASS  
-**Phase 02 result:** ACTIVE — outstanding external-data gates remain
+**Validated:** 2026-08-05 America/New_York  
+**Task result:** IMPLEMENTATION PASS  
+**Credentialed trial result:** BLOCKED — credentials absent  
+**Phase result:** ACTIVE
 
-## Scope boundary
+## Scope
 
-The validation proves the local deterministic data contracts, immutable storage behavior, point-in-time selection, identity rules, calendar rules, split-adjustment behavior, monthly-universe policy, leakage checks, and reproducible hashes.
+Validation covered the new provider-adapter layer overlaid on:
 
-It does not prove provider coverage, provider timestamp accuracy, license rights, earnings-revision availability, quote-based spread calibration, short borrow history, or strategy performance.
+- the approved Phase 01 `CSMOM-LS-v0.2` repository bundle; and
+- the Phase 02 minimum data kernel.
 
-## Unit tests
+No Massive API key, SEC contact User-Agent, licensed provider payload, or provider-license approval was available. Therefore no provider coverage, accuracy, or retention-right claim is made.
+
+## Merged regression
 
 Command:
 
 ```bash
-python -m unittest discover -s tests/unit/data -p 'test_*.py' -v
+PYTHONPATH=src python -m pytest -q
 ```
 
 Result:
 
 ```text
-Ran 38 tests
-OK
+........................................................................ [ 90%]
+........                                                                 [100%]
+80 passed in 11.47s
 ```
 
-Validated behaviors include:
+The 80 tests cover:
 
-- timezone-aware UTC normalization and naive-datetime rejection;
-- OHLC, volume, revision, and feature-lineage invariants;
-- daily bars cannot be available before observation;
-- raw snapshot and manifest overwrite rejection;
-- source-file mutation detection by SHA-256;
-- manifest lineage hash reproducibility independent of storage ID;
-- no future revision fallback;
-- conflict rejection for equal PIT revision keys;
-- symbol change preservation and non-overlapping ticker reuse;
-- rejection of overlapping ticker ownership;
-- identity aliases unavailable at the decision time are invisible;
-- regular sessions, early closes, next-session lookup, and monthly freeze time;
-- future and unavailable corporate actions do not adjust prices;
-- latest known corporate-action revision is selected;
-- conflicting action revisions fail closed;
-- exact Phase 01 universe boundaries are inclusive;
-- every applicable universe rejection reason is retained;
-- future-information and lineage-hash leakage checks;
-- order-invariant universe membership hashes.
+- 19 approved Phase 01 strategy tests;
+- 38 existing Phase 02 kernel unit tests;
+- 1 existing Phase 02 kernel integration test;
+- 21 new adapter unit tests;
+- 1 new adapter-to-kernel integration test.
 
-## Integration test
+## New adapter tests
 
-Command:
+Verified behaviors include:
 
-```bash
-python -m unittest discover -s tests/integration/data -p 'test_*.py' -v
-```
-
-Result:
-
-```text
-Ran 1 test
-OK
-```
-
-The integration test builds a source-file manifest, verifies the raw hash, freezes a monthly universe twice, and confirms identical manifest and universe lineage hashes.
-
-## Approved Phase 01 merge regression
-
-The minimum kernel was overlaid on the approved `phase01_v0_2_repo_bundle`.
-
-Commands:
-
-```bash
-PYTHONPATH=src pytest -q tests/unit/strategies/test_csmom_ls_v0_2.py
-PYTHONPATH=src python -m unittest discover -s tests/unit/data -p 'test_*.py' -v
-PYTHONPATH=src python -m unittest discover -s tests/integration/data -p 'test_*.py' -v
-```
-
-Results:
-
-```text
-19 Phase 01 strategy tests passed
-38 Phase 02 kernel unit tests passed
-1 Phase 02 kernel integration test passed
-```
-
-No approved Phase 01 regression was detected.
+- API-key preservation across Massive pagination without duplication;
+- rejection of pagination to an unapproved host;
+- URL and manifest secret redaction;
+- immutable raw snapshot overwrite rejection;
+- credential-gated historical ticker normalization;
+- stable-identifier requirements;
+- official-calendar daily-bar timestamps;
+- close-plus-30-minute daily availability;
+- strict six-interval 10:00–10:30 ET VWAP;
+- missing-window and future-availability rejection;
+- conservative split and dividend event availability;
+- ticker-change history to half-open aliases;
+- direct historical market-cap and SIC blocking until evidence exists;
+- SEC User-Agent and request-rate policy;
+- SEC accession-to-acceptance timestamp joins;
+- future shares revisions remaining invisible;
+- conflicting multi-class shares blocking;
+- current SEC SIC prohibited from historical use;
+- point-in-time derived market cap;
+- raw-to-normalized-to-kernel lineage integration.
 
 ## Compilation
 
-Command:
-
 ```bash
-python -m compileall -q src tests
-```
-
-Result: PASS; no compilation errors.
-
-## Configuration parsing
-
-Command:
-
-```bash
-python - <<'PY'
-from pathlib import Path
-import yaml
-path = Path('configs/data/minimum_data_kernel.yaml')
-payload = yaml.safe_load(path.read_text(encoding='utf-8'))
-assert payload['kernel']['id'] == 'PHASE02-MINIMUM-DATA-KERNEL-v0.1'
-print('PASS')
-PY
+PYTHONPATH=src python -m compileall -q src tests
 ```
 
 Result: PASS.
 
-## Remaining Phase 02 evidence
+## Configuration parsing
 
-- Credentialed Massive trial and representative historical cases.
-- Provider retention-license review.
-- SEC production adapter and share-class mapping.
-- Formal sector-taxonomy approval.
-- Revision-aware historical earnings feed.
-- Production VWAP normalization.
-- Historical spread calibration.
-- Conservative short-borrow model.
-- Complex corporate-action and total-return processing.
+The following YAML files parsed successfully:
+
+```text
+configs/data/minimum_data_kernel.yaml
+configs/data/production_provider_adapters.yaml
+configs/data/provider_representative_cases.yaml
+configs/strategies/csmom_ls_v0_2.yaml
+```
+
+## Credential readiness
+
+Command:
+
+```bash
+PYTHONPATH=src python -m trading_bot.data.adapters.trial environment-status
+```
+
+Output:
+
+```json
+{
+  "credentialed_trial_ready": false,
+  "massive_credentials": "MISSING",
+  "sec_user_agent": "MISSING"
+}
+```
+
+## Smoke trial attempt
+
+The smoke-trial CLI executed and wrote `CREDENTIALED_TRIAL_RESULTS.json`.
+
+Result:
+
+```text
+MASSIVE_TICKER_OVERVIEW: BLOCKED — MASSIVE_API_KEY missing
+SEC_SUBMISSIONS_COMPANYFACTS: BLOCKED — SEC_USER_AGENT missing
+Overall: BLOCKED
+```
+
+This is the expected fail-closed result.
+
+## Outstanding validation
+
+- credentialed Massive dated ticker snapshot;
+- active/inactive and delisted coverage;
+- market-cap historical as-of semantics;
+- SIC historical as-of semantics;
+- representative split, dividend, ticker-change, merger/spinoff, and ticker-reuse samples;
+- SEC network request using a real monitored contact User-Agent;
+- SEC older-submission fragment coverage;
+- provider storage and post-cancellation retention rights;
+- historical earnings revisions;
+- spread calibration.

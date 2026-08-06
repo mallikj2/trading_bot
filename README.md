@@ -1,45 +1,27 @@
-# Phase 02 Minimum Data Kernel Bundle
+# Phase 02 Production Provider Adapters
 
-This is an incremental repository bundle for the Quant Trading Bot project.
+This incremental repository bundle adds production-oriented Massive and SEC ingestion above the approved Phase 02 minimum data kernel.
 
-## Merge destination
-
-Copy the bundle contents into the repository root. It adds files under:
-
-```text
-src/trading_bot/data/
-tests/unit/data/
-tests/integration/data/
-configs/data/
-docs/data/
-docs/phases/
-docs/project/
-```
-
-It does not replace the approved Phase 01 strategy implementation or the earlier Phase 02 reconciliation/provider-PoC files.
-
-## Validate
-
-From the repository root:
+## Run local validation
 
 ```bash
-python -m unittest discover -s tests/unit/data -p 'test_*.py' -v
-python -m unittest discover -s tests/integration/data -p 'test_*.py' -v
-python -m compileall -q src tests
+PYTHONPATH=src python -m unittest discover -s tests/unit/data/adapters -p 'test_*.py' -v
+PYTHONPATH=src python -m unittest discover -s tests/integration/data/adapters -p 'test_*.py' -v
+PYTHONPATH=src python -m compileall -q src tests
 ```
 
-## Import example
+## Check credential readiness
 
-```python
-from trading_bot.data.manifests import DatasetManifest
-from trading_bot.data.pit import select_latest_known
-from trading_bot.data.universe import build_monthly_universe
+```bash
+PYTHONPATH=src python -m trading_bot.data.adapters.trial environment-status
 ```
 
-Ensure `src` is on `PYTHONPATH`, or install the repository package in the normal project environment.
+## Run smoke trial
 
-## Status
+```bash
+export MASSIVE_API_KEY='...'
+export SEC_USER_AGENT='QuantTradingBot/0.2 monitored-contact@example.com'
+PYTHONPATH=src python -m trading_bot.data.adapters.trial smoke --output artifacts/provider_trial/smoke.json
+```
 
-- Minimum data-kernel task: PASS.
-- Phase 02 overall: ACTIVE.
-- Phase 03, paper trading, and live trading: not authorized.
+No credentials or licensed data are included in this bundle.

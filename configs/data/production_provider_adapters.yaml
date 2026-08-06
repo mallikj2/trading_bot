@@ -1,0 +1,91 @@
+schema_version: 1
+adapter_stack:
+  id: PHASE02-PRODUCTION-ADAPTERS-v0.2
+  strategy_id: CSMOM-LS-v0.2
+  status: IMPLEMENTED_CREDENTIALS_PENDING
+  live_authorized: false
+  paper_authorized: false
+
+massive:
+  base_url: https://api.massive.com
+  api_key_environment: MASSIVE_API_KEY
+  fallback_api_key_environment: POLYGON_API_KEY
+  adapter_version: MASSIVE-STOCKS-v0.2.0
+  requests_per_second: 5
+  endpoints:
+    tickers: /v3/reference/tickers
+    ticker_overview: /v3/reference/tickers/{ticker}
+    aggregates: /v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from}/{to}
+    splits: /stocks/v1/splits
+    dividends: /stocks/v1/dividends
+    ticker_events: /vX/reference/tickers/{id}/events
+  raw_aggregates_adjusted: false
+  ticker_snapshot:
+    market: stocks
+    locale: us
+    type: CS
+    exchanges: [XNYS, XNAS]
+    historical_as_of_semantics_credential_validated: false
+    failure_policy: BLOCK_NORMALIZATION
+  ticker_overview:
+    market_cap_historical_as_of_validated: false
+    sic_historical_as_of_validated: false
+    failure_policy: BLOCK_MARKET_CAP_AND_SECTOR
+  daily_bars:
+    publication_delay_minutes: 30
+  intraday_bars:
+    interval_minutes: 5
+    availability_lag_seconds: 5
+    execution_window_et: ["10:00:00", "10:30:00"]
+    incomplete_window_policy: NO_FILL
+  corporate_actions:
+    split_availability_policy: EFFECTIVE_DATE_CONSERVATIVE
+    dividend_availability_policy: EX_DATE_CONSERVATIVE
+    ticker_events_endpoint_status: EXPERIMENTAL
+
+sec_edgar:
+  base_url: https://data.sec.gov
+  user_agent_environment: SEC_USER_AGENT
+  user_agent_requires_monitored_email: true
+  adapter_version: SEC-EDGAR-v0.2.0
+  requests_per_second: 5
+  hard_max_requests_per_second: 10
+  endpoints:
+    submissions: /submissions/CIK{cik10}.json
+    submissions_fragment: /submissions/{filename}
+    companyfacts: /api/xbrl/companyfacts/CIK{cik10}.json
+  processing_buffer_minutes: 1
+  shares_concepts:
+    - taxonomy: dei
+      concept: EntityCommonStockSharesOutstanding
+    - taxonomy: us-gaap
+      concept: CommonStockSharesOutstanding
+  acceptance_join_required: true
+  filing_date_only_allowed: false
+  ambiguous_multiclass_policy: BLOCK
+  current_sic_historical_use: PROHIBITED
+
+storage:
+  root: data/research/raw
+  immutable: true
+  raw_payload_filename: response.json
+  manifest_filename: manifest.json
+  secret_redaction: true
+  overwrite_policy: PROHIBITED
+  license_classification_required: true
+
+retry:
+  attempts: 4
+  retryable_http_statuses: [429, 500, 502, 503, 504]
+  exponential_backoff: true
+
+gates:
+  massive_credentials: PENDING
+  sec_user_agent: PENDING
+  massive_ticker_snapshot_pit_proof: PENDING
+  massive_market_cap_pit_proof: PENDING
+  massive_sic_pit_proof: PENDING
+  provider_license_retention_review: PENDING
+  historical_sector_source: BLOCKING
+  historical_earnings_revisions: BLOCKING
+  historical_spread_calibration: BLOCKING_FINAL_ACCEPTANCE
