@@ -1,0 +1,49 @@
+schema_version: 1
+provider_poc:
+  id: PHASE02-PROVIDER-POC-v0.1
+  status: CONTRACT_VALIDATED_CREDENTIALS_PENDING
+  primary_provider:
+    name: MASSIVE
+    plan: STOCKS_DEVELOPER
+    documented_monthly_usd: 79
+    required_history_years: 10
+    raw_aggregates_adjusted: false
+  companion_sources:
+    - name: SEC_EDGAR
+      cost_usd: 0
+      purposes: [SHARES_OUTSTANDING_PIT, SIC_PIT, FILING_ACCEPTANCE]
+    - name: WALL_STREET_HORIZON_DATEBREAKS
+      cost_usd: UNKNOWN
+      purposes: [EARNINGS_SCHEDULE_REVISIONS]
+      blocking: true
+  universe:
+    exchanges: [XNYS, XNAS]
+    ticker_type: CS
+    active_query_by_date_required: true
+    stable_keys_preference: [share_class_figi, composite_figi, cik]
+  intraday:
+    timezone: America/New_York
+    interval_minutes: 5
+    window_start: "10:00:00"
+    window_end: "10:30:00"
+    expected_intervals: 6
+    incomplete_policy: NO_FILL
+    zero_volume_policy: NO_FILL
+  sec:
+    max_requests_per_second: 5
+    required_user_agent: true
+    shares_concepts:
+      - dei:EntityCommonStockSharesOutstanding
+      - us-gaap:CommonStockSharesOutstanding
+    ambiguous_multiclass_policy: BLOCK
+    sector_taxonomy: SEC_SIC_DIVISION_V1
+  spread:
+    model_id: CORWIN_SCHULTZ_CONSERVATIVE_V0_1
+    threshold_bps: 35
+    floor_bps: 5
+    calibration_status: PENDING
+  gates:
+    actual_provider_credentials: PENDING
+    license_retention_review: PENDING
+    earnings_revision_feed: BLOCKING
+    spread_calibration: BLOCKING_FINAL_ACCEPTANCE

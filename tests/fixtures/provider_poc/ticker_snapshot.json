@@ -1,0 +1,22 @@
+[
+  {
+    "ticker": "AAA",
+    "active": true,
+    "type": "CS",
+    "primary_exchange": "XNYS",
+    "cik": "0000000001",
+    "composite_figi": "BBG000000001",
+    "share_class_figi": "BBG001000001",
+    "last_updated_utc": "2024-11-29T00:00:00Z"
+  },
+  {
+    "ticker": "BBB",
+    "active": true,
+    "type": "CS",
+    "primary_exchange": "XNAS",
+    "cik": "0000000002",
+    "composite_figi": "BBG000000002",
+    "share_class_figi": "BBG001000002",
+    "last_updated_utc": "2024-11-29T00:00:00Z"
+  }
+]

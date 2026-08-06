@@ -1,58 +1,101 @@
-# Phase 02 Reconciliation — Validation Results
+# Validation Results
 
-**Date:** 2026-08-05  
-**Result:** PASS
+**Bundle:** Phase 02 Provider Proof of Concept  
+**Validated:** 2026-08-05  
+**Result:** PASS for local contracts and synthetic fixtures; credentialed provider evidence remains pending
 
-## Source bundle integrity
+## Scope boundary
 
-```text
-quant_trading_bot_mandate_v0.2_docs.zip
-45c5d25f7762e92dc7cbddf5cc888f29d411a621cb325548629cc9a3c73f895e
+These tests validate deterministic code paths, fail-closed contracts, schemas, and synthetic adversarial fixtures. They do **not** demonstrate licensed-provider coverage, accuracy, retention rights, earnings-revision history, or spread calibration.
 
-phase01_v0_2_repo_bundle.zip
-9076036dbf38c8f08ebf30abac059d72830f19b40bcc1239d3943a9f52a23fd0
-```
-
-## Phase 01 internal manifest
+## Unit tests
 
 Command:
 
 ```bash
-sha256sum -c MANIFEST.sha256
+python -m unittest discover -s tests/unit/data -p 'test_provider_poc.py' -v
 ```
 
-Result: every listed Phase 01 file returned `OK`.
+Output:
 
-## Phase 01 reference validation
+```text
+test_complete_vwap_window (test_provider_poc.ProviderPocTests.test_complete_vwap_window) ... ok
+test_current_only_earnings_calendar_fails (test_provider_poc.ProviderPocTests.test_current_only_earnings_calendar_fails) ... ok
+test_earnings_revision_sequence_passes (test_provider_poc.ProviderPocTests.test_earnings_revision_sequence_passes) ... ok
+test_future_pit_record_is_invisible (test_provider_poc.ProviderPocTests.test_future_pit_record_is_invisible) ... ok
+test_incomplete_vwap_window_fails (test_provider_poc.ProviderPocTests.test_incomplete_vwap_window_fails) ... ok
+test_latest_known_pit_revision_is_selected (test_provider_poc.ProviderPocTests.test_latest_known_pit_revision_is_selected) ... ok
+test_no_known_pit_record_fails (test_provider_poc.ProviderPocTests.test_no_known_pit_record_fails) ... ok
+test_spread_proxy_has_floor (test_provider_poc.ProviderPocTests.test_spread_proxy_has_floor) ... ok
+test_spread_proxy_is_deterministic (test_provider_poc.ProviderPocTests.test_spread_proxy_is_deterministic) ... ok
+test_spread_proxy_rejects_invalid_bar (test_provider_poc.ProviderPocTests.test_spread_proxy_rejects_invalid_bar) ... ok
+test_ticker_snapshot_passes (test_provider_poc.ProviderPocTests.test_ticker_snapshot_passes) ... ok
+test_ticker_snapshot_rejects_non_common_stock (test_provider_poc.ProviderPocTests.test_ticker_snapshot_rejects_non_common_stock) ... ok
+test_ticker_snapshot_requires_stable_identity (test_provider_poc.ProviderPocTests.test_ticker_snapshot_requires_stable_identity) ... ok
+test_zero_volume_vwap_window_fails (test_provider_poc.ProviderPocTests.test_zero_volume_vwap_window_fails) ... ok
 
-Commands:
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK
+```
+
+## Fixture validator
+
+Command:
+
+```bash
+python -m src.data.provider_poc.cli validate-fixtures --fixture-root tests/fixtures/provider_poc
+```
+
+Output:
+
+```json
+{
+  "status": "PASS",
+  "vwap": 100.13666666666667
+}
+```
+
+## Compilation
+
+Command:
 
 ```bash
 python -m compileall -q src tests
-PYTHONPATH=src python -m pytest -q
 ```
 
-Result:
+Result: PASS; no compilation errors.
+
+## Configuration and fixture parsing
 
 ```text
-...................                                                      [100%]
-19 passed
+PASS JSON tests/fixtures/provider_poc/earnings_revisions.json
+PASS JSON tests/fixtures/provider_poc/intraday_complete.json
+PASS JSON tests/fixtures/provider_poc/intraday_incomplete.json
+PASS JSON tests/fixtures/provider_poc/pit_records.json
+PASS JSON tests/fixtures/provider_poc/ticker_snapshot.json
+PASS YAML configs/data/provider_poc.yaml
 ```
 
-## Reconciliation checks
+## Verified local behaviors
 
-| Check | Result |
-|---|---|
-| Phase 00 mandate inherited without conflict | PASS |
-| Phase 01 approval normalized in project state | PASS |
-| Frozen YAML thresholds mapped | PASS |
-| Exact data inventory produced | PASS |
-| Point-in-time availability rules produced | PASS |
-| Generic Phase 02 conflicts identified and corrected | PASS |
-| Provider-dependent requirements preserved as blockers | PASS |
-| No backtest/performance claim introduced | PASS |
-| No paper/live authorization introduced | PASS |
+- Rejects non-common-stock universe rows.
+- Requires at least one stable identity field.
+- Rejects duplicate ticker/identity rows.
+- Rejects incomplete 10:00–10:30 ET VWAP windows.
+- Rejects zero-volume VWAP intervals.
+- Prevents future point-in-time revisions from being selected.
+- Selects the latest revision known at the decision timestamp.
+- Rejects current-only earnings calendars without a revision sequence.
+- Produces deterministic modeled spread output and rejects invalid bars.
+- Prevents overwrite of raw adapter snapshots.
 
-## Limitation
+## Outstanding evidence
 
-The source tests validate the focused Phase 01 reference implementation. They do not validate research vendors, point-in-time datasets, intraday VWAP, earnings revisions, spread estimates, historical borrow, backtesting, broker behavior, or profitability.
+- Massive Developer credentialed API/flat-file trial.
+- Representative delisting, symbol-change, corporate-action, and ten-year coverage tests.
+- SEC filing/accession joining for historical acceptance timestamps and security-class shares.
+- Written provider-license retention review.
+- Wall Street Horizon DateBreaks sample and quote.
+- Calibration of the historical spread proxy against observed consolidated quotes.

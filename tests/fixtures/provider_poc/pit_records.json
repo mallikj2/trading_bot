@@ -1,0 +1,14 @@
+[
+  {
+    "value": 100,
+    "available_at": "2024-05-01T20:05:00Z",
+    "revision": 0,
+    "accession": "original"
+  },
+  {
+    "value": 80,
+    "available_at": "2024-08-01T20:05:00Z",
+    "revision": 1,
+    "accession": "restatement"
+  }
+]
