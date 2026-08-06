@@ -1,0 +1,155 @@
+schema_version: 1
+contract:
+  id: CSMOM-LS-v0.2-DATA-v0.1
+  strategy_id: CSMOM-LS-v0.2
+  status: RECONCILED_PROVIDER_VALIDATION_PENDING
+  live_authorized: false
+  paper_authorized: false
+
+authority:
+  mandate_version: "0.2"
+  strategy_spec_version: "0.2"
+  strategy_approval_status: APPROVED
+  reconciliation_date: "2026-08-05"
+
+time:
+  internal_timezone: UTC
+  exchange_timezone: America/New_York
+  calendar: NYSE
+  decision_delay_minutes: 30
+  week_definition: ISO_MONDAY_TO_SUNDAY
+  weekly_review_session: FIRST_ELIGIBLE_NYSE_SESSION
+  universe_refresh: MONTHLY
+  universe_freeze_session: FINAL_ELIGIBLE_SESSION_OF_PRIOR_MONTH
+  universe_freeze_at: OFFICIAL_CLOSE_PLUS_30_MINUTES
+
+tradable_universe:
+  exchanges: [NYSE, NASDAQ]
+  security_types: [COMMON_STOCK]
+  excluded:
+    - OTC
+    - ETF
+    - PREFERRED
+    - WARRANT
+    - RIGHT
+    - UNIT
+    - CLOSED_END_FUND
+    - LEVERAGED_OR_INVERSE_PRODUCT
+    - UNRESOLVED_IDENTITY
+  min_adjusted_close: 10.0
+  adjusted_close_semantics: AS_OF_DECISION_KNOWN_ACTIONS_ONLY
+  min_market_cap: 2000000000.0
+  market_cap_semantics: POINT_IN_TIME
+  min_adv60: 25000000.0
+  adv_sessions: 60
+  min_valid_sessions: 300
+  max_vol20_annualized: 0.80
+  sector_taxonomy_id: UNRESOLVED_BLOCKING_PHASE_02
+
+features:
+  raw_dollar_volume: raw_close * raw_volume
+  adv60: median(raw_dollar_volume[t-59:t])
+  log_return: ln(adjusted_close[t] / adjusted_close[t-1])
+  mom_12_1: ln(adjusted_close[t-21] / adjusted_close[t-252])
+  mom_6_1: ln(adjusted_close[t-21] / adjusted_close[t-126])
+  vol20: sqrt(252) * sample_stdev(log_return[t-19:t])
+  sma200: mean(adjusted_close[t-199:t])
+  correlation:
+    method: PEARSON
+    lookback_sessions: 60
+    min_overlap: 50
+    maximum_absolute: 0.85
+  cross_section:
+    min_names: 20
+    winsor_lower: 0.025
+    winsor_upper: 0.975
+    center: MEDIAN
+    scale: 1.4826_MAD
+    score: 0.60*z_mom_12_1 + 0.40*z_mom_6_1
+
+events:
+  earnings:
+    required: true
+    revision_history_required: true
+    unknown_time_policy: TREAT_AS_BEFORE_OPEN
+    entry_block_rule: REQUIRED_EXIT_ON_OR_BEFORE_MIN_HOLD_COMPLETION
+    provider_status: UNRESOLVED_BLOCKING_PHASE_02
+  unexplained_raw_move_absolute: 0.20
+  corporate_action_unknown_policy: BLOCK_INSTRUMENT
+
+market_reference:
+  instrument: SPY
+  tradable: false
+  stress:
+    max_absolute_daily_return: 0.05
+    max_vol20_annualized: 0.40
+  regimes:
+    transition_band_absolute: 0.02
+    low_high_vol_boundary: 0.20
+
+execution_research:
+  intended_fill_session: NEXT_ELIGIBLE_NYSE_SESSION
+  window_start: "10:00:00"
+  window_end: "10:30:00"
+  window_start_inclusive: true
+  window_end_inclusive: false
+  maximum_bar_interval_minutes: 5
+  interval_vwap_required: true
+  complete_contiguous_window_required: true
+  zero_volume_policy: NO_FILL
+  incomplete_window_policy: NO_FILL
+  target_expiry: "10:30:00"
+  spread:
+    maximum_bps: 35.0
+    method_id: UNRESOLVED_BLOCKING_PHASE_02
+    missing_policy: BLOCK_ENTRY
+
+holding:
+  minimum_sessions: 10
+  fill_session_counts_as: 1
+  discretionary_exit_first_decision: AFTER_VALIDATED_CLOSE_OF_TENTH_HELD_SESSION
+  maximum_sessions: 63
+  rank_buffer:
+    percentile: 0.30
+    population: VALID_SCORED_NAMES_IN_FROZEN_MONTHLY_UNIVERSE
+    count_rule: max(1, ceil(percentile * population_size))
+    tie_break: instrument_id_ascending
+
+point_in_time:
+  eligibility_rule: available_at <= decision_at
+  raw_snapshots: IMMUTABLE_APPEND_ONLY
+  provider_corrections: NEW_SNAPSHOT_AND_DATA_VERSION
+  future_record_fallback: PROHIBITED
+  naive_datetimes: PROHIBITED
+  current_market_cap_backfill: PROHIBITED
+  current_sector_backfill: PROHIBITED
+  current_earnings_backfill: PROHIBITED
+  future_corporate_action_adjustment: PROHIBITED
+
+short_research:
+  historical_borrow_free_assumption: PROHIBITED
+  observed_and_modeled_states_separate: true
+  dividend_liability_required: true
+  sleeve_reporting_separate: true
+  executable_short_when_borrow_unknown: false
+
+fail_closed:
+  missing_identity: BLOCK_INSTRUMENT
+  missing_monthly_market_cap: EXCLUDE_FROM_UNIVERSE
+  missing_sector: BLOCK_ENTRY
+  missing_daily_bar_or_action: BLOCK_INSTRUMENT_SESSION
+  invalid_cross_section: NO_NEW_TARGET
+  missing_earnings_history: BLOCK_FINAL_ACCEPTANCE_TEST
+  missing_vwap_window: NO_FILL_AND_EXPIRE
+  missing_spread: BLOCK_ENTRY
+  missing_spy_stress_input: NO_NEW_TARGET
+  lineage_hash_mismatch: INVALIDATE_DATASET
+
+blocking_contracts:
+  - POINT_IN_TIME_MARKET_CAP
+  - POINT_IN_TIME_SECTOR_TAXONOMY
+  - REVISION_AWARE_EARNINGS_SCHEDULE
+  - VALIDATED_INTRADAY_VWAP
+  - HISTORICAL_SPREAD_METHOD
+  - SURVIVORSHIP_AWARE_SECURITY_MASTER_AND_ACTIONS
+  - CONSERVATIVE_SHORT_BORROW_MODEL
