@@ -1,61 +1,91 @@
 # Validation Results
 
-**Bundle:** Phase 02 Provider Proof of Concept  
+**Bundle:** Phase 02 Minimum Data Kernel  
 **Validated:** 2026-08-05  
-**Result:** PASS for local contracts and synthetic fixtures; credentialed provider evidence remains pending
+**Task result:** PASS  
+**Phase 02 result:** ACTIVE — outstanding external-data gates remain
 
 ## Scope boundary
 
-These tests validate deterministic code paths, fail-closed contracts, schemas, and synthetic adversarial fixtures. They do **not** demonstrate licensed-provider coverage, accuracy, retention rights, earnings-revision history, or spread calibration.
+The validation proves the local deterministic data contracts, immutable storage behavior, point-in-time selection, identity rules, calendar rules, split-adjustment behavior, monthly-universe policy, leakage checks, and reproducible hashes.
+
+It does not prove provider coverage, provider timestamp accuracy, license rights, earnings-revision availability, quote-based spread calibration, short borrow history, or strategy performance.
 
 ## Unit tests
 
 Command:
 
 ```bash
-python -m unittest discover -s tests/unit/data -p 'test_provider_poc.py' -v
+python -m unittest discover -s tests/unit/data -p 'test_*.py' -v
 ```
 
-Output:
+Result:
 
 ```text
-test_complete_vwap_window (test_provider_poc.ProviderPocTests.test_complete_vwap_window) ... ok
-test_current_only_earnings_calendar_fails (test_provider_poc.ProviderPocTests.test_current_only_earnings_calendar_fails) ... ok
-test_earnings_revision_sequence_passes (test_provider_poc.ProviderPocTests.test_earnings_revision_sequence_passes) ... ok
-test_future_pit_record_is_invisible (test_provider_poc.ProviderPocTests.test_future_pit_record_is_invisible) ... ok
-test_incomplete_vwap_window_fails (test_provider_poc.ProviderPocTests.test_incomplete_vwap_window_fails) ... ok
-test_latest_known_pit_revision_is_selected (test_provider_poc.ProviderPocTests.test_latest_known_pit_revision_is_selected) ... ok
-test_no_known_pit_record_fails (test_provider_poc.ProviderPocTests.test_no_known_pit_record_fails) ... ok
-test_spread_proxy_has_floor (test_provider_poc.ProviderPocTests.test_spread_proxy_has_floor) ... ok
-test_spread_proxy_is_deterministic (test_provider_poc.ProviderPocTests.test_spread_proxy_is_deterministic) ... ok
-test_spread_proxy_rejects_invalid_bar (test_provider_poc.ProviderPocTests.test_spread_proxy_rejects_invalid_bar) ... ok
-test_ticker_snapshot_passes (test_provider_poc.ProviderPocTests.test_ticker_snapshot_passes) ... ok
-test_ticker_snapshot_rejects_non_common_stock (test_provider_poc.ProviderPocTests.test_ticker_snapshot_rejects_non_common_stock) ... ok
-test_ticker_snapshot_requires_stable_identity (test_provider_poc.ProviderPocTests.test_ticker_snapshot_requires_stable_identity) ... ok
-test_zero_volume_vwap_window_fails (test_provider_poc.ProviderPocTests.test_zero_volume_vwap_window_fails) ... ok
-
-----------------------------------------------------------------------
-Ran 14 tests in 0.002s
-
+Ran 38 tests
 OK
 ```
 
-## Fixture validator
+Validated behaviors include:
+
+- timezone-aware UTC normalization and naive-datetime rejection;
+- OHLC, volume, revision, and feature-lineage invariants;
+- daily bars cannot be available before observation;
+- raw snapshot and manifest overwrite rejection;
+- source-file mutation detection by SHA-256;
+- manifest lineage hash reproducibility independent of storage ID;
+- no future revision fallback;
+- conflict rejection for equal PIT revision keys;
+- symbol change preservation and non-overlapping ticker reuse;
+- rejection of overlapping ticker ownership;
+- identity aliases unavailable at the decision time are invisible;
+- regular sessions, early closes, next-session lookup, and monthly freeze time;
+- future and unavailable corporate actions do not adjust prices;
+- latest known corporate-action revision is selected;
+- conflicting action revisions fail closed;
+- exact Phase 01 universe boundaries are inclusive;
+- every applicable universe rejection reason is retained;
+- future-information and lineage-hash leakage checks;
+- order-invariant universe membership hashes.
+
+## Integration test
 
 Command:
 
 ```bash
-python -m src.data.provider_poc.cli validate-fixtures --fixture-root tests/fixtures/provider_poc
+python -m unittest discover -s tests/integration/data -p 'test_*.py' -v
 ```
 
-Output:
+Result:
 
-```json
-{
-  "status": "PASS",
-  "vwap": 100.13666666666667
-}
+```text
+Ran 1 test
+OK
 ```
+
+The integration test builds a source-file manifest, verifies the raw hash, freezes a monthly universe twice, and confirms identical manifest and universe lineage hashes.
+
+## Approved Phase 01 merge regression
+
+The minimum kernel was overlaid on the approved `phase01_v0_2_repo_bundle`.
+
+Commands:
+
+```bash
+PYTHONPATH=src pytest -q tests/unit/strategies/test_csmom_ls_v0_2.py
+PYTHONPATH=src python -m unittest discover -s tests/unit/data -p 'test_*.py' -v
+PYTHONPATH=src python -m unittest discover -s tests/integration/data -p 'test_*.py' -v
+```
+
+Results:
+
+```text
+19 Phase 01 strategy tests passed
+38 Phase 02 kernel unit tests passed
+1 Phase 02 kernel integration test passed
+```
+
+No approved Phase 01 regression was detected.
 
 ## Compilation
 
@@ -67,35 +97,31 @@ python -m compileall -q src tests
 
 Result: PASS; no compilation errors.
 
-## Configuration and fixture parsing
+## Configuration parsing
 
-```text
-PASS JSON tests/fixtures/provider_poc/earnings_revisions.json
-PASS JSON tests/fixtures/provider_poc/intraday_complete.json
-PASS JSON tests/fixtures/provider_poc/intraday_incomplete.json
-PASS JSON tests/fixtures/provider_poc/pit_records.json
-PASS JSON tests/fixtures/provider_poc/ticker_snapshot.json
-PASS YAML configs/data/provider_poc.yaml
+Command:
+
+```bash
+python - <<'PY'
+from pathlib import Path
+import yaml
+path = Path('configs/data/minimum_data_kernel.yaml')
+payload = yaml.safe_load(path.read_text(encoding='utf-8'))
+assert payload['kernel']['id'] == 'PHASE02-MINIMUM-DATA-KERNEL-v0.1'
+print('PASS')
+PY
 ```
 
-## Verified local behaviors
+Result: PASS.
 
-- Rejects non-common-stock universe rows.
-- Requires at least one stable identity field.
-- Rejects duplicate ticker/identity rows.
-- Rejects incomplete 10:00–10:30 ET VWAP windows.
-- Rejects zero-volume VWAP intervals.
-- Prevents future point-in-time revisions from being selected.
-- Selects the latest revision known at the decision timestamp.
-- Rejects current-only earnings calendars without a revision sequence.
-- Produces deterministic modeled spread output and rejects invalid bars.
-- Prevents overwrite of raw adapter snapshots.
+## Remaining Phase 02 evidence
 
-## Outstanding evidence
-
-- Massive Developer credentialed API/flat-file trial.
-- Representative delisting, symbol-change, corporate-action, and ten-year coverage tests.
-- SEC filing/accession joining for historical acceptance timestamps and security-class shares.
-- Written provider-license retention review.
-- Wall Street Horizon DateBreaks sample and quote.
-- Calibration of the historical spread proxy against observed consolidated quotes.
+- Credentialed Massive trial and representative historical cases.
+- Provider retention-license review.
+- SEC production adapter and share-class mapping.
+- Formal sector-taxonomy approval.
+- Revision-aware historical earnings feed.
+- Production VWAP normalization.
+- Historical spread calibration.
+- Conservative short-borrow model.
+- Complex corporate-action and total-return processing.

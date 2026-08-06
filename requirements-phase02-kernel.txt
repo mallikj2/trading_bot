@@ -1,0 +1,2 @@
+# Phase 02 minimum data kernel adds no third-party runtime dependency.
+# Python 3.11+ is required for zoneinfo and modern typing/dataclasses behavior.

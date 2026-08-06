@@ -1,0 +1,73 @@
+schema_version: 1
+kernel:
+  id: PHASE02-MINIMUM-DATA-KERNEL-v0.1
+  strategy_id: CSMOM-LS-v0.2
+  status: IMPLEMENTED_LOCAL_VALIDATION_PASS
+  live_authorized: false
+  paper_authorized: false
+
+time:
+  internal_timezone: UTC
+  exchange_timezone: America/New_York
+  calendar_id: XNYS
+  calendar_version_required: true
+  decision_delay_minutes: 30
+  monthly_universe_freeze: FINAL_PRIOR_MONTH_SESSION_CLOSE_PLUS_DELAY
+
+storage:
+  raw_snapshots: IMMUTABLE_APPEND_ONLY
+  manifest_hash: SHA256_CANONICAL_JSON
+  raw_file_hash: SHA256_BYTES
+  overwrite_policy: PROHIBITED
+  provider_correction_policy: NEW_SNAPSHOT_AND_DATA_VERSION
+
+identity:
+  canonical_key: UUID
+  ticker_is_alias: true
+  alias_intervals: HALF_OPEN_EFFECTIVE_DATES
+  overlapping_market_symbol_ownership: PROHIBITED
+  nonoverlapping_ticker_reuse: ALLOWED
+
+point_in_time:
+  eligibility: available_at <= decision_at
+  future_fallback: PROHIBITED
+  naive_datetime: PROHIBITED
+  feature_available_at: MAX_INPUT_AVAILABLE_AT_PLUS_PROCESSING_LATENCY
+
+corporate_actions:
+  raw_prices_preserved: true
+  supported_kernel_adjustment: SPLIT_AND_REVERSE_SPLIT
+  adjustment_semantics: AS_OF_DECISION_EFFECTIVE_AND_AVAILABLE_ACTIONS_ONLY
+  revisions: LATEST_KNOWN_PER_ACTION_ID
+  unknown_material_action: BLOCK_INSTRUMENT
+
+universe:
+  policy_version: CSMOM-LS-v0.2-UNIVERSE-v0.1
+  exchanges: [NYSE, NASDAQ]
+  security_type: COMMON_STOCK
+  min_adjusted_close: 10.0
+  min_market_cap: 2000000000.0
+  min_adv60: 25000000.0
+  min_valid_sessions: 300
+  max_vol20_annualized: 0.80
+  sector_required: true
+  complete_reason_codes_required: true
+  deterministic_sort_key: instrument_id
+
+fail_closed:
+  missing_calendar_session: BLOCK_SESSION
+  invalid_ohlc: REJECT_RECORD
+  unresolved_identity: EXCLUDE_INSTRUMENT
+  future_information: EXCLUDE_INSTRUMENT_AND_RAISE_LEAKAGE_FINDING
+  bad_lineage_hash: INVALIDATE_DATASET
+  source_hash_mismatch: INVALIDATE_DATASET
+  duplicate_universe_instrument: INVALIDATE_UNIVERSE_BUILD
+
+out_of_scope:
+  - PROVIDER_NETWORK_INGESTION
+  - EARNINGS_FEED_IMPLEMENTATION
+  - INTRADAY_VWAP_FILL_ENGINE
+  - SPREAD_CALIBRATION
+  - SHORT_BORROW_MODEL
+  - STRATEGY_PERFORMANCE_BACKTEST
+  - PAPER_OR_LIVE_TRADING

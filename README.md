@@ -1,26 +1,45 @@
-# Phase 02 Provider Proof-of-Concept Bundle
+# Phase 02 Minimum Data Kernel Bundle
 
-This bundle contains the incremental repository files for the Phase 02 provider proof-of-concept task.
+This is an incremental repository bundle for the Quant Trading Bot project.
 
-## Contents
+## Merge destination
 
-- Provider decision and gate report
-- Provider capability matrix and official evidence register
-- Credentialed trial runbook and results template
-- Historical spread proxy candidate
-- Machine-readable provider PoC configuration
-- Massive and SEC read-only adapter skeletons
-- Fail-closed validators
-- Adversarial fixtures and unit tests
-- Current-state and decision-log patches
+Copy the bundle contents into the repository root. It adds files under:
 
-## Validation
-
-Run:
-
-```bash
-python -m unittest discover -s tests/unit/data -p 'test_provider_poc.py' -v
-python -m src.data.provider_poc.cli validate-fixtures --fixture-root tests/fixtures/provider_poc
+```text
+src/trading_bot/data/
+tests/unit/data/
+tests/integration/data/
+configs/data/
+docs/data/
+docs/phases/
+docs/project/
 ```
 
-No paid-provider data is included. The fixture payloads are synthetic schema examples and must not be represented as provider evidence.
+It does not replace the approved Phase 01 strategy implementation or the earlier Phase 02 reconciliation/provider-PoC files.
+
+## Validate
+
+From the repository root:
+
+```bash
+python -m unittest discover -s tests/unit/data -p 'test_*.py' -v
+python -m unittest discover -s tests/integration/data -p 'test_*.py' -v
+python -m compileall -q src tests
+```
+
+## Import example
+
+```python
+from trading_bot.data.manifests import DatasetManifest
+from trading_bot.data.pit import select_latest_known
+from trading_bot.data.universe import build_monthly_universe
+```
+
+Ensure `src` is on `PYTHONPATH`, or install the repository package in the normal project environment.
+
+## Status
+
+- Minimum data-kernel task: PASS.
+- Phase 02 overall: ACTIVE.
+- Phase 03, paper trading, and live trading: not authorized.
