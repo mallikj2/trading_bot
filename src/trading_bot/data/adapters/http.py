@@ -1,4 +1,4 @@
-"""Small, injectable HTTPS JSON transport with retry and rate-limit controls."""
+"""Small, injectable HTTPS transports with retry and rate-limit controls."""
 
 from __future__ import annotations
 
@@ -22,6 +22,10 @@ class JsonTransport(Protocol):
     def get_json(self, url: str, *, headers: Mapping[str, str], timeout: float) -> Mapping[str, Any]: ...
 
 
+class TextTransport(Protocol):
+    def get_text(self, url: str, *, headers: Mapping[str, str], timeout: float) -> str: ...
+
+
 class UrllibJsonTransport:
     def get_json(self, url: str, *, headers: Mapping[str, str], timeout: float) -> Mapping[str, Any]:
         request = Request(url, headers=dict(headers), method="GET")
@@ -38,6 +42,23 @@ class UrllibJsonTransport:
         if not isinstance(payload, Mapping):
             raise ProviderRequestError("provider response must be a JSON object")
         return payload
+
+
+class UrllibTextTransport:
+    def get_text(self, url: str, *, headers: Mapping[str, str], timeout: float) -> str:
+        request = Request(url, headers=dict(headers), method="GET")
+        try:
+            with urlopen(request, timeout=timeout) as response:  # nosec B310: caller pins allowed host
+                raw = response.read()
+                charset = response.headers.get_content_charset() or "utf-8"
+        except HTTPError as exc:
+            body = exc.read(1024).decode("utf-8", errors="replace")
+            raise ProviderRequestError(
+                f"provider returned HTTP {exc.code}: {body}", status_code=exc.code
+            ) from exc
+        except URLError as exc:
+            raise ProviderRequestError(f"provider request failed: {exc.reason}") from exc
+        return raw.decode(charset, errors="replace")
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,19 +94,16 @@ class RateLimiter:
         self._last_request_at = now
 
 
-class SafeJsonClient:
-    """GET-only client that rejects redirects/pagination to an unexpected host."""
-
+class _SafeClientBase:
     def __init__(
         self,
         *,
         base_url: str,
         default_headers: Mapping[str, str],
-        transport: JsonTransport | None = None,
-        requests_per_second: float = 5.0,
-        retry_policy: RetryPolicy | None = None,
-        timeout_seconds: float = 60.0,
-        sleeper=time.sleep,
+        requests_per_second: float,
+        retry_policy: RetryPolicy | None,
+        timeout_seconds: float,
+        sleeper,
     ) -> None:
         parsed = urlparse(base_url)
         if parsed.scheme != "https" or not parsed.netloc:
@@ -93,7 +111,6 @@ class SafeJsonClient:
         self.base_url = base_url.rstrip("/")
         self._allowed_host = parsed.netloc
         self.default_headers = dict(default_headers)
-        self.transport = transport or UrllibJsonTransport()
         self.rate_limiter = RateLimiter(requests_per_second, sleeper=sleeper)
         self.retry_policy = retry_policy or RetryPolicy()
         self.timeout_seconds = timeout_seconds
@@ -109,7 +126,7 @@ class SafeJsonClient:
 
         parsed = urlparse(candidate)
         if parsed.scheme != "https" or parsed.netloc != self._allowed_host:
-            raise ProviderRequestError("provider pagination attempted to leave the allowed HTTPS host")
+            raise ProviderRequestError("provider request attempted to leave the allowed HTTPS host")
 
         query = dict(parse_qsl(parsed.query, keep_blank_values=True))
         if params:
@@ -122,17 +139,12 @@ class SafeJsonClient:
                     query[key] = str(value)
         return urlunparse(parsed._replace(query=urlencode(query)))
 
-    def get_json(self, path_or_url: str, *, params: Mapping[str, Any] | None = None) -> Mapping[str, Any]:
-        url = self._url(path_or_url, params)
+    def _retry(self, call):
         last_error: ProviderRequestError | None = None
         for attempt in range(self.retry_policy.attempts):
             self.rate_limiter.wait()
             try:
-                return self.transport.get_json(
-                    url,
-                    headers=self.default_headers,
-                    timeout=self.timeout_seconds,
-                )
+                return call()
             except ProviderRequestError as exc:
                 last_error = exc
                 retryable = exc.status_code in self.retry_policy.retryable_statuses
@@ -145,6 +157,76 @@ class SafeJsonClient:
                 self._sleeper(exponential + random.random() * min(0.25, exponential))
         assert last_error is not None
         raise last_error
+
+
+class SafeJsonClient(_SafeClientBase):
+    """GET-only JSON client that rejects requests to an unexpected host."""
+
+    def __init__(
+        self,
+        *,
+        base_url: str,
+        default_headers: Mapping[str, str],
+        transport: JsonTransport | None = None,
+        requests_per_second: float = 5.0,
+        retry_policy: RetryPolicy | None = None,
+        timeout_seconds: float = 60.0,
+        sleeper=time.sleep,
+    ) -> None:
+        super().__init__(
+            base_url=base_url,
+            default_headers=default_headers,
+            requests_per_second=requests_per_second,
+            retry_policy=retry_policy,
+            timeout_seconds=timeout_seconds,
+            sleeper=sleeper,
+        )
+        self.transport = transport or UrllibJsonTransport()
+
+    def get_json(self, path_or_url: str, *, params: Mapping[str, Any] | None = None) -> Mapping[str, Any]:
+        url = self._url(path_or_url, params)
+        return self._retry(
+            lambda: self.transport.get_json(
+                url,
+                headers=self.default_headers,
+                timeout=self.timeout_seconds,
+            )
+        )
+
+
+class SafeTextClient(_SafeClientBase):
+    """GET-only text client that rejects requests to an unexpected host."""
+
+    def __init__(
+        self,
+        *,
+        base_url: str,
+        default_headers: Mapping[str, str],
+        transport: TextTransport | None = None,
+        requests_per_second: float = 5.0,
+        retry_policy: RetryPolicy | None = None,
+        timeout_seconds: float = 60.0,
+        sleeper=time.sleep,
+    ) -> None:
+        super().__init__(
+            base_url=base_url,
+            default_headers=default_headers,
+            requests_per_second=requests_per_second,
+            retry_policy=retry_policy,
+            timeout_seconds=timeout_seconds,
+            sleeper=sleeper,
+        )
+        self.transport = transport or UrllibTextTransport()
+
+    def get_text(self, path_or_url: str, *, params: Mapping[str, Any] | None = None) -> str:
+        url = self._url(path_or_url, params)
+        return self._retry(
+            lambda: self.transport.get_text(
+                url,
+                headers=self.default_headers,
+                timeout=self.timeout_seconds,
+            )
+        )
 
 
 def redact_url(url: str, *, secret_keys: set[str] | None = None) -> str:

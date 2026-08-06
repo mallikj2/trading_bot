@@ -1,27 +1,26 @@
-# Phase 02 Production Provider Adapters
+# Phase 02 Historical Sector Classification Bundle
 
-This incremental repository bundle adds production-oriented Massive and SEC ingestion above the approved Phase 02 minimum data kernel.
+Repository-ready incremental bundle for the Phase 02 historical sector task.
 
-## Run local validation
+## Apply after
 
-```bash
-PYTHONPATH=src python -m unittest discover -s tests/unit/data/adapters -p 'test_*.py' -v
-PYTHONPATH=src python -m unittest discover -s tests/integration/data/adapters -p 'test_*.py' -v
-PYTHONPATH=src python -m compileall -q src tests
-```
+- Phase 01 v0.2 approved strategy bundle;
+- Phase 02 minimum data kernel;
+- Phase 02 production provider adapters.
 
-## Check credential readiness
+## Contents
 
-```bash
-PYTHONPATH=src python -m trading_bot.data.adapters.trial environment-status
-```
+- SEC Archives text transport and complete-submission client;
+- filing-header SIC parser for legacy SGML and modern EDGAR headers;
+- frozen Fama–French 12-sector mapping;
+- point-in-time sector interval builder and selector;
+- adversarial unit and universe-integration tests;
+- source evaluation, data contract, phase report, configuration, and project patches.
 
-## Run smoke trial
+## Validation
 
-```bash
-export MASSIVE_API_KEY='...'
-export SEC_USER_AGENT='QuantTradingBot/0.2 monitored-contact@example.com'
-PYTHONPATH=src python -m trading_bot.data.adapters.trial smoke --output artifacts/provider_trial/smoke.json
-```
+See `VALIDATION_RESULTS.md`.
 
-No credentials or licensed data are included in this bundle.
+## Important limitation
+
+This package does not claim full-universe SEC sector coverage. Run the configured coverage gate with a compliant `SEC_USER_AGENT` containing a real monitored contact email before final Phase 02 approval.

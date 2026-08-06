@@ -1,0 +1,57 @@
+version: "0.1.0"
+status: "implementation_pass_coverage_conditional"
+
+source:
+  provider: "SEC EDGAR complete-submission headers"
+  base_url: "https://www.sec.gov"
+  endpoint_template: "/Archives/edgar/data/{cik_unpadded}/{accession_no_dashes}/{accession}.txt"
+  user_agent_env: "SEC_USER_AGENT"
+  max_requests_per_second: 5
+  hard_sec_limit_requests_per_second: 10
+  processing_buffer_minutes: 1
+  immutable_snapshot_required: true
+
+raw_observation:
+  identity_key: ["instrument_id", "cik", "accession_number"]
+  required_fields:
+    - instrument_id
+    - cik
+    - accession_number
+    - form_type
+    - sic_code
+    - accepted_at
+    - available_at
+    - source_snapshot_id
+  reject_sic_codes: ["0000"]
+  conflicting_same_accession: "block"
+  missing_target_cik: "block"
+
+sector_taxonomy:
+  taxonomy_id: "FAMA_FRENCH_12_FROM_SEC_SIC"
+  taxonomy_version: "FF12-SIC-2026-08-05-v1"
+  input: "four_digit_sec_assigned_sic"
+  mapping_policy: "frozen_static_ranges"
+  unmapped_valid_sic: "12_OTHER"
+  missing_or_invalid_sic: "block"
+
+point_in_time:
+  effective_from: "filing_acceptance_timestamp_plus_processing_buffer"
+  effective_to: "next_different_sector_available_at"
+  pre_first_observation: "missing_block_entry"
+  future_revision_fallback: false
+  same_sector_repeated_filing: "do_not_create_redundant_interval"
+  frozen_month_rewrite: false
+
+phase01_use:
+  selector_field: "sector_code"
+  max_names_per_sector_per_side: 2
+  daily_entry_on_missing_sector: "block"
+  monthly_universe_on_missing_sector: "exclude"
+
+coverage_gate:
+  required_before_phase02_pass:
+    - "At least 99 percent of otherwise-eligible instrument-months have sector coverage"
+    - "All sector changes are traceable to an accession and raw snapshot"
+    - "No overlapping effective intervals per instrument and taxonomy version"
+    - "Manual review of at least 25 sector-change cases"
+    - "Representative legacy and modern EDGAR header samples pass"

@@ -20,6 +20,17 @@ from .models import (
     SnapshotReceipt,
     TickerReference,
 )
+from .sec_filing_sic import (
+    SecArchivesClient,
+    SecFilingHeaderError,
+    SecFilingSicObservation,
+    TAXONOMY_ID,
+    TAXONOMY_VERSION,
+    build_sector_history,
+    map_sic_to_ff12,
+    parse_filing_sic,
+    select_sector_as_of,
+)
 from .sec_edgar import (
     SecEdgarClient,
     SecSchemaError,
@@ -38,6 +49,11 @@ __all__ = [
     "MassiveSchemaError",
     "SecEdgarClient",
     "SecSchemaError",
+    "SecArchivesClient",
+    "SecFilingHeaderError",
+    "SecFilingSicObservation",
+    "TAXONOMY_ID",
+    "TAXONOMY_VERSION",
     "RawSnapshotStore",
     "TickerReference",
     "IntradayBar",
@@ -60,5 +76,9 @@ __all__ = [
     "derive_market_cap",
     "extract_current_sic_reference",
     "historical_sector_from_submissions",
+    "parse_filing_sic",
+    "map_sic_to_ff12",
+    "build_sector_history",
+    "select_sector_as_of",
     "build_execution_vwap",
 ]
