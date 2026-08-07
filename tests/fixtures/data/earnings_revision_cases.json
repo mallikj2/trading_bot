@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "purpose": "Adversarial point-in-time earnings schedule cases",
+  "cases": [
+    {"id": "DATE_MOVED_LATER", "expected": "prior decision keeps old date; later decision sees new date"},
+    {"id": "DATE_MOVED_EARLIER", "expected": "earlier deadline applies only after revision becomes known"},
+    {"id": "AMC_TO_BMO_LATE", "expected": "missed prior-session deadline is operational exception; next window used"},
+    {"id": "UNKNOWN_TIME", "expected": "prior-session exit"},
+    {"id": "DURING_SESSION", "expected": "prior-session exit"},
+    {"id": "WITHDRAWN_DATE", "expected": "not treated as no event; block entry and exit existing position"},
+    {"id": "NO_ROW_NO_COVERAGE", "expected": "block because absence is not proof of no event"},
+    {"id": "STATUS_CONFIRMATION_ONLY", "expected": "same date retained with later status revision"},
+    {"id": "WEEKEND_UNKNOWN", "expected": "exit prior trading session"},
+    {"id": "FUTURE_REVISION", "expected": "not visible to earlier decision"}
+  ]
+}

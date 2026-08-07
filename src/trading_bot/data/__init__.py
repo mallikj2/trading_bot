@@ -22,6 +22,24 @@ from .total_returns import (
 )
 from .strategy_inputs import StrategyPriceRecord, strategy_price_records
 
+from .earnings import (
+    EarningsCoverageObservation,
+    EarningsEntryDecision,
+    EarningsEntryReason,
+    EarningsExitPlan,
+    EarningsExitReason,
+    EarningsRevisionKind,
+    EarningsScheduleRevision,
+    EarningsScheduleStatus,
+    evaluate_new_entry,
+    latest_schedule_as_of,
+    latest_schedules_as_of,
+    plan_existing_position_exit,
+    required_earnings_exit_session,
+    validate_revision_sequence,
+    validate_coverage_sequence,
+)
+
 __all__ = [
     "ExchangeCalendar",
     "InstrumentMaster",
@@ -48,4 +66,19 @@ __all__ = [
     "continuing_event_value",
     "StrategyPriceRecord",
     "strategy_price_records",
+    "EarningsCoverageObservation",
+    "EarningsEntryDecision",
+    "EarningsEntryReason",
+    "EarningsExitPlan",
+    "EarningsExitReason",
+    "EarningsRevisionKind",
+    "EarningsScheduleRevision",
+    "EarningsScheduleStatus",
+    "evaluate_new_entry",
+    "latest_schedule_as_of",
+    "latest_schedules_as_of",
+    "plan_existing_position_exit",
+    "required_earnings_exit_session",
+    "validate_revision_sequence",
+    "validate_coverage_sequence",
 ]

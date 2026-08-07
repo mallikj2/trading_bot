@@ -1,125 +1,60 @@
-# Validation Results — Phase 02 Complex Corporate Actions and Point-in-Time Total Return
+# Validation Results — Phase 02 Revision-Aware Historical Earnings
 
-**Validated:** 2026-08-05 America/New_York  
-**Task result:** IMPLEMENTATION PASS / PROVIDER COVERAGE CONDITIONAL  
-**Phase result:** ACTIVE
+**Date:** 2026-08-06  
+**Task gate:** IMPLEMENTATION PASS / SOURCE CONDITIONAL
 
-## Scope
+## Test execution
 
-Validation covered the cumulative repository overlay containing:
-
-- the approved Phase 01 `CSMOM-LS-v0.2` reference strategy;
-- the Phase 02 minimum data kernel;
-- production Massive and SEC adapters;
-- filing-level historical sector classification;
-- complex corporate-action and point-in-time total-return processing.
-
-No credentialed Massive payload, provider retention approval, or full-universe complex-action coverage report was available. No provider completeness or accuracy claim is made.
-
-## Full merged regression
-
-Command:
-
-```bash
-PYTHONPATH=src python -m pytest -q
-```
-
-Result:
+Full cumulative repository overlay:
 
 ```text
-119 passed, 12 subtests passed in 12.41s
+143 passed, 12 subtests passed in 6.58s
 ```
 
-## Test breakdown
-
-Phase 01 strategy suite:
+Focused earnings schedule suite:
 
 ```text
-20 passed
+24 passed in 0.06s
 ```
 
-This comprises the 19 previously approved strategy tests plus one Phase 02 interface test proving that `price_eligibility_close` is separate from the total-return `adjusted_close` series.
+The cumulative suite includes the approved Phase 01 strategy tests and all prior Phase 02 kernel, provider-adapter, historical-sector, and corporate-action/total-return tests contained in this cumulative overlay.
 
-Phase 02 data and integration suite:
+## Static and configuration validation
 
-```text
-99 passed, 12 subtests passed
-```
+- Python compilation: PASS (`src` and `tests`)
+- YAML parse: PASS — 7 configuration files
+- JSON parse: PASS — 3 JSON fixture/result files
+- Earnings adversarial fixture parse: PASS
+- No credentials or proprietary earnings files embedded: PASS
 
-New corporate-action coverage includes:
+## Earnings-specific behaviors verified
 
-- two-for-one split and reverse-split economics;
-- future split invisibility at an earlier decision;
-- cash-dividend total return and short liability;
-- stock-dividend quantity and price factors;
-- spinoff valuation and signed child positions;
-- cash-and-stock merger terminal return and successor position;
-- explicit zero-recovery delisting;
-- action cancellation and later revision behavior;
-- incomplete coverage rejection;
-- unsupported tender and rights-event policy;
-- missing ex-date and prior-bar rejection;
-- currency mismatch rejection;
-- deterministic build and position-effect hashes;
-- reconciliation of back-adjusted returns with the forward total-return index;
-- split-safe raw dollar volume through the Phase 01 feature pipeline;
-- absence of artificial split and dividend momentum jumps;
-- six machine-readable registered economic-event fixtures.
+- Future schedule revisions are invisible to earlier decisions.
+- Later decisions see only revisions whose `available_at` has passed.
+- Empty event results without forward coverage block entry.
+- Forward coverage shorter than the 10-session hold interval blocks entry.
+- Earnings inside the minimum-hold interval block entry.
+- Events outside that interval do not block entry when coverage is complete.
+- Withdrawn dates remain unresolved rather than becoming false no-event states.
+- BMO, unknown, and during-session events map to prior-session exits.
+- AMC maps to the event-session exit.
+- Weekend unknown-time events map conservatively to the prior trading session.
+- Invalid AMC-on-non-session records fail closed.
+- Late BMO/time revisions do not backdate exits; they emit operational exceptions and next-window exits.
+- Duplicate revision keys fail closed.
+- Mixed-provider coverage histories fail closed.
+- Provider availability cannot postdate local ingestion in an impossible direction.
+- A later revision can change a later decision while preserving the earlier historical decision.
 
-## Compilation
+## Evidence boundary
 
-Command:
+No credentialed Wall Street Horizon historical sample was available in this environment. Therefore this validation does **not** claim provider completeness, provider accuracy, retention rights, price, delivery schema, or full-universe historical coverage.
 
-```bash
-PYTHONPATH=src python -m compileall -q src tests
-```
+## Remaining external gate
 
-Result: PASS.
+Before the historical earnings source can be approved for the final acceptance backtest:
 
-## Configuration parsing
-
-Six YAML files parsed successfully:
-
-```text
-configs/data/corporate_action_total_return.yaml
-configs/data/historical_sector_classification.yaml
-configs/data/minimum_data_kernel.yaml
-configs/data/production_provider_adapters.yaml
-configs/data/provider_representative_cases.yaml
-configs/strategies/csmom_ls_v0_2.yaml
-```
-
-## Determinism and integrity
-
-- identical selected inputs produce identical `build_hash` values;
-- revised corporate-action inputs change the build hash;
-- same-key conflicting revisions fail closed;
-- raw files and provider snapshots remain immutable;
-- all package files are covered by `MANIFEST.sha256`;
-- manifest verification and ZIP integrity checks passed.
-
-## Important interface correction
-
-The approved strategy previously used `adjusted_close` both for total-return features and the USD 10 price threshold. The normalized Phase 02 interface now provides:
-
-```text
-adjusted_close = forward total-return index
-price_eligibility_close = current-session raw close
-```
-
-This preserves the intended strategy economics while preventing a later split or accumulated distribution from rewriting historical price eligibility. Backward compatibility remains for development callers that omit the new field, but research-tier data must supply it.
-
-## Remaining external evidence
-
-- credentialed Massive representative-case trial;
-- provider storage and post-cancellation retention approval;
-- representative provider reconciliation for splits and dividends;
-- at least one provider-sourced merger and spinoff reconciliation;
-- delisting and terminal-value coverage samples;
-- full-universe action-coverage completeness statistics;
-- full SEC historical-sector coverage scan;
-- revision-aware historical earnings schedules;
-- spread calibration;
-- short-borrow availability and fee modeling.
-
-Phase 03 final acceptance testing, paper trading, and live trading remain unauthorized.
+1. obtain a WSH historical DateBreaks + Earnings Date Daily Snapshots sample;
+2. run `EARNINGS_PROVIDER_TRIAL_RUNBOOK.md`;
+3. validate stable identity, timestamps, BMO/AMC/unknown encoding, withdrawals, and coverage;
+4. approve local/raw/derived/post-termination retention terms.

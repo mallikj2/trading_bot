@@ -1,0 +1,81 @@
+schema_version: 1
+contract_id: CSMOM-LS-v0.2-EARNINGS-PIT
+status: IMPLEMENTED_SOURCE_CONDITIONAL
+
+strategy_policy:
+  decision_time: OFFICIAL_CLOSE_PLUS_30_MINUTES
+  execution_window: NEXT_SESSION_10_00_TO_10_30_AMERICA_NEW_YORK
+  minimum_holding_sessions: 10
+  timing_exit_map:
+    BMO: PRIOR_SESSION
+    AMC: EVENT_SESSION
+    DURING_SESSION: PRIOR_SESSION
+    UNKNOWN: PRIOR_SESSION
+  late_revision_policy: NEXT_AVAILABLE_EXECUTION_WINDOW_AND_OPERATIONAL_EXCEPTION
+  withdrawn_schedule_policy: BLOCK_NEW_ENTRY_AND_EXIT_EXISTING_POSITION_NEXT_AVAILABLE_WINDOW
+  reentry_policy: ONLY_AFTER_EVENT_SESSION_VALIDATED_CLOSE
+
+point_in_time:
+  selector: LATEST_AVAILABLE_REVISION
+  condition: available_at <= decision_at
+  future_fallback: PROHIBITED
+  current_calendar_backfill: PROHIBITED
+  absence_without_coverage: BLOCK
+  all_timestamps_internal_timezone: UTC
+
+coverage:
+  require_explicit_forward_coverage: true
+  minimum_required_through: MINIMUM_HOLD_END_SESSION
+  missing_or_incomplete: BLOCK_NEW_ENTRY
+  final_backtest_rule: EVERY_ADMITTED_INSTRUMENT_DECISION_MUST_HAVE_VALID_COVERAGE
+
+preferred_source:
+  vendor: Wall Street Horizon
+  products:
+    - DateBreaks historical earnings-date revisions
+    - Earnings Date Daily Snapshots
+  status: PREFERRED_PENDING_TRIAL_AND_LICENSE
+  rationale:
+    - timestamped earnings date confirmations and revisions
+    - archived as-published calendar states
+    - historical data advertised from 2006-present, varying by dataset
+  unresolved:
+    - exact delivery schema and stable identifier fields
+    - exact time-zone/timestamp semantics
+    - cancellation/withdrawal encoding
+    - price
+    - local raw-data retention rights
+    - post-termination retention rights
+
+secondary_sources:
+  massive_benzinga:
+    role: DEVELOPMENT_AND_CORROBORATION_ONLY
+    status: NOT_APPROVED_AS_SOLE_PIT_HISTORY
+    reason: public contract exposes last_updated but does not prove retrieval of prior schedule versions
+  intrinio_corporate_events:
+    role: REJECT_AS_SOLE_HISTORICAL_SOURCE
+    status: REJECTED_FOR_ACCEPTANCE_HISTORY
+    reason: official product page states history is most recent data only
+  sec_and_company_releases:
+    role: CORROBORATION
+    status: NOT_SUFFICIENT_AS_SOLE_SOURCE
+    reason: cannot provide complete forecast/tentative calendar revision history
+
+license_gate:
+  required_before_source_approval:
+    - local immutable raw archive permitted
+    - historical archive storage permitted
+    - internal research/backtesting permitted
+    - derived features/results retention permitted
+    - post-termination deletion/retention obligations documented
+    - redistribution restrictions documented
+    - credentials and access method documented
+
+source_urls:
+  wall_street_horizon_earnings: https://www.wallstreethorizon.com/earnings-calendar
+  wall_street_horizon_historical: https://www.wallstreethorizon.com/historical-data
+  wall_street_horizon_datebreaks: https://www.wallstreethorizon.com/news/DateBreaksV3
+  wall_street_horizon_historical_expansion: https://www.wallstreethorizon.com/news/Wall-Street-Horizon-Expands-Historical-Corporate-Event-Data
+  massive_benzinga_earnings: https://massive.com/docs/rest/partners/benzinga/earnings
+  massive_benzinga_pricing: https://massive.com/partners/benzinga
+  intrinio_corporate_events: https://intrinio.com/products/corporate-events

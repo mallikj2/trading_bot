@@ -1,26 +1,22 @@
-# Phase 02 Complex Corporate-Action and Total-Return Bundle
+# Phase 02 Revision-Aware Historical Earnings Bundle
 
-This is a cumulative repository overlay for the Quant Trading Bot project. It contains the Phase 02 kernel, production adapters, historical-sector implementation, and the new complex corporate-action/point-in-time total-return implementation.
+This is a cumulative repository overlay for the Quant Trading Bot project. It contains the Phase 02 kernel, provider adapters, historical-sector implementation, complex corporate-action/total-return engine, and the revision-aware historical earnings schedule implementation.
 
-## Merge destination
-
-Copy the bundle contents into the repository root.
-
-Important new or changed paths:
+## Important new paths
 
 ```text
-src/trading_bot/data/total_returns.py
-src/trading_bot/data/strategy_inputs.py
-src/trading_bot/data/contracts.py
-src/trading_bot/data/hashing.py
-src/trading_bot/strategies/csmom_ls_v0_2.py
-tests/unit/data/test_total_returns.py
-tests/integration/data/test_total_return_strategy_pipeline.py
-tests/unit/strategies/test_csmom_ls_v0_2.py
-configs/data/corporate_action_total_return.yaml
-docs/data/CORPORATE_ACTION_TOTAL_RETURN_CONTRACT.md
-docs/data/POINT_IN_TIME_TOTAL_RETURN_ALGORITHM.md
-docs/phases/PHASE_02_COMPLEX_CORPORATE_ACTION_TOTAL_RETURN.md
+src/trading_bot/data/earnings.py
+tests/unit/data/test_earnings_schedule.py
+tests/integration/data/test_earnings_strategy_bridge.py
+tests/fixtures/data/earnings_revision_cases.json
+configs/data/revision_aware_earnings.yaml
+docs/data/EARNINGS_SCHEDULE_POINT_IN_TIME_CONTRACT.md
+docs/data/EARNINGS_SOURCE_EVALUATION.md
+docs/data/EARNINGS_PROVIDER_TRIAL_RUNBOOK.md
+docs/data/EARNINGS_PROVIDER_EVIDENCE_REGISTER.md
+docs/phases/PHASE_02_REVISION_AWARE_EARNINGS_SCHEDULE.md
+docs/project/CURRENT_STATE_PHASE_02_EARNINGS_PATCH.md
+docs/project/DECISIONS_PHASE_02_EARNINGS_APPEND.md
 ```
 
 ## Validate
@@ -30,15 +26,12 @@ PYTHONPATH=src python -m pytest -q
 PYTHONPATH=src python -m compileall -q src tests
 ```
 
-Expected test result for this bundle:
-
-```text
-119 passed, 12 subtests passed
-```
+Observed validation for this package build: `143 passed, 12 subtests passed`; focused earnings suite: `24 passed`. See `VALIDATION_RESULTS.md` for details.
 
 ## Status
 
-- Complex corporate-action implementation: PASS.
-- Provider completeness and retention evidence: CONDITIONAL / OPEN.
+- Revision-aware earnings implementation: PASS.
+- Historical source evidence: CONDITIONAL / OPEN.
+- Preferred source: Wall Street Horizon DateBreaks + Earnings Date Daily Snapshots, pending credentialed sample and license.
 - Phase 02 overall: ACTIVE.
 - Phase 03 final acceptance backtest, paper trading, and live trading: not authorized.

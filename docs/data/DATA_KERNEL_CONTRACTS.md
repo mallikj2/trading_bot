@@ -104,3 +104,14 @@ Boundary values are inclusive. Every rejected instrument retains all applicable 
 ## Reproducibility contract
 
 Identical raw bytes, request parameters, versions, timestamps, normalized inputs, and policy versions must produce identical manifest and universe hashes. Changing any declared input must produce a different lineage hash.
+
+## Revision-aware earnings schedules
+
+The earnings calendar is implemented in `src/trading_bot/data/earnings.py` rather than extending the generic contract module with provider-specific semantics.
+
+Required record types:
+
+- `EarningsScheduleRevision`: immutable fiscal-event schedule version with `available_at`, timing, status, revision kind, and source lineage.
+- `EarningsCoverageObservation`: explicit evidence that the calendar is complete through a forward date.
+
+Historical selection uses only revisions available at the decision time. Missing coverage fails closed. See `EARNINGS_SCHEDULE_POINT_IN_TIME_CONTRACT.md` for full policy.
