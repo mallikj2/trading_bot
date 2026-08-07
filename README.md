@@ -1,37 +1,32 @@
-# Phase 02 Revision-Aware Historical Earnings Bundle
+# Phase 02 Cumulative Repository Bundle — Through Spread Calibration / Transaction Costs
 
-This is a cumulative repository overlay for the Quant Trading Bot project. It contains the Phase 02 kernel, provider adapters, historical-sector implementation, complex corporate-action/total-return engine, and the revision-aware historical earnings schedule implementation.
+This cumulative bundle contains the approved Phase 01 reference strategy plus all Phase 02 implementation work completed through the historical spread-calibration and transaction-cost input task.
 
-## Important new paths
+Latest task status:
 
-```text
-src/trading_bot/data/earnings.py
-tests/unit/data/test_earnings_schedule.py
-tests/integration/data/test_earnings_strategy_bridge.py
-tests/fixtures/data/earnings_revision_cases.json
-configs/data/revision_aware_earnings.yaml
-docs/data/EARNINGS_SCHEDULE_POINT_IN_TIME_CONTRACT.md
-docs/data/EARNINGS_SOURCE_EVALUATION.md
-docs/data/EARNINGS_PROVIDER_TRIAL_RUNBOOK.md
-docs/data/EARNINGS_PROVIDER_EVIDENCE_REGISTER.md
-docs/phases/PHASE_02_REVISION_AWARE_EARNINGS_SCHEDULE.md
-docs/project/CURRENT_STATE_PHASE_02_EARNINGS_PATCH.md
-docs/project/DECISIONS_PHASE_02_EARNINGS_APPEND.md
-```
+- **Engineering:** PASS
+- **Historical observed-quote calibration:** BLOCKED pending licensed source
+- **Phase 02 overall:** ACTIVE
 
-## Validate
+New primary files:
 
-```bash
-PYTHONPATH=src python -m pytest -q
-PYTHONPATH=src python -m compileall -q src tests
-```
+- `docs/phases/PHASE_02_HISTORICAL_SPREAD_AND_TRANSACTION_COSTS.md`
+- `docs/data/HISTORICAL_SPREAD_CALIBRATION_CONTRACT.md`
+- `docs/data/TRANSACTION_COST_INPUT_CONTRACT.md`
+- `docs/data/SPREAD_QUOTE_SOURCE_EVALUATION.md`
+- `docs/data/SPREAD_CALIBRATION_CREDENTIALED_RUNBOOK.md`
+- `docs/data/TRANSACTION_FEE_EVIDENCE_REGISTER.md`
+- `configs/data/historical_spread_transaction_cost.yaml`
+- `src/trading_bot/data/costs.py`
+- `tests/unit/data/test_spread_costs.py`
+- `tests/unit/data/adapters/test_massive_quotes.py`
+- `tests/integration/data/test_spread_cost_pipeline.py`
+- `docs/project/CURRENT_STATE_PHASE_02_SPREAD_COST_PATCH.md`
+- `docs/project/DECISIONS_PHASE_02_SPREAD_COST_APPEND.md`
 
-Observed validation for this package build: `143 passed, 12 subtests passed`; focused earnings suite: `24 passed`. See `VALIDATION_RESULTS.md` for details.
+The bundle does not claim provider-license approval, paid quote-data calibration, strategy profitability, paper-trading readiness, or live-trading readiness.
 
-## Status
 
-- Revision-aware earnings implementation: PASS.
-- Historical source evidence: CONDITIONAL / OPEN.
-- Preferred source: Wall Street Horizon DateBreaks + Earnings Date Daily Snapshots, pending credentialed sample and license.
-- Phase 02 overall: ACTIVE.
-- Phase 03 final acceptance backtest, paper trading, and live trading: not authorized.
+## Material provider-license correction
+
+The previously proposed Massive one-month Advanced historical quote download-and-retain workflow has been withdrawn. Massive's public Individual Market Data Terms are not sufficient for this project's non-display strategy-research and post-termination retention requirements. See `docs/data/PROVIDER_LICENSE_GOVERNANCE_CORRECTION.md`.

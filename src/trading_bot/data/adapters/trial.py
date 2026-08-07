@@ -18,11 +18,16 @@ UTC = timezone.utc
 
 def environment_status() -> dict[str, Any]:
     massive = bool(os.getenv("MASSIVE_API_KEY") or os.getenv("POLYGON_API_KEY"))
+    massive_license_approved = os.getenv("MASSIVE_RESEARCH_LICENSE_APPROVED", "").strip().lower() in {
+        "1", "true", "yes"
+    }
     sec_user_agent = os.getenv("SEC_USER_AGENT")
+    sec_ready = bool(sec_user_agent and "@" in sec_user_agent)
     return {
         "massive_credentials": "AVAILABLE" if massive else "MISSING",
-        "sec_user_agent": "AVAILABLE" if sec_user_agent and "@" in sec_user_agent else "MISSING",
-        "credentialed_trial_ready": bool(massive and sec_user_agent and "@" in sec_user_agent),
+        "massive_research_license": "APPROVED" if massive_license_approved else "NOT_APPROVED",
+        "sec_user_agent": "AVAILABLE" if sec_ready else "MISSING",
+        "credentialed_trial_ready": bool(massive and massive_license_approved and sec_ready),
     }
 
 
@@ -36,7 +41,7 @@ def run_smoke_trial(*, ticker: str, cik: str, as_of_date: date) -> dict[str, Any
         "environment": status,
         "checks": [],
     }
-    if status["massive_credentials"] == "AVAILABLE":
+    if status["massive_credentials"] == "AVAILABLE" and status["massive_research_license"] == "APPROVED":
         massive = MassiveClient()
         ticker_payload = massive.ticker_overview(ticker, as_of_date=as_of_date)
         result["checks"].append(
@@ -47,8 +52,12 @@ def run_smoke_trial(*, ticker: str, cik: str, as_of_date: date) -> dict[str, Any
             }
         )
     else:
+        if status["massive_credentials"] != "AVAILABLE":
+            reason = "MASSIVE_API_KEY missing"
+        else:
+            reason = "Massive research/non-display license not approved"
         result["checks"].append(
-            {"id": "MASSIVE_TICKER_OVERVIEW", "status": "BLOCKED", "reason": "MASSIVE_API_KEY missing"}
+            {"id": "MASSIVE_TICKER_OVERVIEW", "status": "BLOCKED", "reason": reason}
         )
 
     if status["sec_user_agent"] == "AVAILABLE":

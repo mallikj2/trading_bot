@@ -1,0 +1,105 @@
+version: "0.2.1"
+status: IMPLEMENTATION_PASS_CALIBRATION_SOURCE_BLOCKED
+strategy: CSMOM-LS-v0.2
+as_of_date: "2026-08-06"
+
+phase01_binding_rules:
+  maximum_modeled_spread_bps: 35
+  spread_gate_inclusive: true
+  fill_benchmark: NEXT_SESSION_10_00_TO_10_30_ET_VWAP
+  pessimistic_cost_multiplier: 2
+
+historical_spread:
+  pretrade_proxy:
+    estimator: CORWIN_SCHULTZ_TWO_DAY_HIGH_LOW
+    uses_only_completed_daily_bars: true
+    decision_time_requirement: available_at_lte_decision_at
+    proxy_floor_bps: 1
+    maximum_model_spread_bps: 100
+  calibration_target:
+    metric: TIME_WEIGHTED_NBBO_QUOTED_SPREAD_BPS
+    window: "10:00:00-10:30:00 America/New_York"
+    initial_prevailing_quote_max_age_seconds: 60
+    provider_selection_status: OPEN_PENDING_LICENSE_COST_AND_COVERAGE_TRIAL
+    required_rights:
+      - INTERNAL_NON_DISPLAY_RESEARCH
+      - ALGORITHMIC_STRATEGY_RESEARCH
+      - LOCAL_IMMUTABLE_ARCHIVAL
+      - POST_TERMINATION_RESEARCH_RETENTION
+      - DERIVED_MODEL_RETENTION
+    candidates:
+      massive_advanced:
+        status: REJECTED_UNDER_PUBLIC_INDIVIDUAL_TERMS_UNLESS_SEPARATE_WRITTEN_LICENSE
+        documented_quote_semantics: NBBO
+        documented_history_from: "2003-09-10"
+        observed_plan_price_monthly_usd: 199
+      databento_historical:
+        status: CANDIDATE_PENDING_DATASET_COVERAGE_COST_AND_ACCOUNT_LICENSE_REVIEW
+        pricing_model: USAGE_BASED_HISTORICAL
+        public_licensing_statement: HISTORICAL_T_PLUS_1_GENERALLY_NO_EXCHANGE_LICENSE_REQUIRED
+      cboe_datashop_equity_quotes_or_trades:
+        status: CANDIDATE_PENDING_PRICE_AND_LICENSE_REVIEW
+        documented_history_from: "2010-01-01"
+        documented_nbbo_fields: true
+  sampling:
+    design: DETERMINISTIC_HASH_STRATIFIED
+    names_per_liquidity_bucket_per_week: 10
+    warmup_years_before_acceptance_period: 2
+    liquidity_buckets_usd_adv60:
+      - [25000000, 50000000]
+      - [50000000, 100000000]
+      - [100000000, 250000000]
+      - [250000000, null]
+  fitting:
+    method: EXPANDING_ROBUST_BUCKET_MEDIAN_RATIO
+    minimum_observations_per_bucket: 500
+    target_must_be_available_before_fit: true
+    future_execution_quotes_as_direct_filter: PROHIBITED
+
+provider_budget:
+  mandate_recurring_monthly_ceiling_usd: 80
+  recurring_quote_subscription_above_ceiling: PROHIBITED_WITHOUT_MANDATE_AMENDMENT
+  one_time_historical_purchase_or_usage_based_request: REQUIRES_EXPLICIT_SPEND_AND_LICENSE_APPROVAL
+  massive_public_individual_terms_one_month_retain_then_cancel: REJECTED
+
+transaction_cost_contract:
+  benchmark_price_component: NEXT_SESSION_10_00_TO_10_30_ET_VWAP
+  price_adversity_components:
+    - HALF_PRETRADE_MODELED_SPREAD
+    - RESIDUAL_SLIPPAGE
+    - MARKET_IMPACT
+  cash_charge_components:
+    - ONLINE_COMMISSION
+    - SEC_SECTION_31_ON_COVERED_SALES
+    - FINRA_TAF_ON_COVERED_SALES
+  excluded_from_this_module_and_added_downstream:
+    - STOCK_BORROW_FEES
+    - SHORT_RECALL_OR_BUY_IN_COST
+    - FINANCING
+    - DIVIDEND_LIABILITIES
+  phase03_parameters_not_frozen_here:
+    - residual_slippage_bps
+    - impact_floor_bps
+    - impact_coefficient_bps
+    - fee_basis_mode_historical_vs_current_deployment
+
+current_fee_evidence_2026:
+  schwab_online_listed_stock_commission_usd: 0
+  sec_section31:
+    effective_from: "2026-04-04"
+    usd_per_million_covered_sales: 20.60
+  finra_taf_equity:
+    calendar_year: 2026
+    usd_per_share_on_sales: 0.000195
+    maximum_usd_per_trade: 9.79
+
+fail_closed:
+  - UNAPPROVED_MARKET_DATA_LICENSE
+  - MISSING_CALIBRATION_BUCKET
+  - CALIBRATION_TARGET_AVAILABLE_AFTER_MODEL_FIT
+  - PRETRADE_PROXY_AVAILABLE_AFTER_DECISION
+  - NBBO_WINDOW_WITHOUT_VALID_PREVAILING_START_QUOTE
+  - CROSSED_OR_NONPOSITIVE_NBBO
+  - AMBIGUOUS_OR_MISSING_REGULATORY_FEE_SCHEDULE
+  - MODELED_SPREAD_ABOVE_35_BPS
+  - MISSING_EXPLICIT_PHASE03_SLIPPAGE_OR_IMPACT_ASSUMPTIONS

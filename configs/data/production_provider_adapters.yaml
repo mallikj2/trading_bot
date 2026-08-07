@@ -2,15 +2,17 @@ schema_version: 1
 adapter_stack:
   id: PHASE02-PRODUCTION-ADAPTERS-v0.2
   strategy_id: CSMOM-LS-v0.2
-  status: IMPLEMENTED_CREDENTIALS_PENDING
+  status: IMPLEMENTED_LICENSE_AND_CREDENTIALS_PENDING
   live_authorized: false
   paper_authorized: false
 
 massive:
   base_url: https://api.massive.com
   api_key_environment: MASSIVE_API_KEY
+  research_license_approval_environment: MASSIVE_RESEARCH_LICENSE_APPROVED
+  public_individual_terms_research_status: PROHIBITED_WITHOUT_SEPARATE_WRITTEN_LICENSE
   fallback_api_key_environment: POLYGON_API_KEY
-  adapter_version: MASSIVE-STOCKS-v0.2.0
+  adapter_version: MASSIVE-STOCKS-v0.2.1
   requests_per_second: 5
   endpoints:
     tickers: /v3/reference/tickers
@@ -81,11 +83,12 @@ retry:
 
 gates:
   massive_credentials: PENDING
+  massive_research_license: BLOCKED_UNDER_PUBLIC_INDIVIDUAL_TERMS_PENDING_SEPARATE_WRITTEN_LICENSE
   sec_user_agent: PENDING
   massive_ticker_snapshot_pit_proof: PENDING
   massive_market_cap_pit_proof: PENDING
   massive_sic_pit_proof: PENDING
-  provider_license_retention_review: PENDING
+  provider_license_retention_review: BLOCKING
   historical_sector_source: BLOCKING
   historical_earnings_revisions: BLOCKING
   historical_spread_calibration: BLOCKING_FINAL_ACCEPTANCE

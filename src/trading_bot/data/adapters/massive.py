@@ -20,6 +20,7 @@ from ..contracts import (
     SectorObservation,
     SymbolAlias,
 )
+from ..costs import NbboQuote
 from ..errors import DataContractError, PointInTimeError
 from ..time_utils import require_aware
 from .http import JsonTransport, SafeJsonClient
@@ -35,7 +36,7 @@ class MassiveSchemaError(DataContractError):
 
 class MassiveClient:
     base_url = "https://api.massive.com"
-    adapter_version = "MASSIVE-STOCKS-v0.2.0"
+    adapter_version = "MASSIVE-STOCKS-v0.2.1"
 
     def __init__(
         self,
@@ -169,6 +170,28 @@ class MassiveClient:
     def ticker_events(self, identifier: str) -> Mapping[str, Any]:
         return self.get_json(f"/vX/reference/tickers/{identifier}/events")
 
+    def quotes(
+        self,
+        ticker: str,
+        *,
+        start_ns: int,
+        end_ns: int,
+    ) -> tuple[Mapping[str, Any], ...]:
+        if start_ns < 0 or end_ns <= start_ns:
+            raise ValueError("quote timestamp range is invalid")
+        return tuple(
+            self.iter_results(
+                f"/v3/quotes/{ticker}",
+                params={
+                    "timestamp.gte": start_ns,
+                    "timestamp.lt": end_ns,
+                    "sort": "timestamp",
+                    "order": "asc",
+                    "limit": 50000,
+                },
+            )
+        )
+
 
 def _decimal(row: Mapping[str, Any], key: str) -> Decimal:
     value = row.get(key)
@@ -186,6 +209,60 @@ def _epoch_ms(row: Mapping[str, Any], key: str = "t") -> datetime:
     if not isinstance(value, (int, float)):
         raise MassiveSchemaError(f"Massive timestamp field {key!r} is required")
     return datetime.fromtimestamp(float(value) / 1000.0, tz=UTC)
+
+
+def _epoch_ns(row: Mapping[str, Any], key: str) -> datetime:
+    value = row.get(key)
+    if not isinstance(value, int):
+        raise MassiveSchemaError(f"Massive nanosecond timestamp field {key!r} is required")
+    seconds, nanoseconds = divmod(value, 1_000_000_000)
+    return datetime.fromtimestamp(seconds, tz=UTC).replace(microsecond=nanoseconds // 1000)
+
+
+def normalize_nbbo_quotes(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    instrument_id: UUID,
+    symbol: str,
+    source_snapshot_id: str,
+) -> tuple[NbboQuote, ...]:
+    quotes: list[NbboQuote] = []
+    seen_sequences: set[int] = set()
+    for row in rows:
+        bid = _decimal(row, "bid_price")
+        ask = _decimal(row, "ask_price")
+        # Massive may emit one-sided quote updates with a zero side. They are not
+        # a complete NBBO state and are excluded from the calibration contract.
+        if bid <= 0 or ask <= 0:
+            continue
+        sequence_raw = row.get("sequence_number")
+        sequence = int(sequence_raw) if sequence_raw is not None else None
+        if sequence is not None:
+            if sequence in seen_sequences:
+                raise MassiveSchemaError(f"duplicate quote sequence_number {sequence}")
+            seen_sequences.add(sequence)
+        participant = _epoch_ns(row, "participant_timestamp")
+        sip = _epoch_ns(row, "sip_timestamp")
+        if sip < participant:
+            raise MassiveSchemaError("SIP timestamp precedes participant timestamp")
+        quotes.append(
+            NbboQuote(
+                instrument_id=instrument_id,
+                symbol=symbol,
+                observed_at=participant,
+                available_at=sip,
+                bid_price=bid,
+                ask_price=ask,
+                bid_size=int(row.get("bid_size", 0) or 0),
+                ask_size=int(row.get("ask_size", 0) or 0),
+                source_snapshot_id=source_snapshot_id,
+                sequence_number=sequence,
+                quality_status=DataQualityStatus.VALID,
+            )
+        )
+    if not quotes:
+        raise MassiveSchemaError("Massive quote dataset contains no complete positive NBBO states")
+    return tuple(sorted(quotes, key=lambda quote: (quote.observed_at, quote.sequence_number or -1)))
 
 
 def normalize_ticker_references(
