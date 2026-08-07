@@ -1,9 +1,9 @@
-# Validation Results — Phase 02 Historical Short-Borrow Modeling
+# Validation Results — Phase 02 Financing / Cash Carry + Data-Gate Audit
 
 **Date:** 2026-08-06  
-**Task status:** `IMPLEMENTATION PASS / SOURCE AND LIVE-BROKER GATES BLOCKED`
+**Task status:** `IMPLEMENTATION PASS / PHASE 02 NOT READY FOR PHASE 03`
 
-## Automated tests
+## Cumulative automated tests
 
 Command:
 
@@ -14,68 +14,73 @@ PYTHONPATH=src pytest -q
 Result:
 
 ```text
-188 passed, 12 subtests passed
+205 passed, 12 subtests passed
 ```
 
-The cumulative suite includes the approved Phase 01 strategy tests and all Phase 02 data-kernel, provider-adapter, sector, corporate-action, earnings, spread/cost, and new short-borrow tests.
+The cumulative suite includes the approved Phase 01 strategy tests and all Phase 02 kernel, provider adapter, sector, corporate action/total return, earnings, spread/cost, short-borrow, financing, and gate-audit tests.
 
-## New short-borrow focused coverage
+## New focused tests
 
-The new tests cover:
+```text
+17 passed
+```
 
-- future borrow revisions excluded from earlier decisions;
-- expired borrow records not carried forward;
-- conflicting same-revision observations rejected;
-- regulatory proxy data prohibited from asserting availability;
-- missing fee rate blocks entry;
-- insufficient available quantity blocks entry;
-- hard-to-borrow policy is explicit;
-- live gate rejects market-composite evidence;
-- known recall/restriction blocks immediately;
-- future-unknown recall does not leak backward;
-- rate/economic ceiling enforcement;
-- EOD market value × annual rate / 360 × calendar-day fee calculation;
-- Phase 01 2x pessimistic borrow-cost multiplier;
-- explicit dense source coverage semantics;
-- existing-short forced exit when borrow evidence expires;
-- AVAILABLE-to-UNAVAILABLE withdrawal event derivation;
-- ORTEX non-demo license gate;
-- ORTEX historical ticker-resolution request parameters;
-- ORTEX date-specific availability request construction;
-- research/live evidence separation in the integration bridge.
+Coverage includes:
+
+- zero primary cash carry;
+- short proceeds cannot be reused;
+- gross leverage > 1.0 rejection;
+- positive settled debit rejection;
+- broker-specific evidence required for any future positive broker cash credit or margin debit;
+- future financing rate revisions excluded;
+- optional DTB3-style benchmark attribution does not alter primary return;
+- pessimistic multiplier applies to financing costs only;
+- machine-readable Phase 02 gate counts;
+- blocked/conditional mandatory gates deny Phase 03 authorization;
+- duplicate/invalid gate definitions fail closed;
+- integration of matched-gross strategy accounting with restricted short collateral.
+
+## Approved Phase 01 regression
+
+```text
+20 passed
+```
 
 ## Compilation and artifact parsing
 
 - Python `compileall`: PASS
-- YAML parse: 9 files PASS
-- JSON parse: 4 files PASS
+- YAML parse: 11 files PASS
+- JSON parse: 5 files PASS
+- Machine-readable audit: 17 mandatory gates = 9 PASS / 7 BLOCKED / 1 CONDITIONAL
+- All audit evidence file references: present
+- SHA-256 manifest: PASS
+- ZIP integrity: PASS
 
 ## Evidence not claimed
 
-The following were not available and are therefore **not** claimed as passed:
+The following remain open and are **not** claimed as passed:
 
-- licensed historical securities-lending provider coverage;
-- provider raw-retention approval;
-- credentialed S&P Global/DataLend/ORTEX sample;
-- historical recall-event completeness;
-- Schwab account short permission;
-- Schwab credentialed current shortability/HTB/rate/quantity/locate contract;
-- live short-order execution.
+- approved core provider research/retention license;
+- credentialed representative-case core provider trial;
+- full historical-sector coverage crawl;
+- complex corporate-action provider reconciliation;
+- licensed historical earnings revision sample;
+- licensed observed-spread calibration dataset/panel;
+- licensed historical securities-lending coverage;
+- full acceptance-period regulatory fee basis;
+- Schwab live short/account/borrow authorization;
+- Schwab live cash-feature/margin contract testing.
 
 ## Gate result
 
-### Engineering
+### Financing/cash-carry engineering
 
 **PASS**
 
-### Historical borrow source
+### Phase 02 final data gate
 
-**BLOCKED / OPEN**
+**NOT READY**
 
-### Live Schwab borrow/account gate
+### Phase 03 final acceptance backtest
 
-**BLOCKED / OPEN**
-
-### Phase 02 overall
-
-**ACTIVE**
+**NOT AUTHORIZED**

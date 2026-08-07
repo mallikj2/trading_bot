@@ -1,0 +1,64 @@
+version: "0.2.0"
+status: IMPLEMENTATION_PASS
+strategy: CSMOM-LS-v0.2
+as_of_date: "2026-08-06"
+
+binding_phase00_phase01_rules:
+  primary_cash_return: ZERO
+  financing_reported_separately: true
+  maximum_research_target_gross: 1.0
+  target_long_gross: 0.5
+  target_short_gross: 0.5
+  initial_live_borrowed_cash: PROHIBITED
+  initial_live_leverage: PROHIBITED
+  initial_live_shorting: PROHIBITED
+  pessimistic_financing_cost_multiplier: 2
+
+accounting_policy:
+  short_sale_proceeds:
+    classification: RESTRICTED_COLLATERAL
+    reusable_as_free_cash: false
+    assumed_interest_credit: 0
+    rationale: DO_NOT_INFER_BROKER_CREDIT_WITHOUT_POINT_IN_TIME_BROKER_EVIDENCE
+  free_cash:
+    primary_analysis_credit_rate: 0
+    optional_benchmark_attribution:
+      source: FRED_DTB3
+      description: 3_MONTH_TREASURY_BILL_SECONDARY_MARKET_RATE_DISCOUNT_BASIS
+      primary_return_input: false
+      purpose: CASH_DRAG_OPPORTUNITY_ATTRIBUTION_ONLY
+  margin_debit:
+    permitted_by_mandate: false
+    positive_settled_debit_behavior: FAIL_CLOSED
+    live_current_reference_only:
+      broker: SCHWAB
+      tier_usd: [0, 24999.99]
+      current_effective_rate_as_reviewed_2026_08_06: 0.11825
+      historical_backfill_prohibited: true
+
+point_in_time:
+  every_rate_requires:
+    - rate_date
+    - available_at
+    - annual_rate
+    - day_count_basis
+    - provider
+    - source_kind
+    - source_snapshot_id
+    - revision
+  future_rate_revision_use: PROHIBITED
+  ambiguous_same_revision: FAIL_CLOSED
+
+stress:
+  positive_cash_income_multiplier: 1
+  financing_cost_multiplier: 2
+  primary_cash_income_remains_zero: true
+
+fail_closed:
+  - SHORT_PROCEEDS_REUSED_AS_CASH
+  - GROSS_LEVERAGE_ABOVE_1_0
+  - POSITIVE_SETTLED_DEBIT
+  - MISSING_BROKER_RATE_WHEN_DEBIT_EXPLICITLY_ALLOWED_IN_FUTURE_VERSION
+  - FUTURE_RATE_REVISION
+  - AMBIGUOUS_RATE_REVISION
+  - ASSUMED_SHORT_COLLATERAL_INTEREST

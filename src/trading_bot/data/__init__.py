@@ -82,3 +82,21 @@ __all__ = [
     "validate_revision_sequence",
     "validate_coverage_sequence",
 ]
+
+from .financing import (
+    FinancingAccrual,
+    FinancingBalanceSnapshot,
+    FinancingPolicy,
+    FinancingRateKind,
+    FinancingRateObservation,
+    FinancingSourceKind,
+    accrue_financing,
+    latest_financing_rate_as_of,
+)
+from .gates import (
+    GateStatus,
+    Phase02GateAudit,
+    PhaseGateEvidence,
+    assert_phase03_authorized,
+    audit_phase02_gates,
+)
