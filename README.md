@@ -1,32 +1,33 @@
-# Phase 02 Cumulative Repository Bundle — Through Spread Calibration / Transaction Costs
+# Phase 02 Cumulative Repository Bundle — Through Historical Short-Borrow Modeling
 
-This cumulative bundle contains the approved Phase 01 reference strategy plus all Phase 02 implementation work completed through the historical spread-calibration and transaction-cost input task.
+This cumulative bundle contains the approved Phase 01 reference strategy plus all Phase 02 implementation work completed through the historical short-borrow availability and borrow-cost modeling task.
 
 Latest task status:
 
 - **Engineering:** PASS
-- **Historical observed-quote calibration:** BLOCKED pending licensed source
+- **Historical borrow source:** BLOCKED pending approved research/retention license and credentialed coverage evidence
+- **Live Schwab shorting:** PROHIBITED pending account/broker borrow validation
 - **Phase 02 overall:** ACTIVE
 
 New primary files:
 
-- `docs/phases/PHASE_02_HISTORICAL_SPREAD_AND_TRANSACTION_COSTS.md`
-- `docs/data/HISTORICAL_SPREAD_CALIBRATION_CONTRACT.md`
-- `docs/data/TRANSACTION_COST_INPUT_CONTRACT.md`
-- `docs/data/SPREAD_QUOTE_SOURCE_EVALUATION.md`
-- `docs/data/SPREAD_CALIBRATION_CREDENTIALED_RUNBOOK.md`
-- `docs/data/TRANSACTION_FEE_EVIDENCE_REGISTER.md`
-- `configs/data/historical_spread_transaction_cost.yaml`
-- `src/trading_bot/data/costs.py`
-- `tests/unit/data/test_spread_costs.py`
-- `tests/unit/data/adapters/test_massive_quotes.py`
-- `tests/integration/data/test_spread_cost_pipeline.py`
-- `docs/project/CURRENT_STATE_PHASE_02_SPREAD_COST_PATCH.md`
-- `docs/project/DECISIONS_PHASE_02_SPREAD_COST_APPEND.md`
+- `docs/phases/PHASE_02_HISTORICAL_SHORT_BORROW.md`
+- `docs/data/HISTORICAL_SHORT_BORROW_CONTRACT.md`
+- `docs/data/SHORT_BORROW_SOURCE_EVALUATION.md`
+- `docs/data/SHORT_BORROW_PROVIDER_TRIAL_RUNBOOK.md`
+- `docs/data/SHORT_BORROW_EVIDENCE_REGISTER.md`
+- `configs/data/historical_short_borrow.yaml`
+- `src/trading_bot/data/borrow.py`
+- `src/trading_bot/data/adapters/ortex_borrow.py`
+- `tests/unit/data/test_borrow.py`
+- `tests/unit/data/adapters/test_ortex_borrow.py`
+- `tests/integration/data/test_short_borrow_strategy_bridge.py`
+- `tests/fixtures/data/borrow_history_cases.json`
+- `docs/project/CURRENT_STATE_PHASE_02_BORROW_PATCH.md`
+- `docs/project/DECISIONS_PHASE_02_BORROW_APPEND.md`
 
-The bundle does not claim provider-license approval, paid quote-data calibration, strategy profitability, paper-trading readiness, or live-trading readiness.
+The implementation does not claim licensed securities-lending coverage, historical strategy profitability, paper-trading readiness, or live-short authorization.
 
+## Material source-governance result
 
-## Material provider-license correction
-
-The previously proposed Massive one-month Advanced historical quote download-and-retain workflow has been withdrawn. Massive's public Individual Market Data Terms are not sufficient for this project's non-display strategy-research and post-termination retention requirements. See `docs/data/PROVIDER_LICENSE_GOVERNANCE_CORRECTION.md`.
+S&P Global Securities Finance is the preferred technical historical-borrow candidate, with DataLend/EquiLend as the secondary institutional candidate. ORTEX is technically useful and has a retail API, but its standard consumer retention terms conflict with this project's immutable raw-snapshot/reproducibility policy. ORTEX research ingestion is therefore gated behind explicit separate license approval.

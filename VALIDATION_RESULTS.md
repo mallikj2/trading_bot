@@ -1,61 +1,81 @@
-# Validation Results — Phase 02 Historical Spread Calibration and Transaction-Cost Inputs
+# Validation Results — Phase 02 Historical Short-Borrow Modeling
 
 **Date:** 2026-08-06  
-**Task status:** `IMPLEMENTATION_PASS_CALIBRATION_SOURCE_BLOCKED`  
-**Phase 02 overall:** `ACTIVE`
+**Task status:** `IMPLEMENTATION PASS / SOURCE AND LIVE-BROKER GATES BLOCKED`
 
-## Automated validation
+## Automated tests
 
-- `PYTHONPATH=src pytest -q` -> **165 passed, 12 subtests passed**.
-- `python -m compileall -q src tests` -> **PASS**.
-- All **8 YAML** configuration files parsed successfully.
-- All **3 JSON** artifacts/fixtures parsed successfully.
-- Credentialed provider trial entrypoint -> **BLOCKED as designed** because project credentials are unavailable and the Massive research license flag is not approved.
+Command:
 
-## Focused spread / cost coverage
+```bash
+PYTHONPATH=src pytest -q
+```
 
-Validated behaviors include:
+Result:
 
-- Corwin-Schultz proxy uses only completed daily bars available by decision time.
-- Future execution-window NBBO targets cannot enter earlier calibration fits.
-- Time-weighted 10:00–10:30 ET NBBO spread requires a valid prevailing start quote and full 1,800-second state coverage.
-- Crossed and non-positive quote states fail closed.
-- Liquidity calibration uses the frozen Phase 01 ADV60 buckets.
-- Missing calibration buckets fail closed.
-- Phase 01 spread boundary is exact: `<= 35 bps` passes and `> 35 bps` blocks.
-- Benchmark VWAP, half-spread, residual slippage, market impact, broker commission, SEC Section 31, and FINRA TAF are separately attributed.
-- Buy trades do not receive sell-side regulatory assessments.
-- Regulatory fee schedule gaps/overlaps fail closed.
-- Pessimistic scenario doubles the modeled cost components as required by Phase 01.
-- Phase 03 slippage/impact coefficients have no hidden production defaults.
+```text
+188 passed, 12 subtests passed
+```
 
-## Provider-license hardening
+The cumulative suite includes the approved Phase 01 strategy tests and all Phase 02 data-kernel, provider-adapter, sector, corporate-action, earnings, spread/cost, and new short-borrow tests.
 
-A material source-governance correction was incorporated before packaging:
+## New short-borrow focused coverage
 
-- Massive's public Individual Market Data Terms were reviewed and are not treated as authorization for this project's non-display strategy research or post-termination data retention.
-- The previously proposed one-month Massive Advanced `download -> retain -> cancel/downgrade` workflow is withdrawn unless separate written rights are obtained.
-- The provider trial now requires both a Massive credential and explicit `MASSIVE_RESEARCH_LICENSE_APPROVED=true` authorization.
-- Two unit tests verify that a credential alone cannot make the research trial ready.
-- Databento historical and Cboe DataShop are recorded as **evaluation candidates only**, not approved providers.
+The new tests cover:
 
-## Live/credentialed evidence not claimed
+- future borrow revisions excluded from earlier decisions;
+- expired borrow records not carried forward;
+- conflicting same-revision observations rejected;
+- regulatory proxy data prohibited from asserting availability;
+- missing fee rate blocks entry;
+- insufficient available quantity blocks entry;
+- hard-to-borrow policy is explicit;
+- live gate rejects market-composite evidence;
+- known recall/restriction blocks immediately;
+- future-unknown recall does not leak backward;
+- rate/economic ceiling enforcement;
+- EOD market value × annual rate / 360 × calendar-day fee calculation;
+- Phase 01 2x pessimistic borrow-cost multiplier;
+- explicit dense source coverage semantics;
+- existing-short forced exit when borrow evidence expires;
+- AVAILABLE-to-UNAVAILABLE withdrawal event derivation;
+- ORTEX non-demo license gate;
+- ORTEX historical ticker-resolution request parameters;
+- ORTEX date-specific availability request construction;
+- research/live evidence separation in the integration bridge.
 
-No historical observed-quote panel was downloaded in this task. No quote calibration accuracy, provider completeness, provider license approval, or paid-data retention right is claimed.
+## Compilation and artifact parsing
 
-The spread blocker remains open until a provider/dataset passes:
+- Python `compileall`: PASS
+- YAML parse: 9 files PASS
+- JSON parse: 4 files PASS
 
-1. use-rights review;
-2. cost and coverage approval;
-3. credentialed deterministic quote-panel acquisition;
-4. minimum 500 known calibration points per ADV60 bucket;
-5. calibration error/coverage report;
-6. frozen model artifact with immutable lineage.
+## Evidence not claimed
 
-## Current external fee evidence encoded for contract tests
+The following were not available and are therefore **not** claimed as passed:
 
-- Schwab current online listed-stock/ETF commission: USD 0.
-- SEC Section 31: USD 20.60 per USD 1,000,000 of covered sales effective 2026-04-04.
-- FINRA 2026 covered-equity TAF: USD 0.000195/share, capped at USD 9.79/trade.
+- licensed historical securities-lending provider coverage;
+- provider raw-retention approval;
+- credentialed S&P Global/DataLend/ORTEX sample;
+- historical recall-event completeness;
+- Schwab account short permission;
+- Schwab credentialed current shortability/HTB/rate/quantity/locate contract;
+- live short-order execution.
 
-These are effective-dated evidence examples. They are not silently backfilled into historical periods.
+## Gate result
+
+### Engineering
+
+**PASS**
+
+### Historical borrow source
+
+**BLOCKED / OPEN**
+
+### Live Schwab borrow/account gate
+
+**BLOCKED / OPEN**
+
+### Phase 02 overall
+
+**ACTIVE**

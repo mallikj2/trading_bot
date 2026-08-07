@@ -1,0 +1,73 @@
+schema_version: 1
+strategy_id: CSMOM-LS-v0.2
+status: IMPLEMENTATION_PASS_SOURCE_BLOCKED
+
+research_contract:
+  decision_frequency: DAILY_AFTER_VALIDATED_CLOSE
+  historical_short_requires_known_borrow: true
+  historical_short_requires_known_fee_rate: true
+  missing_observation_means_available: false
+  dense_coverage_required_to_interpret_missing_rows: true
+  availability_quantity_required: true
+  market_composite_allowed_for_historical_research: true
+  broker_specific_required_for_live: true
+  future_revisions_visible: false
+  future_recalls_visible: false
+  availability_withdrawal_forces_exit: true
+  recall_or_buy_in_forces_exit: true
+  hard_to_borrow_policy: EXPLICIT_CONFIG_REQUIRED
+  max_annual_fee_rate: null
+  max_annual_fee_rate_status: DEFERRED_TO_PHASE_03_PREREGISTRATION
+
+borrow_cost:
+  formula: END_OF_DAY_SHORT_MARKET_VALUE_X_ANNUAL_RATE_DIV_360_X_CALENDAR_DAYS
+  annual_rate_representation: DECIMAL_FRACTION
+  calendar_day_accrual: true
+  accrual_start_semantics: EXPLICIT_CALLER_INPUT_REQUIRED
+  base_cost_multiplier: 1.0
+  pessimistic_cost_multiplier: 2.0
+  pessimistic_multiplier_source: PHASE_01_FROZEN_RULE
+  dividends_handled_by: CORPORATE_ACTION_TOTAL_RETURN_MODULE
+  financing_handled_by: SEPARATE_FINANCING_MODULE
+
+live_schwab_gate:
+  status: PROHIBITED_PENDING_CREDENTIALED_BROKER_VALIDATION
+  margin_enabled_account_required: true
+  account_short_permission_required: true
+  broker_specific_shortable_state_required: true
+  current_borrow_fee_required: true
+  current_available_quantity_required_if_exposed: true
+  locate_or_confirmation_required_where_applicable: true
+  recall_buy_in_handling_required: true
+  broker_reconciliation_required: true
+
+source_evaluation:
+  preferred_technical_fit:
+    provider: S&P_GLOBAL_SECURITIES_FINANCE
+    status: TECHNICALLY_SUITABLE_COMMERCIAL_TERMS_OPEN
+  secondary_institutional:
+    provider: DATALEND_EQUILEND
+    status: TECHNICALLY_SUITABLE_COMMERCIAL_TERMS_OPEN
+  retail_api_candidate:
+    provider: ORTEX
+    status: TECHNICALLY_SUITABLE_STANDARD_CONSUMER_RETENTION_TERMS_INCOMPATIBLE
+    api_plan_under_monthly_budget: TRADER_49_USD
+    persistent_archive_allowed_under_standard_consumer_terms: false
+  broker_reference:
+    provider: INTERACTIVE_BROKERS
+    status: BROKER_SPECIFIC_REFERENCE_NOT_APPROVED_AS_CANONICAL_RESEARCH_SOURCE
+  public_proxies:
+    datasets:
+      - SEC_REG_SHO_THRESHOLD_AND_FTD
+      - FINRA_SHORT_INTEREST_AND_SHORT_SALE_VOLUME
+      - OCC_STOCK_LOAN_VOLUME
+    status: STRESS_INDICATORS_ONLY_NOT_BORROW_AVAILABILITY
+
+acceptance_gate:
+  source_license_and_retention_approved: false
+  credentialed_historical_sample_passed: false
+  point_in_time_availability_coverage_passed: false
+  point_in_time_fee_coverage_passed: false
+  recall_or_withdrawal_handling_validated: false
+  schwab_live_borrow_contract_validated: false
+  phase_02_blocker_closed: false

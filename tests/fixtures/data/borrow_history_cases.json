@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "easy_available",
+      "availability": "AVAILABLE",
+      "difficulty": "EASY",
+      "annual_fee_rate": "0.02",
+      "available_shares": 10000,
+      "expected": "ELIGIBLE"
+    },
+    {
+      "id": "hard_known_rate",
+      "availability": "AVAILABLE",
+      "difficulty": "HARD",
+      "annual_fee_rate": "0.25",
+      "available_shares": 500,
+      "expected": "POLICY_DEPENDENT"
+    },
+    {
+      "id": "missing_rate",
+      "availability": "AVAILABLE",
+      "difficulty": "UNKNOWN",
+      "annual_fee_rate": null,
+      "available_shares": 1000,
+      "expected": "BLOCK"
+    },
+    {
+      "id": "unavailable",
+      "availability": "UNAVAILABLE",
+      "difficulty": "HARD",
+      "annual_fee_rate": null,
+      "available_shares": 0,
+      "expected": "BLOCK"
+    },
+    {
+      "id": "future_recall",
+      "event_type": "RECALL",
+      "event_available_after_decision": true,
+      "expected": "NO_RETROACTIVE_EXIT"
+    },
+    {
+      "id": "known_withdrawal",
+      "transition": "AVAILABLE_TO_UNAVAILABLE",
+      "expected": "FORCE_NEXT_PERMITTED_EXIT"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+# No new runtime dependencies are required by the Phase 02 short-borrow module.
