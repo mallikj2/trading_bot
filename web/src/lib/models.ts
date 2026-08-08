@@ -92,10 +92,30 @@ export interface PortfolioView {
   warning: string;
 }
 
+export interface ProtectionDecisionView {
+  protection_id: string;
+  scope: string;
+  evaluated_at: string;
+  required_state: string;
+  reason_code: string;
+  detail: string;
+  observation_hash: string | null;
+  active: boolean;
+}
+
 export interface RiskView {
   runtime_state: string;
   new_risk_allowed: boolean;
   reason: string;
+  runtime_blocks_new_risk: boolean;
+  runtime_recovery_required: boolean;
+  runtime_permissions: {
+    simulate_increase_exposure: boolean;
+    reduce_exposure: boolean;
+    cancel_open_orders: boolean;
+    mutate_broker: boolean;
+  };
+  protections: ProtectionDecisionView[];
   position_counts: { long: number; short: number };
   hard_boundaries: string[];
 }

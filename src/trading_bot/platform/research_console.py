@@ -13,6 +13,17 @@ from decimal import Decimal
 from typing import Any, Iterable
 from uuid import UUID
 
+
+from trading_bot.platform.runtime_safety import (
+    ProtectionEngine,
+    ProtectionObservation,
+    ProtectionScope,
+    ProtectionStatus,
+    RuntimeSafetyState,
+    StatusProtectionRule,
+    StalenessProtectionRule,
+    permissions_for,
+)
 from trading_bot.platform.leads import (
     BorrowState,
     CostState,
@@ -84,7 +95,10 @@ class ResearchConsoleSnapshot:
     audit_records: tuple[AuditRecordView, ...]
     data_gates: tuple[dict[str, Any], ...]
     data_health: tuple[dict[str, Any], ...]
-    runtime_state: str = "RESEARCH_ONLY"
+    runtime_state: str = "ACTIVE"
+    runtime_protections: tuple[dict[str, Any], ...] = ()
+    runtime_recovery_required: bool = False
+    runtime_permissions: dict[str, bool] = field(default_factory=lambda: permissions_for(RuntimeSafetyState.ACTIVE).to_dict())
     environment: str = "PHASE_02_FIXTURE"
 
     def _lead_view(self, lead: TradeLead) -> dict[str, Any]:
@@ -184,16 +198,22 @@ class ResearchConsoleSnapshot:
     def risk(self) -> dict[str, Any]:
         longs = sum(1 for position in self.positions if position.side == "LONG")
         shorts = sum(1 for position in self.positions if position.side == "SHORT")
+        runtime_blocks_new_risk = not self.runtime_permissions.get("simulate_increase_exposure", False)
         return {
             "runtime_state": self.runtime_state,
             "new_risk_allowed": False,
-            "reason": "PHASE_02_RESEARCH_ONLY",
+            "reason": "PHASE_02_GOVERNANCE_BLOCKS_ORDER_AUTHORITY",
+            "runtime_blocks_new_risk": runtime_blocks_new_risk,
+            "runtime_recovery_required": self.runtime_recovery_required,
+            "runtime_permissions": dict(self.runtime_permissions),
+            "protections": [dict(row) for row in self.runtime_protections],
             "position_counts": {"long": longs, "short": shorts},
             "hard_boundaries": [
                 "NO_LIVE_ORDER_SUBMISSION",
                 "NO_DEPLOYED_PAPER_TRADING",
                 "NO_FRONTEND_STRATEGY_LOGIC",
                 "NO_FRONTEND_SECRET_STORAGE",
+                "PROTECTIONS_CANNOT_CHANGE_FROZEN_ALPHA_RULES",
             ],
         }
 
@@ -372,7 +392,9 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         book.ingest(lead)
     gate_rows = (
         {"gate_id": "P02-PF01", "name": "TradeLead + Watchlist", "status": "PASS", "category": "PLATFORM"},
-        {"gate_id": "P02-PF02", "name": "Read-only API + Research Console", "status": "IN_PROGRESS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF02", "name": "Read-only API + Research Console", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF03", "name": "Event Journal + Replay", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF04", "name": "Runtime Safety + Protections", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-G04", "name": "Core provider credentialed trial", "status": "BLOCKED", "category": "DATA"},
         {"gate_id": "P02-G18", "name": "PIT security master + exact execution", "status": "BLOCKED", "category": "DATA"},
     )
@@ -395,6 +417,34 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         PortfolioPositionView("ALFA", "LONG", 3, Decimal("612.00"), Decimal("18.50"), "Technology", 7),
         PortfolioPositionView("OMEG", "SHORT", 2, Decimal("318.00"), Decimal("-4.20"), "Industrials", 4),
     )
+    safety_engine = ProtectionEngine((
+        StatusProtectionRule("JOURNAL_INTEGRITY", ProtectionScope.JOURNAL),
+        StatusProtectionRule("CONFIG_INTEGRITY", ProtectionScope.CONFIG),
+        StalenessProtectionRule(
+            "RESEARCH_DATA_FRESHNESS",
+            ProtectionScope.DATA,
+            reduce_after=timedelta(minutes=5),
+            halt_after=timedelta(minutes=15),
+        ),
+    ))
+    safety_observations = (
+        ProtectionObservation(
+            "JOURNAL_INTEGRITY", ProtectionScope.JOURNAL, ProtectionStatus.HEALTHY,
+            now, now, now + timedelta(hours=1), "JOURNAL_VERIFIED",
+            "PF03 append-only journal integrity verified for fixture state.", _hash("7"),
+        ),
+        ProtectionObservation(
+            "CONFIG_INTEGRITY", ProtectionScope.CONFIG, ProtectionStatus.HEALTHY,
+            now, now, now + timedelta(hours=1), "CONFIG_VERIFIED",
+            "Version-controlled Phase 02 configuration is internally consistent.", _hash("8"),
+        ),
+        ProtectionObservation(
+            "RESEARCH_DATA_FRESHNESS", ProtectionScope.DATA, ProtectionStatus.HEALTHY,
+            now - timedelta(minutes=1), now - timedelta(minutes=1), now + timedelta(minutes=14),
+            "FIXTURE_DATA_FRESH", "Synthetic fixture data is within the PF04 freshness window.", _hash("9"),
+        ),
+    )
+    safety_evaluation = safety_engine.evaluate(safety_observations, evaluated_at=now)
     return ReadOnlyResearchConsole(
         ResearchConsoleSnapshot(
             generated_at=now,
@@ -403,5 +453,9 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
             audit_records=audit_records,
             data_gates=gate_rows,
             data_health=health_rows,
+            runtime_state=safety_evaluation.required_state.value,
+            runtime_protections=tuple(decision.to_dict() for decision in safety_evaluation.decisions),
+            runtime_recovery_required=False,
+            runtime_permissions=permissions_for(safety_evaluation.required_state).to_dict(),
         )
     )

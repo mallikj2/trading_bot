@@ -1,0 +1,26 @@
+{
+  "automatic_escalation": true,
+  "automatic_recovery": false,
+  "cumulative_python_tests_passed": 371,
+  "date": "2026-08-08",
+  "explicit_recovery_required": true,
+  "focused_pf04_tests_passed": 19,
+  "frontend_view_model_tests_passed": 5,
+  "live_broker_mutation_allowed": false,
+  "mutation_routes": 0,
+  "name": "RUNTIME_SAFETY_STATE_AND_PROTECTIONS",
+  "next_task": "P02-PF05",
+  "openapi_get_paths": 9,
+  "phase03_authorized": false,
+  "procurement_authorized": false,
+  "procurement_ready_for_manual_approval": false,
+  "runtime_states": [
+    "ACTIVE",
+    "REDUCING",
+    "HALTED"
+  ],
+  "status": "PASS",
+  "strategy_math_changed": false,
+  "task": "P02-PF04",
+  "taxonomy_subtests_passed": 12
+}

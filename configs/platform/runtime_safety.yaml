@@ -1,0 +1,55 @@
+version: 0.1.0
+phase_task: P02-PF04
+mode: PHASE_02_PRE_PURCHASE
+initial_state: ACTIVE
+states:
+  ACTIVE:
+    simulate_increase_exposure: true
+    reduce_exposure: true
+    cancel_open_orders: true
+    mutate_broker: false
+  REDUCING:
+    simulate_increase_exposure: false
+    reduce_exposure: true
+    cancel_open_orders: true
+    mutate_broker: false
+  HALTED:
+    simulate_increase_exposure: false
+    reduce_exposure: false
+    cancel_open_orders: true
+    mutate_broker: false
+transition_policy:
+  automatic_escalation: true
+  automatic_recovery: false
+  recovery_requires_explicit_approval: true
+  same_state_is_idempotent: true
+protections:
+  required:
+    - id: JOURNAL_INTEGRITY
+      scope: JOURNAL
+      rule: STATUS
+      unknown_state: HALTED
+      missing_state: HALTED
+    - id: CONFIG_INTEGRITY
+      scope: CONFIG
+      rule: STATUS
+      unknown_state: HALTED
+      missing_state: HALTED
+    - id: RESEARCH_DATA_FRESHNESS
+      scope: DATA
+      rule: STALENESS
+      reducing_after_seconds: 300
+      halted_after_seconds: 900
+      missing_state: HALTED
+hard_boundaries:
+  protection_scope: OPERATIONAL_SAFETY_ONLY
+  strategy_math_changes_allowed: false
+  alpha_threshold_changes_allowed: false
+  tradelead_score_mutation_allowed: false
+  live_broker_mutation_allowed: false
+  deployed_paper_trading_allowed: false
+  frontend_runtime_mutation_allowed: false
+journal:
+  protection_evaluation_event: PROTECTION.EVALUATED
+  runtime_transition_event: RUNTIME_SAFETY.TRANSITION
+  replay_projection: RUNTIME_SAFETY_V1

@@ -57,11 +57,18 @@ subphases:
       - tests/integration/platform/test_event_journal_replay_flow.py
     - id: P02-PF04
       name: RUNTIME_SAFETY_STATE_AND_PROTECTIONS
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF04_RUNTIME_SAFETY_PROTECTIONS.md
+      - docs/platform/RUNTIME_SAFETY_PROTECTIONS_CONTRACT.md
+      - src/trading_bot/platform/runtime_safety.py
+      - configs/platform/runtime_safety.yaml
+      - tests/unit/platform/test_runtime_safety.py
+      - tests/integration/platform/test_runtime_safety_event_flow.py
     - id: P02-PF05
       name: LOOKAHEAD_AND_RECURSIVE_VALIDATION
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     - id: P02-PF06
       name: OMS_AND_SIMULATED_BROKER
@@ -123,5 +130,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF04
-  name: RUNTIME_SAFETY_STATE_AND_PROTECTIONS
+  id: P02-PF05
+  name: LOOKAHEAD_AND_RECURSIVE_VALIDATION

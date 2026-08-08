@@ -12,9 +12,9 @@ def test_fixture_console_has_expected_lead_and_watchlist_projection():
     assert all(row["content_hash"] for row in leads)
 
 
-def test_overview_is_research_only_and_phase03_locked():
+def test_overview_exposes_pf04_runtime_state_while_governance_remains_locked():
     overview = build_fixture_console().overview()
-    assert overview["runtime_state"] == "RESEARCH_ONLY"
+    assert overview["runtime_state"] == "ACTIVE"
     assert overview["phase03_authorized"] is False
     assert overview["procurement_authorized"] is False
     assert "No live orders" in overview["fixture_notice"]

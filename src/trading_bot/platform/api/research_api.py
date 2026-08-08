@@ -14,7 +14,7 @@ def create_app(console: ReadOnlyResearchConsole | None = None) -> FastAPI:
     service = console or build_fixture_console()
     app = FastAPI(
         title="Quant Trading Bot Research Console API",
-        version="0.2-pf02",
+        version="0.2-pf04",
         description=(
             "Read-only Phase 02 research/operations API. No broker/order mutation routes "
             "exist in this application."
