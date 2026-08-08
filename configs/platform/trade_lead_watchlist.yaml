@@ -1,0 +1,80 @@
+version: 1.0.0
+phase_task: P02-PF01
+status: IMPLEMENTED
+purpose: Canonical deterministic trade-lead and watchlist domain contract.
+
+strategy_boundary:
+  strategy_id: CSMOM-LS
+  strategy_version: v0.2
+  strategy_math_changed: false
+  score_and_factor_values_frozen_at_decision: true
+  blocked_or_watchlist_lead_can_requalify_in_same_artifact: false
+  future_decision_creates_new_lead: true
+
+identity:
+  lead_id: deterministic_sha256
+  immutable_components:
+    - instrument_id
+    - strategy_id
+    - strategy_version
+    - decision_at
+    - direction
+    - dataset_manifest_hash
+    - universe_manifest_hash
+    - feature_manifest_hash
+
+lifecycle:
+  initial_state: DISCOVERED
+  states:
+    - DISCOVERED
+    - WATCHLIST
+    - QUALIFIED
+    - RISK_REJECTED
+    - EVENT_BLOCKED
+    - COST_BLOCKED
+    - BORROW_BLOCKED
+    - PORTFOLIO_REJECTED
+    - PLANNED
+    - ENTERED
+    - EXIT_PENDING
+    - CLOSED
+    - EXPIRED
+  terminal_states:
+    - CLOSED
+    - EXPIRED
+  watchlist_states:
+    - DISCOVERED
+    - WATCHLIST
+    - RISK_REJECTED
+    - EVENT_BLOCKED
+    - COST_BLOCKED
+    - BORROW_BLOCKED
+    - PORTFOLIO_REJECTED
+  planned_requires_allocation: true
+  entered_requires_allocation: true
+
+point_in_time:
+  decision_symbol_available_at_must_be_lte_decision_at: true
+  factor_available_at_must_be_lte_decision_at: true
+  max_input_available_at_must_be_lte_decision_at: true
+  transition_reason_available_at_must_be_lte_transition_time: true
+
+provenance:
+  required_hashes:
+    - dataset_manifest_hash
+    - universe_manifest_hash
+    - feature_manifest_hash
+  hash_algorithm: SHA-256
+  source_event_ids_deterministically_sorted: true
+
+watchlist:
+  explicit_blocking_reason_required: true
+  deterministic_qualification_action_from_reason_code: true
+  post_hoc_ai_explanation_allowed_as_authoritative_reason: false
+
+hard_safety_boundary:
+  live_order_submission: false
+  paper_order_submission: false
+  broker_connection: false
+  network_io: false
+  secret_storage: false

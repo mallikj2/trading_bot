@@ -1,142 +1,58 @@
-# Validation Results — Phase 02 PIT Security-Master and Exact-Execution Integration
+# Validation Results — Phase 02B P02-PF01 TradeLead + Watchlist
 
 **Date:** 2026-08-08  
-**Task status:** `ENGINEERING PASS / CREDENTIALED EVIDENCE BLOCKED`  
-**P02-G04:** `BLOCKED`  
-**P02-G18:** `BLOCKED`  
-**Phase 02 status:** `ACTIVE — NOT READY FOR PHASE 03`
+**Task result:** PASS
 
-## Cumulative automated tests
-
-Command:
-
-```bash
-PYTHONPATH=src pytest -q
-```
-
-Result:
+## Focused PF01 tests
 
 ```text
-287 passed, 12 subtests passed
-```
-
-This includes the approved Phase 01 strategy tests and the full cumulative Phase 02 stack.
-
-## Focused PIT companion / target-ledger tests
-
-Command:
-
-```bash
-PYTHONPATH=src pytest -q \
-  tests/unit/data/adapters/test_databento_companion.py \
-  tests/unit/data/adapters/test_databento_pit_execution.py \
-  tests/unit/data/adapters/test_core_trial.py \
-  tests/unit/data/adapters/test_pit_companion_trial.py \
-  tests/unit/data/test_pit_acceptance.py \
-  tests/integration/data/test_pit_companion_sector_ledger.py
-```
-
-Result:
-
-```text
-20 passed
+29 passed
 ```
 
 Focused coverage includes:
 
-- approval-gated Databento SDK client construction;
-- US common-equity security-master filtering;
-- separate `ts_effective` and `ts_record` handling;
-- future provider-record exclusion;
-- PIT primary-listing selection;
-- ticker-reuse detection;
-- stable FIGI historical execution queries;
-- EST/EDT-correct 10:00–10:30 ET execution windows;
-- exact trade-size-weighted VWAP;
-- bad timestamp/book-quality rejection;
-- mixed provider-instrument rejection;
-- sector-blind monthly universe behavior;
-- PIT CIK/exchange/security-type cross-checks;
-- PIT shares-outstanding market-cap corroboration;
-- direct sector-ledger compatibility with the SEC crawler;
-- fail-closed credential/license/execution-coverage governance.
+- deterministic lead identity;
+- immutable decision-time score/factors/provenance;
+- point-in-time future-data rejection;
+- historical decision-symbol protection;
+- explicit lifecycle transition table;
+- deterministic blocked/rejection reason categories;
+- no requalification of an old WATCHLIST/blocked artifact;
+- risk/cost/borrow/portfolio state-change auditability;
+- planned/entered allocation requirements;
+- whole-share allocation attachment immutability;
+- deterministic watchlist "what prevents qualification" projection;
+- JSON round-trip/content-hash equality;
+- duplicate/stale/idempotent registry handling;
+- immutable-content and divergent-history conflict rejection;
+- no order-submission domain surface;
+- committed synthetic fixture compatibility.
 
-## Credentialed runner invocation
-
-The standalone companion runner was invoked with external secrets intentionally absent:
-
-```bash
-env -u DATABENTO_API_KEY \
-    -u DATABENTO_RESEARCH_LICENSE_APPROVED \
-    -u DATABENTO_EXECUTION_DATASET \
-    -u DATABENTO_US_EQUITIES_DATASET \
-    -u DATABENTO_EXECUTION_COVERAGE_APPROVED \
-  PYTHONPATH=src python -m trading_bot.data.adapters.pit_companion_trial smoke \
-    --ticker AAPL \
-    --as-of-date 2025-12-31 \
-    --output PIT_COMPANION_TRIAL_RESULTS.json
-```
-
-Result: exit code `2`, `BLOCKED`.
-
-The runner requires:
+## Cumulative regression
 
 ```text
-DATABENTO_API_KEY
-DATABENTO_RESEARCH_LICENSE_APPROVED=true
-DATABENTO_EXECUTION_DATASET=<approved dataset>
-DATABENTO_EXECUTION_COVERAGE_APPROVED=true
+316 passed, 12 subtests passed
 ```
 
-No PIT provider coverage, execution coverage, license, or VWAP accuracy claim is made from offline fixtures.
+This includes the approved Phase 01 strategy tests plus all cumulative Phase 02 data/provider/kernel/integration tests and PF01 platform-domain tests.
 
-## End-to-end integration evidence
+## Additional validation
 
-The integration test validates this chain without vendor fabrication:
+- Python source compilation: PASS
+- YAML configuration parsing: PASS
+- JSON artifact parsing: PASS
+- Phase 02 roadmap state check: PASS
+- SHA-256 package manifest: PASS
+- ZIP integrity: PASS
+
+## Governance checks
 
 ```text
-PIT security-master record
-    -> immutable internal instrument identity
-    -> sector-blind Phase 01 monthly universe target
-    -> P02-G07 SEC target-ledger payload
-    -> SEC crawler target-ledger parser
-
-stable instrument identity
-    -> trade-level 10:00–10:30 ET records
-    -> exact size-weighted VWAP
+P02-PF01=PASS
+P02-PF-GATE=BLOCKED_REMAINING_TASKS
+PROCUREMENT_AUTHORIZED=false
+PROCUREMENT_READY_FOR_MANUAL_APPROVAL=false
+PHASE03_AUTHORIZED=false
 ```
 
-The target-ledger path deliberately removes only the sector requirement. Missing PIT CIK for an otherwise eligible security blocks the build instead of shrinking the P02-G07 denominator.
-
-## Compilation and artifact parsing
-
-- Python `compileall`: PASS
-- YAML parse: PASS
-- JSON parse: PASS
-- Gate audit: 18 mandatory = 11 PASS / 7 BLOCKED / 0 CONDITIONAL
-- Phase 03 authorization: FALSE
-
-## Current gate conclusions
-
-### P02-G04
-
-**BLOCKED** until the paid/composite core-provider representative trial is completed.
-
-### P02-G18
-
-**BLOCKED** until:
-
-1. account-specific research and retention rights are approved;
-2. the execution dataset is explicitly selected;
-3. the historical venue/off-exchange execution coverage profile is approved;
-4. the security-master representative panel passes;
-5. the exact execution representative panel passes;
-6. a real sector-blind monthly target ledger is produced from credentialed PIT data.
-
-### P02-G07 dependency
-
-The internal sector-blind ledger builder is now complete, but the real ledger still depends on P02-G04/P02-G18 external evidence. The SEC monitored-contact crawl remains separately required.
-
-### Phase 03
-
-**NOT AUTHORIZED**
+No external account, broker, paid data source, secret, or network mutation path was required or added.

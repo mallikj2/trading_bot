@@ -1,0 +1,43 @@
+"""Platform-domain models built on top of the Phase 02 research foundation."""
+
+from .leads import (
+    BorrowState,
+    CostState,
+    EarningsState,
+    FactorObservation,
+    LeadConflictError,
+    LeadDirection,
+    LeadLifecycleState,
+    LeadProvenance,
+    LeadReason,
+    LeadReasonCode,
+    LeadTransition,
+    LeadVolatilityState,
+    LeadTrendState,
+    LeadUniverseState,
+    TradeLead,
+    TradeLeadBook,
+    WatchlistEntry,
+    derive_watchlist_entry,
+)
+
+__all__ = [
+    "BorrowState",
+    "CostState",
+    "EarningsState",
+    "FactorObservation",
+    "LeadConflictError",
+    "LeadDirection",
+    "LeadLifecycleState",
+    "LeadProvenance",
+    "LeadReason",
+    "LeadReasonCode",
+    "LeadTransition",
+    "LeadVolatilityState",
+    "LeadTrendState",
+    "LeadUniverseState",
+    "TradeLead",
+    "TradeLeadBook",
+    "WatchlistEntry",
+    "derive_watchlist_entry",
+]

@@ -1,0 +1,2 @@
+# P02-PF01 adds no third-party runtime dependencies.
+# Python 3.11+ is required. pytest/PyYAML are development/test dependencies already used by Phase 02.

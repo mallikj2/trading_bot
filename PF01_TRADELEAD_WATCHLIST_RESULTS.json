@@ -1,0 +1,16 @@
+{
+  "phase": "PHASE_02B",
+  "task_id": "P02-PF01",
+  "task_name": "TRADELEAD_AND_WATCHLIST_DOMAIN",
+  "status": "PASS",
+  "focused_tests_passed": 29,
+  "cumulative_tests_passed": 316,
+  "taxonomy_subtests_passed": 12,
+  "strategy_math_changed": false,
+  "live_order_paths_added": false,
+  "procurement_authorized": false,
+  "procurement_ready_for_manual_approval": false,
+  "phase03_authorized": false,
+  "pre_purchase_integrated_gate": "BLOCKED_REMAINING_TASKS",
+  "next_task": "P02-PF02"
+}
