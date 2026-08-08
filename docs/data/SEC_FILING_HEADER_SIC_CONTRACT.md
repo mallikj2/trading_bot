@@ -70,3 +70,15 @@ The raw four-digit SIC observation remains retained for audit and industry-level
 - overlapping/conflicting accession records;
 - decision before the first valid sector observation;
 - missing raw snapshot lineage.
+
+## Coverage-crawl amendment — 2026-08-08
+
+For P02-G07, the default filing-header publication buffer is now:
+
+```text
+processing_buffer = 3 minutes
+```
+
+This supersedes the earlier 1-minute implementation assumption because SEC's current Webmaster FAQ documents a typical 1–3 minute lag from EDGAR system timestamp to public document availability.
+
+The complete-submission parser remains the SIC observation source, but filing existence is established from as-published daily master indexes rather than current submissions history alone. A filing later removed from the current archive remains part of the historical inventory and must be recovered from archival evidence rather than silently ignored.

@@ -64,3 +64,14 @@ A later filing that maps to a different FF12 sector closes the prior interval. R
 ## Coverage limitation
 
 The source design is approved, but full-universe coverage has not been measured because the environment lacks a compliant project SEC User-Agent. Before the Phase 02 final gate, a credentialed/compliant crawl must demonstrate adequate coverage for otherwise-eligible instrument-months and manually review representative sector changes.
+
+## 2026-08-08 coverage-crawl hardening
+
+The source decision remains SEC filing-header assigned SIC, but the collection architecture is hardened in two ways:
+
+1. **As-published daily master indexes are the canonical filing inventory.** SEC documents that later post-acceptance removals are not rewritten into previous daily indexes. This avoids silently dropping a filing merely because it was removed later.
+2. **Complete-submission availability uses a 3-minute buffer, not 1 minute.** SEC's current Webmaster FAQ says filings are often public within 1–3 minutes of the EDGAR timestamp. The upper end is used conservatively.
+
+The real coverage denominator must come from a sector-blind PIT historical universe ledger. A current ticker/CIK list is not an acceptable substitute because it would reintroduce survivorship bias.
+
+Residual PAC correction risk is controlled by manual comparison of at least 25 detected sector-change filings against original daily archive (`Oldloads`) evidence during the real acceptance crawl.

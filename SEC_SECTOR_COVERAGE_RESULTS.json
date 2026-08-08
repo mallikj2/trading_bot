@@ -1,0 +1,15 @@
+{
+  "phase": "PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN",
+  "gate_id": "P02-G07",
+  "status": "BLOCKED",
+  "phase03_authorized": false,
+  "reasons": [
+    "SEC_USER_AGENT_WITH_MONITORED_CONTACT_REQUIRED",
+    "SECTOR_BLIND_TARGET_LEDGER_REQUIRED_FROM_UPSTREAM_PIT_UNIVERSE"
+  ],
+  "claims": {
+    "full_sec_crawl_completed": false,
+    "coverage_ratio_measured": false,
+    "manual_25_change_review_completed": false
+  }
+}

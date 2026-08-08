@@ -1,0 +1,58 @@
+version: "0.1.0"
+status: "implementation_pass_real_crawl_blocked"
+gate_id: "P02-G07"
+
+upstream_target_ledger:
+  required: true
+  sector_blind: true
+  purpose: "denominator of otherwise-eligible instrument decision points"
+  required_fields:
+    - instrument_id
+    - cik
+    - decision_at
+    - source_manifest_hash
+    - universe_version
+  provenance_rule: "must be generated before sector is applied; no current ticker list substitution"
+  dependency_gates:
+    - P02-G04
+    - P02-G18
+
+sec_access:
+  user_agent_env: "SEC_USER_AGENT"
+  monitored_contact_required: true
+  requests_per_second: 5
+  hard_limit_requests_per_second: 10
+  filing_header_publication_buffer_minutes: 3
+
+filing_inventory:
+  canonical_source: "SEC daily master indexes"
+  rationale: "SEC states later post-acceptance removals are not reflected backward into previous daily indexes"
+  index_template: "/Archives/edgar/daily-index/{year}/QTR{quarter}/master.{yyyymmdd}.idx"
+  quarter_directory_template: "/Archives/edgar/daily-index/{year}/QTR{quarter}/index.json"
+  seed_lookback_days: 550
+  persist_raw_indexes: true
+  submissions_api_role: "optional acceleration/corroboration only; not canonical inventory"
+
+filing_header_source:
+  primary: "current immutable complete-submission archive path"
+  template: "/Archives/edgar/data/{cik_unpadded}/{accession_no_dashes}/{accession}.txt"
+  missing_current_archive: "unresolved; requires Oldloads recovery"
+  pac_correction_residual_risk: "manual Oldloads review on at least 25 sector-change cases"
+
+coverage_gate:
+  minimum_instrument_decision_coverage: 0.99
+  unresolved_selected_filing_headers_allowed: 0
+  overlapping_sector_intervals_allowed: 0
+  untraceable_sector_changes_allowed: 0
+  minimum_manual_sector_change_reviews: 25
+  rejected_manual_reviews_allowed: 0
+  representative_legacy_and_modern_header_tests_required: true
+
+fail_closed:
+  missing_target_ledger: "BLOCKED"
+  missing_monitored_contact_user_agent: "BLOCKED"
+  missing_or_removed_complete_submission: "BLOCKED_FOR_AFFECTED_HISTORY"
+  conflicting_accession: "BLOCKED"
+  invalid_or_missing_sic: "BLOCKED_FOR_AFFECTED_HISTORY"
+  decision_before_first_known_sic: "NO_SECTOR_BLOCK_ENTRY"
+  future_filing_fallback: false

@@ -17,5 +17,5 @@
     "P02-G18"
   ],
   "conditional_gate_ids": [],
-  "note": "P02-G17 regulatory-fee basis is frozen and PASS for 2010-01-01 through 2026-08-08. Seven external evidence/license/credential gates remain BLOCKED, so Phase 03 remains unauthorized."
+  "note": "P02-G07 crawl runner is implemented and validated offline, but the real SEC sector coverage gate remains BLOCKED pending a monitored-contact SEC_USER_AGENT and a sector-blind PIT target ledger from the unresolved core provider/security-master gates. Seven external/dependency gates remain BLOCKED."
 }

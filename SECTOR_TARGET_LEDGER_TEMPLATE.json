@@ -1,0 +1,6 @@
+{
+  "version": "0.1.0",
+  "sector_blind": true,
+  "description": "Populate only from the PIT historical universe before sector is applied.",
+  "rows": []
+}

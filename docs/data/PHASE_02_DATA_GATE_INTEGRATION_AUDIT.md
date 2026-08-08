@@ -109,3 +109,14 @@ All historical datasets are required to map to immutable `instrument_id`; ticker
 `PHASE_03_FINAL_ACCEPTANCE_BACKTEST = NOT_AUTHORIZED`
 
 This is a governance state, not a claim that the strategy is invalid. It means the historical evidence chain is incomplete.
+
+## P02-G07 coverage-crawl update — 2026-08-08
+
+The SEC historical-sector crawl implementation is now complete offline, including daily-index inventory, immutable raw persistence, resume checkpoints, point-in-time coverage measurement, and manual-review controls.
+
+P02-G07 remains **BLOCKED** for two explicit external/dependency reasons:
+
+1. a compliant monitored-contact `SEC_USER_AGENT` is not present in the project runtime; and
+2. the sector-blind PIT target ledger cannot be frozen until the upstream core-provider/PIT security-master evidence gates are resolved.
+
+No current ticker list will be substituted for the sector-blind historical denominator. Mandatory gate totals remain 11 PASS / 7 BLOCKED / 0 CONDITIONAL.

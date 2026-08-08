@@ -1,5 +1,5 @@
 version: "0.1.0"
-status: "implementation_pass_coverage_conditional"
+status: "implementation_pass_coverage_crawl_blocked"
 
 source:
   provider: "SEC EDGAR complete-submission headers"
@@ -8,7 +8,7 @@ source:
   user_agent_env: "SEC_USER_AGENT"
   max_requests_per_second: 5
   hard_sec_limit_requests_per_second: 10
-  processing_buffer_minutes: 1
+  processing_buffer_minutes: 3
   immutable_snapshot_required: true
 
 raw_observation:
@@ -55,3 +55,5 @@ coverage_gate:
     - "No overlapping effective intervals per instrument and taxonomy version"
     - "Manual review of at least 25 sector-change cases"
     - "Representative legacy and modern EDGAR header samples pass"
+    - "No unresolved target-company filing headers remain in the selected crawl inventory"
+    - "Canonical filing inventory is built from as-published SEC daily master indexes to preserve later PAC deletions"

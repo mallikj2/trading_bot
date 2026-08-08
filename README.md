@@ -31,3 +31,17 @@ See:
 - `docs/data/REGULATORY_FEE_BASIS_CONTRACT.md`
 - `docs/data/TRANSACTION_FEE_EVIDENCE_REGISTER.md`
 - `VALIDATION_RESULTS.md`
+
+## Latest Phase 02 increment — SEC historical sector coverage crawl
+
+This cumulative bundle adds the P02-G07 crawl/evidence layer:
+
+- `src/trading_bot/data/sector_coverage.py`
+- `src/trading_bot/data/adapters/sec_sector_crawl.py`
+- `configs/data/sec_sector_coverage_crawl.yaml`
+- `docs/phases/PHASE_02_SEC_HISTORICAL_SECTOR_COVERAGE_CRAWL.md`
+- `docs/data/SEC_SECTOR_COVERAGE_CRAWL_CONTRACT.md`
+- `docs/data/SEC_SECTOR_COVERAGE_RUNBOOK.md`
+- `SEC_SECTOR_COVERAGE_RESULTS.json`
+
+The engineering is complete, but P02-G07 remains BLOCKED until the real sector-blind PIT target ledger and compliant monitored-contact SEC User-Agent are available.

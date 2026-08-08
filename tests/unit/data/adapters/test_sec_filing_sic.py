@@ -124,7 +124,7 @@ class SecFilingSicTests(unittest.TestCase):
         self.assertEqual(observation.sic_code, "3571")
         self.assertEqual(observation.sic_description, "ELECTRONIC COMPUTERS")
         self.assertEqual(observation.accepted_at, datetime(2025, 2, 1, 21, 15, 30, tzinfo=UTC))
-        self.assertEqual(observation.available_at, datetime(2025, 2, 1, 21, 16, 30, tzinfo=UTC))
+        self.assertEqual(observation.available_at, datetime(2025, 2, 1, 21, 18, 30, tzinfo=UTC))
 
     def test_parse_selects_subject_company_not_filed_by(self):
         observation = parse_filing_sic(

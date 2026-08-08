@@ -187,7 +187,7 @@ def parse_filing_sic(
     instrument_id: UUID,
     target_cik: str | int,
     source_snapshot_id: str,
-    processing_buffer: timedelta = timedelta(minutes=1),
+    processing_buffer: timedelta = timedelta(minutes=3),
 ) -> SecFilingSicObservation:
     """Extract the target filer's filing-time SIC from a complete submission.
 
