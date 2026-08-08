@@ -1,0 +1,30 @@
+{
+  "journal": {
+    "append_only": true,
+    "engine": "sqlite",
+    "events_journaled": 4,
+    "hash_chain_verified": true,
+    "head_hash": "4e08dea5d5c7032eef8e20bcccd5a445cab1befb928b589d43c2d2a1f58fa348",
+    "jsonl_export_lines": 4
+  },
+  "next_task": "P02-PF04",
+  "phase02_status": "ACTIVE_RESHAPED",
+  "phase03_authorized": false,
+  "procurement_authorized": false,
+  "procurement_ready_for_manual_approval": false,
+  "replay": {
+    "event_count": 4,
+    "projector": "TRADE_LEAD_BOOK_V1",
+    "restart_equivalent": true,
+    "state_hash": "eb4e79d7ca8e1878483db8492c9b6c6f8a147ef7af38a99fe6359378e74f9124"
+  },
+  "status": "PASS",
+  "task_id": "P02-PF03",
+  "task_name": "EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY",
+  "validation": {
+    "focused_pf03_tests_passed": 22,
+    "frontend_node_tests_passed": 5,
+    "python_tests_passed": 352,
+    "taxonomy_subtests_passed": 12
+  }
+}

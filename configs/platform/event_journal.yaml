@@ -1,0 +1,39 @@
+version: 1.0.0
+phase_task: P02-PF03
+status: PASS
+storage:
+  engine: sqlite
+  default_path: var/event_journal/platform_events.sqlite3
+  append_only: true
+  sqlite:
+    wal_for_file_backed_journals: true
+    synchronous: FULL
+    update_allowed: false
+    delete_allowed: false
+  writer_mode: single_process_serialized
+integrity:
+  event_identity: sha256_canonical_domain_event
+  journal_chain: sha256
+  genesis_hash: '0000000000000000000000000000000000000000000000000000000000000000'
+  verify_before_replay: true
+  require_contiguous_sequence: true
+  require_prior_causation: true
+  require_correlation_continuity: true
+payload_contract:
+  json_object_required: true
+  floats_allowed: false
+  decimal_encoding: string
+  timestamps: ISO_8601_UTC
+replay:
+  deterministic_order: journal_sequence
+  state_hash: sha256_canonical_projection_snapshot
+  trade_lead_projector:
+    event_type: TRADE_LEAD.SNAPSHOT
+    projection: TRADE_LEAD_BOOK_V1
+hard_boundaries:
+  historical_event_update: forbidden
+  historical_event_delete: forbidden
+  broker_connectivity: forbidden
+  live_order_submission: forbidden
+  commercial_credentials_required: false
+  phase03_authorized: false

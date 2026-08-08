@@ -1,101 +1,118 @@
-# Validation Results — Phase 02B P02-PF02
+# Validation Results — P02-PF03 Event Journal + Deterministic Replay
 
-**Task:** Read-Only FastAPI + React Research Console  
+**Date:** 2026-08-08  
+**Task:** P02-PF03  
 **Result:** PASS
 
-## Python / cumulative repository
+## Cumulative Python regression
 
-```text
-330 passed, 12 subtests passed
+Command:
+
+```bash
+PYTHONPATH=src pytest -q
 ```
 
-The cumulative test suite includes approved Phase 01 strategy tests, Phase 02 data/PIT/corporate-action/earnings/spread/borrow/financing/provider/governance tests, PF01 lead/watchlist tests, and PF02 API/console tests.
-
-### PF02 focused Python tests
-
-**14 passed** covering:
-
-- deterministic fixture-backed research projections;
-- TradeLead → Leads/Watchlist/Audit consistency;
-- Phase 03/procurement lock visibility;
-- synthetic Portfolio/Risk labeling;
-- OpenAPI read-only enforcement;
-- expected GET route responses;
-- POST/PUT/PATCH/DELETE rejection;
-- absence of order-mutation routes;
-- frontend GET-only/static secret/broker safety contract.
-
-## Frontend
-
-### Node/TypeScript view-model tests
+Result:
 
 ```text
-5 tests passed
-0 failed
+352 passed, 12 subtests passed
 ```
 
-Coverage includes lead ranking, LONG/SHORT filtering, display numeric handling, status styling, and deterministic Watchlist blocker text.
+The cumulative suite includes all approved Phase 01 tests and prior Phase 02 data/platform tests.
 
-### TypeScript validation
+## Focused PF03 tests
 
-All React/TypeScript source passed `tsc -p web/tsconfig.json` using local declaration shims for framework module types.
+New PF03 test files:
 
-### Vite build limitation
+- `tests/unit/platform/test_event_journal.py`
+- `tests/unit/platform/test_replay.py`
+- `tests/integration/platform/test_event_journal_replay_flow.py`
 
-A production Vite bundle was **not** claimed as tested in this sandbox. The configured internal npm mirror returned HTTP 404 for public `react`, `@types/react`, and Vite React plugin packages. This is recorded as an environment/package-registry limitation. The repository uses standard public React/Vite package coordinates and contains normal `npm install`/`npm run dev` instructions.
+Result: **22 passed**.
 
-## Running API smoke test
+Covered adversarial cases include:
 
-Uvicorn was started locally and queried over `127.0.0.1`.
+- deterministic event IDs independent of JSON object key order;
+- native float payload rejection;
+- timezone normalization;
+- tampered event-ID rejection;
+- duplicate append idempotency;
+- causation-before-cause rejection;
+- correlation discontinuity rejection;
+- `recorded_at < occurred_at` rejection;
+- SQLite UPDATE/DELETE trigger enforcement;
+- direct/offline database tamper detection;
+- restart/reopen chain verification;
+- aggregate/correlation filters;
+- deterministic JSONL export;
+- deterministic TradeLead replay state hash;
+- historical replay through an earlier sequence;
+- out-of-order replay rejection;
+- divergent TradeLead lifecycle replay rejection;
+- persistent restart replay equivalence.
 
-Observed:
+## Frontend/API regression
+
+PF03 changes no frontend dependency or mutation authority.
+
+Existing PF02 frontend regression:
 
 ```text
-runtime_state = RESEARCH_ONLY
-phase03_authorized = false
-lead states = QUALIFIED / WATCHLIST / BORROW_BLOCKED / COST_BLOCKED
+5 Node/TypeScript view-model tests passed
+TypeScript source validation passed
 ```
 
-The live `/openapi.json` document contains:
+The generated PF02 OpenAPI remains:
 
 ```text
-9 paths
-methods = [GET]
+9 routes
+GET only
+0 mutation routes
 ```
 
-No POST, PUT, PATCH, or DELETE operation is present.
+The PF02 sandbox Vite-production-build limitation remains unchanged: the sandbox's internal npm mirror does not contain the public React/Vite packages. PF03 adds no frontend package.
 
-## Compile / artifact validation
+## Replay CLI smoke test
 
-- Python `compileall`: PASS
-- TypeScript source validation: PASS
-- 19 YAML files parsed: PASS
-- 18 JSON/fixture files parsed: PASS
-- generated OpenAPI JSON: PASS
-- roadmap state: PF01 PASS / PF02 PASS / PF03 NEXT
-- procurement remains unauthorized: PASS
-- Phase 03 remains unauthorized: PASS
-- SHA-256 manifest: PASS after packaging
-- ZIP integrity: PASS after packaging
+A temporary persistent journal was created from the PF01/PF02 lead fixtures and then verified with:
 
-## Security boundary
-
-Confirmed by tests/static scan:
-
-- no frontend `localStorage`/`sessionStorage` credential persistence;
-- no Schwab/broker URL in frontend;
-- no `/orders`, `/buy`, `/sell`, or `/cancel` endpoint;
-- API client uses GET only;
-- no strategy score calculation exists in frontend source.
-
-## Gate decision
-
-```text
-P02-PF02 = PASS
-P02-PF-GATE = BLOCKED_REMAINING_TASKS
-PROCUREMENT_AUTHORIZED = false
-PROCUREMENT_READY_FOR_MANUAL_APPROVAL = false
-PHASE03_AUTHORIZED = false
+```bash
+PYTHONPATH=src python -m trading_bot.platform.replay_cli <temporary-journal.sqlite3>
 ```
 
-**Next:** P02-PF03 — Event Journal + Deterministic Replay.
+Result:
+
+- four lead events replayed;
+- journal head hash verified;
+- projection state hash emitted;
+- CLI output parsed as valid JSON.
+
+## Structural validation
+
+- Python compilation: **PASS**
+- YAML parse validation: **20 files PASS**
+- JSON parse validation: **22 files PASS**
+- roadmap state: **PF03 PASS / PF04 NEXT**
+- procurement flags remain false: **PASS**
+- Phase 03 authorization remains false: **PASS**
+
+## Security/governance result
+
+PF03 introduces no:
+
+- broker adapter;
+- order submission/cancellation path;
+- commercial credential;
+- browser credential storage;
+- deployed paper trading;
+- Phase 03 authorization.
+
+Historical journal records cannot be updated/deleted through ordinary SQLite operations and direct/offline tampering is detected during integrity verification.
+
+## Final task gate
+
+**P02-PF03 = PASS**
+
+`P02-PF-GATE = BLOCKED_REMAINING_TASKS`
+
+Next: **P02-PF04 — Runtime Safety State + Protections**.

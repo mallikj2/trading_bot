@@ -1,43 +1,25 @@
-"""Platform-domain models built on top of the Phase 02 research foundation."""
+"""Platform-foundation domain services for Phase 02B."""
 
-from .leads import (
-    BorrowState,
-    CostState,
-    EarningsState,
-    FactorObservation,
-    LeadConflictError,
-    LeadDirection,
-    LeadLifecycleState,
-    LeadProvenance,
-    LeadReason,
-    LeadReasonCode,
-    LeadTransition,
-    LeadVolatilityState,
-    LeadTrendState,
-    LeadUniverseState,
-    TradeLead,
-    TradeLeadBook,
-    WatchlistEntry,
-    derive_watchlist_entry,
+from .event_journal import (
+    JournalConflictError,
+    JournalError,
+    JournalIntegrityError,
+    JournalRecord,
+    SQLiteEventJournal,
 )
+from .events import DomainEvent, EventContractError
+from .replay import ReplayEngine, ReplayError, TradeLeadProjector, trade_lead_snapshot_event
 
 __all__ = [
-    "BorrowState",
-    "CostState",
-    "EarningsState",
-    "FactorObservation",
-    "LeadConflictError",
-    "LeadDirection",
-    "LeadLifecycleState",
-    "LeadProvenance",
-    "LeadReason",
-    "LeadReasonCode",
-    "LeadTransition",
-    "LeadVolatilityState",
-    "LeadTrendState",
-    "LeadUniverseState",
-    "TradeLead",
-    "TradeLeadBook",
-    "WatchlistEntry",
-    "derive_watchlist_entry",
+    "DomainEvent",
+    "EventContractError",
+    "JournalConflictError",
+    "JournalError",
+    "JournalIntegrityError",
+    "JournalRecord",
+    "SQLiteEventJournal",
+    "ReplayEngine",
+    "ReplayError",
+    "TradeLeadProjector",
+    "trade_lead_snapshot_event",
 ]

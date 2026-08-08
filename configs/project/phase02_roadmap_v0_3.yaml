@@ -43,11 +43,21 @@ subphases:
       - tests/integration/platform/test_research_console_api_flow.py
     - id: P02-PF03
       name: EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF03_EVENT_JOURNAL_REPLAY.md
+      - docs/platform/EVENT_JOURNAL_REPLAY_CONTRACT.md
+      - src/trading_bot/platform/events.py
+      - src/trading_bot/platform/event_journal.py
+      - src/trading_bot/platform/replay.py
+      - src/trading_bot/platform/replay_cli.py
+      - tests/unit/platform/test_event_journal.py
+      - tests/unit/platform/test_replay.py
+      - tests/integration/platform/test_event_journal_replay_flow.py
     - id: P02-PF04
       name: RUNTIME_SAFETY_STATE_AND_PROTECTIONS
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     - id: P02-PF05
       name: LOOKAHEAD_AND_RECURSIVE_VALIDATION
@@ -61,8 +71,7 @@ subphases:
       name: DETERMINISTIC_SIMULATION_RUNTIME
       status: NOT_STARTED
       external_account_required: false
-      note: Future-paper-compatible architecture only; no deployed paper/live trading
-        claim.
+      note: Future-paper-compatible architecture only; no deployed paper/live trading claim.
     - id: P02-PF08
       name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION
       status: NOT_STARTED
@@ -114,5 +123,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF03
-  name: EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY
+  id: P02-PF04
+  name: RUNTIME_SAFETY_STATE_AND_PROTECTIONS

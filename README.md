@@ -1,18 +1,19 @@
-# Phase 02B — P02-PF02 Read-Only Research Console Bundle
+# Phase 02B — P02-PF03 Event Journal + Deterministic Replay Bundle
 
-This is the cumulative repository-ready Phase 02 bundle after completing the second task in the reshaped pre-purchase platform foundation.
+This is the cumulative repository-ready Phase 02 bundle after completing the third task in the reshaped pre-purchase platform foundation.
 
 ## Result
 
 ```text
 P02-PF01 TRADELEAD_AND_WATCHLIST_DOMAIN = PASS
 P02-PF02 READ_ONLY_API_AND_RESEARCH_CONSOLE = PASS
-P02-PF03 EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY = NEXT
+P02-PF03 EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY = PASS
+P02-PF04 RUNTIME_SAFETY_STATE_AND_PROTECTIONS = NEXT
 ```
 
-PF02 adds a GET-only FastAPI API and a React + TypeScript Research Console for Overview, Trade Leads, Watchlist, synthetic Portfolio, Risk boundaries, Phase Gates, Data Health, and Audit Trail.
+PF03 adds content-addressed immutable domain events, an append-only SQLite event journal with storage mutation guards and SHA-256 hash chaining, deterministic replay/state hashing, PF01 TradeLead replay integration, and a local replay CLI.
 
-It does **not** add broker connectivity, provider credentials, paper/live trading, mutation routes, browser secret storage, or frontend strategy logic.
+It does **not** add broker connectivity, provider credentials, paper/live trading, order mutations, or Phase 03 authority.
 
 ## Current governance state
 
@@ -26,27 +27,28 @@ PHASE03_AUTHORIZED=false
 
 ## New primary files
 
-- `src/trading_bot/platform/research_console.py`
-- `src/trading_bot/platform/api/research_api.py`
-- `web/src/App.tsx`
-- `web/src/pages/`
-- `web/src/lib/`
-- `docs/platform/READ_ONLY_RESEARCH_CONSOLE_CONTRACT.md`
-- `docs/phases/PHASE_02_PF02_READ_ONLY_RESEARCH_CONSOLE.md`
-- `configs/platform/research_console.yaml`
-- `OPENAPI_PF02.json`
-- `PF02_RESEARCH_CONSOLE_RESULTS.json`
-- `tests/unit/platform/test_research_api.py`
-- `tests/integration/platform/test_research_console_api_flow.py`
+- `src/trading_bot/platform/events.py`
+- `src/trading_bot/platform/event_journal.py`
+- `src/trading_bot/platform/replay.py`
+- `src/trading_bot/platform/replay_cli.py`
+- `docs/platform/EVENT_JOURNAL_REPLAY_CONTRACT.md`
+- `docs/phases/PHASE_02_PF03_EVENT_JOURNAL_REPLAY.md`
+- `configs/platform/event_journal.yaml`
+- `PF03_EVENT_JOURNAL_RESULTS.json`
+- `tests/unit/platform/test_event_journal.py`
+- `tests/unit/platform/test_replay.py`
+- `tests/integration/platform/test_event_journal_replay_flow.py`
 
 ## Validation
 
-- **330 Python tests passed + 12 taxonomy subtests**
+- **352 Python tests passed + 12 taxonomy subtests**
+- **22 focused PF03 tests passed**
 - **5 Node/TypeScript frontend view-model tests passed**
-- React/TypeScript source type validation passed
-- live Uvicorn/OpenAPI smoke test passed
-- OpenAPI: 9 routes, GET only
+- Python compilation passed
+- TypeScript/view-model regression passed
 - YAML/JSON validation passed
-- no frontend broker/secret/mutation path detected
+- restart replay equivalence passed
+- append-only/tamper-detection tests passed
+- SHA-256 package verification passed
 
-The sandbox's internal npm mirror does not expose the public React/Vite packages, so the Vite production bundle was not built here. The React source and view-model logic were still type/test validated, and the package is configured for normal public npm installation.
+The PF02 Vite production-build limitation remains unchanged: the sandbox's internal npm mirror does not provide the public React/Vite package set. PF03 adds no frontend dependency.
