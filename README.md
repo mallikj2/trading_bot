@@ -1,37 +1,13 @@
-# Phase 02 PIT Security-Master and Exact-Execution Integration Bundle
+# Phase 02 Reshaped Pre-Purchase Plan Bundle
 
-Cumulative repository-ready Phase 02 bundle through the internal P02-G04/P02-G18 integration layer.
+This bundle adds the approved pre-purchase platform-foundation workstream to Phase 02 without changing the frozen Phase 01 strategy or any existing Phase 02 data-gate acceptance criteria.
 
-## New in this bundle
+Files:
 
-- hardened PIT security-master normalization using both `ts_effective` and `ts_record`;
-- stable provider security/listing identity and ticker-reuse detection;
-- approval-gated stable-ID historical trade queries;
-- exact DST-aware 10:00–10:30 ET trade VWAP;
-- separate execution-coverage governance gate;
-- PIT shares-outstanding market-cap corroboration;
-- sector-blind monthly universe/target-ledger builder for P02-G07;
-- direct integration test from PIT identity to SEC target-ledger parsing;
-- standalone credentialed PIT companion runner;
-- machine-readable representative acceptance policy.
+- `docs/phases/PHASE_02_RESHAPED_PLAN_V0_3.md` — authoritative revised Phase 02 task plan
+- `docs/data/PRE_PURCHASE_PLATFORM_FOUNDATION_ACCEPTANCE.md` — acceptance matrix for the ten new tasks
+- `configs/project/phase02_roadmap_v0_3.yaml` — machine-readable roadmap/procurement state
+- `docs/project/CURRENT_STATE_PHASE_02_RESHAPED_PLAN_PATCH.md` — current-state patch
+- `docs/project/DECISIONS_PHASE_02_RESHAPED_PLAN_APPEND.md` — decision-log append
 
-## Current gate state
-
-```text
-18 mandatory gates
-11 PASS
-7 BLOCKED
-0 CONDITIONAL
-PHASE03_AUTHORIZED=false
-```
-
-P02-G04 and P02-G18 remain BLOCKED because no approved Databento/equivalent account license, execution coverage profile, or credentialed representative trial is present. P02-G07 remains blocked until the real sector-blind ledger and monitored-contact SEC crawl are completed.
-
-See:
-
-- `docs/phases/PHASE_02_PIT_SECURITY_MASTER_AND_EXECUTION_INTEGRATION.md`
-- `docs/data/PIT_SECURITY_MASTER_EXECUTION_CONTRACT.md`
-- `docs/data/PIT_COMPANION_REPRESENTATIVE_TRIAL_RUNBOOK.md`
-- `configs/data/pit_security_master_execution_acceptance.yaml`
-- `PIT_COMPANION_TRIAL_RESULTS.json`
-- `VALIDATION_RESULTS.md`
+Immediate next task: `P02-PF01 — TradeLead + Watchlist Domain Model`.

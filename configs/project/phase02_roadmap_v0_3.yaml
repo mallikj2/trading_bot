@@ -1,0 +1,108 @@
+version: 0.3.0
+date: '2026-08-08'
+phase: PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN
+overall_status: ACTIVE_RESHAPED
+phase03_authorized: false
+procurement_authorized: false
+procurement_ready_for_manual_approval: false
+
+subphases:
+  phase02a_data_foundation:
+    status: ACTIVE_EXTERNAL_GATES_REMAIN
+    note: Existing 18 mandatory Phase 02 data gates remain authoritative and unchanged.
+    current_data_gate_snapshot:
+      mandatory_total: 18
+      pass: 11
+      blocked: 7
+      conditional: 0
+
+  phase02b_pre_purchase_platform_foundation:
+    status: NOT_STARTED
+    prerequisite_for_procurement: true
+    tasks:
+      - id: P02-PF01
+        name: TRADELEAD_AND_WATCHLIST_DOMAIN
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF02
+        name: READ_ONLY_API_AND_RESEARCH_CONSOLE
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF03
+        name: EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF04
+        name: RUNTIME_SAFETY_STATE_AND_PROTECTIONS
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF05
+        name: LOOKAHEAD_AND_RECURSIVE_VALIDATION
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF06
+        name: OMS_AND_SIMULATED_BROKER
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF07
+        name: DETERMINISTIC_SIMULATION_RUNTIME
+        status: NOT_STARTED
+        external_account_required: false
+        note: Future-paper-compatible architecture only; no deployed paper/live trading claim.
+      - id: P02-PF08
+        name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF09
+        name: ALERT_AND_INCIDENT_CENTER
+        status: NOT_STARTED
+        external_account_required: false
+      - id: P02-PF10
+        name: RECOVERY_AND_RECONCILIATION_SIMULATION
+        status: NOT_STARTED
+        external_account_required: false
+    integrated_gate:
+      id: P02-PF-GATE
+      name: PRE_PURCHASE_PLATFORM_FOUNDATION
+      status: NOT_STARTED
+      requires_all_tasks_pass: true
+      on_pass:
+        procurement_ready_for_manual_approval: true
+        procurement_authorized: false
+
+  phase02c_external_procurement_and_evidence:
+    status: DEFERRED_UNTIL_P02_PF_GATE_PASS
+    purchase_requires_manual_approval: true
+    sequence:
+      - SEC_MONITORED_CONTACT_CONFIGURATION
+      - DATABENTO_OR_EQUIVALENT_PIT_EXECUTION_ACCOUNT_AND_LICENSE
+      - PIT_SECURITY_MASTER_AND_EXECUTION_TRIAL
+      - REAL_SECTOR_BLIND_TARGET_LEDGER
+      - SEC_FULL_SECTOR_COVERAGE_CRAWL
+      - KIBOT_RETENTION_CONFIRMATION_AND_EOD_PURCHASE_IF_STILL_REQUIRED
+      - CORE_PROVIDER_REPRESENTATIVE_TRIAL
+      - WSH_EARNINGS_REVISION_SAMPLE_AND_LICENSE
+      - EDI_CORPORATE_ACTION_SAMPLE_AND_LICENSE
+      - OBSERVED_SPREAD_CALIBRATION
+      - HISTORICAL_SHORT_BORROW_SOURCE_AND_LICENSE
+
+  phase02d_final_gate_closure:
+    status: DEFERRED
+    requires:
+      - P02-PF-GATE_PASS
+      - ALL_18_EXISTING_DATA_GATES_PASS
+      - FINAL_INTEGRATED_PIT_AND_REPRODUCIBILITY_AUDIT_PASS
+      - EXPLICIT_PHASE03_AUTHORIZATION_DECISION
+
+hard_boundaries:
+  strategy_math_changes_allowed: false
+  live_order_submission_allowed: false
+  deployed_paper_trading_allowed: false
+  live_broker_credentials_required_during_phase02b: false
+  commercial_data_credentials_required_during_phase02b: false
+  frontend_strategy_logic_allowed: false
+  frontend_secret_storage_allowed: false
+
+next_task:
+  id: P02-PF01
+  name: TRADELEAD_AND_WATCHLIST_DOMAIN
