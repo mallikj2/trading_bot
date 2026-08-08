@@ -1,0 +1,109 @@
+version: 0.1.0
+phase: PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN
+gate_id: P02-G09
+status: BLOCKED
+status_reason: EDI_LONG_HISTORY_AND_DATABENTO_PIT_OVERLAP_REPRESENTATIVE_TRIAL_NOT_RUN
+
+acceptance_horizon:
+  minimum_calendar_years_where_valid_pit_data_permit: 10
+
+provider_stack:
+  long_history_primary:
+    provider: EDI_WCA
+    role: licensed historical corporate-action event master
+    required:
+      - historical event coverage sufficient for acceptance horizon
+      - stable event identifiers
+      - event revision/change timestamps
+      - effective/ex/record/payment dates where applicable
+      - ratio and cash economics
+      - outturn/successor identifiers
+      - cancellation/deletion history
+      - retained private research snapshots permitted by executed agreement
+    license_status: NEGOTIATED_AGREEMENT_REQUIRED
+    trial_input: EDI_CORPORATE_ACTIONS_EXPORT_PATH
+    approval_flag: EDI_CORPORATE_ACTIONS_LICENSE_APPROVED
+
+  pit_overlap_secondary:
+    provider: DATABENTO_CA
+    role: point_in_time overlap reconciliation and independent event cross-check
+    public_history_start: '2018-05-01'
+    required:
+      - pit_true_revision_history
+      - listing_level_identity
+      - event_unique_id
+      - ts_record
+      - event economics
+      - cancellation/deletion state
+    license_status: PROJECT_ACCOUNT_APPROVAL_REQUIRED
+    approval_flag: DATABENTO_CORPORATE_ACTIONS_LICENSE_APPROVED
+
+  price_adjustment_corroboration:
+    provider: KIBOT
+    role: simple split/dividend and raw-vs-adjusted price sanity check only
+    prohibited_roles:
+      - complex_event_master
+      - point_in_time_security_master
+      - sole_merger_spinoff_bankruptcy_source
+
+  official_golden_sources:
+    role: issuer_SEC_exchange economic truth for named representative cases
+    may_replace_provider_history: false
+
+point_in_time_rules:
+  provider_record_visible_only_when: available_at_lte_reconciliation_cutoff
+  future_revisions_visible: false
+  equal_latest_conflicting_revision: BLOCK
+  multiple_distinct_same_day_provider_events: BLOCK
+  cancellation_or_deletion_must_be_preserved: true
+  ticker_only_identity_matching: prohibited
+
+reconciliation_tolerances:
+  decimal_absolute: '0.000001'
+  effective_timestamp_comparison: exchange_economic_date
+
+representative_cases:
+  - NVDA_2024_FORWARD_SPLIT
+  - GE_2021_REVERSE_SPLIT
+  - IBM_2021_KYNDRYL_SPINOFF
+  - XLNX_2022_AMD_STOCK_ACQUISITION
+  - TWTR_2022_CASH_MERGER
+  - BBBYQ_2023_BANKRUPTCY_ZERO_RECOVERY
+
+mandatory_case_requirements:
+  split:
+    - effective_date
+    - old_new_ratio
+    - stable_event_id
+    - revision_timestamp
+  spinoff:
+    - effective_date
+    - distribution_ratio
+    - outturn_identifier
+    - revision_timestamp
+  stock_merger_or_acquisition:
+    - effective_date
+    - exchange_ratio
+    - successor_identifier
+    - revision_timestamp
+  cash_merger:
+    - effective_date
+    - cash_consideration
+    - currency
+    - revision_timestamp
+  terminal_zero_recovery:
+    - effective_date
+    - explicit_zero_consideration_or_cancellation
+    - revision_timestamp
+
+pass_criteria:
+  edi_golden_cases_all_pass: true
+  databento_overlap_cases_all_pass: true
+  no_unresolved_identity_mapping: true
+  no_missing_action_economics: true
+  cancellations_and_revisions_verified: true
+  retention_and_non_display_rights_approved: true
+  representative_raw_snapshots_hashed_and_retained: true
+
+phase03_rule:
+  P02_G09_must_equal_PASS: true

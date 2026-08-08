@@ -21,7 +21,7 @@ The machine-readable audit is `configs/data/phase02_data_gate_audit.yaml`. The r
 | Historical sector engine | PASS | No |
 | Full historical-sector coverage crawl | BLOCKED | **Yes** |
 | Complex corporate-action/total-return engine | PASS | No |
-| Complex-action provider reconciliation | BLOCKED | **Yes** |
+| Complex-action provider reconciliation — EDI long-history + Databento PIT overlap trial | BLOCKED | **Yes** |
 | Revision-aware earnings engine | PASS | No |
 | Historical earnings revisions sample/license | BLOCKED | **Yes** |
 | Spread/transaction-cost engine | PASS | No |
@@ -47,6 +47,11 @@ Kibot is not an acceptable sole security master because its documented ticker-ch
 Databento is the preferred next companion trial candidate because its security-master/symbology products are designed around point-in-time listed/delisted securities and historical symbol mappings. Historical trades or equivalent exact records are also required for the Phase 01 10:00–10:30 ET acceptance VWAP.
 
 No Databento account/license/coverage result is claimed yet.
+
+
+## Corporate-action provider reconciliation architecture
+
+EDI is now the preferred long-history corporate-action candidate because its public historical interface exposes stable event/listing identifiers, record-change timestamps and effective dates, and its historical reference material describes corporate-action/reference change collection since 2003. Databento is the preferred recent PIT overlap source, but its documented corporate-action history begins in 2018 and therefore cannot by itself satisfy the Phase 01 minimum ten-calendar-year horizon. The engineering reconciliation harness is complete; P02-G09 remains blocked until the actual licensed representative trials pass.
 
 ## Cross-contract consistency checks
 
@@ -84,7 +89,7 @@ All historical datasets are required to map to immutable `instrument_id`; ticker
 1. Run and pass the paid Kibot representative-case EOD trial under the approved private-research scope.
 2. Approve and trial a point-in-time security-master/exact-execution companion (Databento preferred candidate or equivalent).
 3. Run the SEC filing-header SIC coverage crawl with a compliant monitored-contact User-Agent and approve coverage/error thresholds.
-4. Reconcile representative complex corporate actions and terminal events against approved provider evidence.
+4. Run and pass the EDI long-history plus Databento PIT-overlap representative corporate-action trial under approved retention/non-display terms.
 5. Obtain and validate a revision-aware historical earnings source, including retention rights.
 6. Approve a historical quote source and run the preregistered spread-calibration panel.
 7. Approve a retainable securities-lending source and run the historical borrow coverage trial.

@@ -1,0 +1,24 @@
+{
+  "databento_pit_overlap_trial": {
+    "cases": [],
+    "reason": "Databento API key and explicit corporate-actions license approval are required",
+    "status": "BLOCKED"
+  },
+  "edi_long_history_trial": {
+    "cases": [],
+    "reason": "approved EDI representative-case export is missing",
+    "status": "BLOCKED"
+  },
+  "environment": {
+    "databento_api_key": "MISSING",
+    "databento_license_approved": false,
+    "edi_export_path": "MISSING",
+    "edi_export_present": false,
+    "edi_license_approved": false,
+    "preferred_long_history_provider": "EDI_WCA",
+    "preferred_pit_overlap_provider": "DATABENTO_CA"
+  },
+  "gate": "P02-G09",
+  "run_at": "2026-08-08T13:36:36.431772+00:00",
+  "status": "BLOCKED"
+}

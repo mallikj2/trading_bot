@@ -1,7 +1,7 @@
-# Validation Results — Phase 02 Core Provider Selection and Trial
+# Validation Results — Phase 02 Corporate-Action Provider Reconciliation
 
 **Date:** 2026-08-08  
-**Task status:** `LICENSE DECISION PASS / CREDENTIALED TRIAL BLOCKED`  
+**Task status:** `ENGINEERING PASS / LICENSED PROVIDER TRIAL BLOCKED`  
 **Phase 02 status:** `ACTIVE — NOT READY FOR PHASE 03`
 
 ## Cumulative automated tests
@@ -15,88 +15,81 @@ PYTHONPATH=src pytest -q tests
 Result:
 
 ```text
-219 passed, 12 subtests passed
+243 passed, 12 subtests passed
 ```
 
-The cumulative suite includes the approved Phase 01 strategy tests and all Phase 02 kernel, provider adapters, sector, corporate action/total return, earnings, spread/cost, short-borrow, financing, gate-audit, and new Kibot/core-provider tests.
+This includes the approved Phase 01 strategy suite and all cumulative Phase 02 tests.
 
-## New core-provider focused tests
+## New provider-reconciliation focused tests
 
 ```text
-14 passed
+24 passed
 ```
 
 Coverage includes:
 
-- Kibot paid-client license acknowledgement gate;
-- guest-evaluation boundary;
-- session/cookie login transport behavior;
-- unadjusted daily-history request contract;
-- daily/minute/tick parsing;
-- Eastern Time bar-open conversion into UTC kernel timestamps;
-- exact size-weighted trade VWAP calculation;
-- adjustment-description parsing without unproven ratio inference;
-- credentialed-trial environment status;
-- approval-gated Databento PIT security-master range request;
-- Databento historical `trades` schema request with explicit dataset configuration;
-- blocked trial result when credentials/approved companion evidence are absent.
+- provider-neutral corporate-action evidence contracts;
+- split/reverse-split economics;
+- spinoff ratio and mandatory outturn identifier;
+- merger/acquisition cash, currency, stock ratio and successor checks;
+- explicit zero-recovery terminal events;
+- missing provider evidence fail-closed behavior;
+- future provider revision exclusion at a reconciliation cut-off;
+- conflicting latest provider revisions;
+- multiple distinct same-day provider events;
+- provider cancellation/deletion behavior;
+- EDI historical-export parsing and explicit ratio semantics;
+- Databento license gating, US/PIT request enforcement and ratio normalization;
+- representative-trial environment gating;
+- six official-source golden-case shapes;
+- multi-action integration reconciliation.
 
-## Credentialed representative-case trial
+## Credentialed representative trial
 
-The executable runner was invoked in this environment.
+The executable trial runner was invoked:
 
-Observed environment:
+```bash
+PYTHONPATH=src python -m trading_bot.data.adapters.corporate_action_trial \
+  --output CORPORATE_ACTION_PROVIDER_TRIAL_RESULTS.json
+```
+
+Observed prerequisites:
 
 ```text
-KIBOT_USERNAME/KIBOT_PASSWORD: MISSING
-KIBOT_PRIVATE_RESEARCH_LICENSE_APPROVED: NO
+EDI_CORPORATE_ACTIONS_EXPORT_PATH: MISSING
+EDI_CORPORATE_ACTIONS_LICENSE_APPROVED: NO
 DATABENTO_API_KEY: MISSING
-DATABENTO_RESEARCH_LICENSE_APPROVED: NO
-DATABENTO_US_EQUITIES_DATASET: MISSING
-SEC_USER_AGENT: MISSING
+DATABENTO_CORPORATE_ACTIONS_LICENSE_APPROVED: NO
 ```
 
 Result:
 
 ```text
-CORE_PROVIDER_TRIAL_RESULTS.json: BLOCKED
+CORPORATE_ACTION_PROVIDER_TRIAL_RESULTS.json: BLOCKED
 ```
 
-No paid provider request, data-quality coverage result, or credentialed accuracy claim is made.
+No EDI or Databento paid-data accuracy, completeness, retention-right, or coverage result is claimed.
 
-## Compilation and artifact parsing
+## Compilation and artifact validation
 
 - Python `compileall`: PASS
-- YAML parse: 12 files PASS
-- JSON parse: 7 files PASS
-- Machine-readable audit: 18 mandatory gates = 10 PASS / 7 BLOCKED / 1 CONDITIONAL
-- `P02-G05 CORE_PROVIDER_RETENTION_AND_NON_DISPLAY_LICENSE`: PASS within Kibot private/personal scope
-- `P02-G04 CORE_PROVIDER_CREDENTIALED_REPRESENTATIVE_CASE_TRIAL`: BLOCKED
-- `P02-G18 PIT_SECURITY_MASTER_AND_EXACT_EXECUTION_SOURCE_LICENSE_AND_TRIAL`: BLOCKED
-
-## Evidence not claimed
-
-The following remain open and are **not** claimed as passed:
-
-- paid Kibot representative-case trial;
-- Databento or equivalent PIT security-master/exact-execution license and coverage trial;
-- same-day EOD publication timing suitable for a 16:30 ET historical decision contract;
-- full historical-sector coverage crawl;
-- complex corporate-action provider reconciliation;
-- licensed historical earnings revision sample;
-- licensed observed-spread calibration dataset/panel;
-- licensed historical securities-lending coverage;
-- full acceptance-period regulatory fee basis;
-- Schwab live short/account/borrow authorization;
-- Schwab live cash-feature/margin contract testing.
+- YAML parse: PASS
+- JSON parse: PASS
+- Gate audit: 18 mandatory = 10 PASS / 7 BLOCKED / 1 CONDITIONAL
+- `P02-G09`: BLOCKED with reason `EDI_LONG_HISTORY_AND_DATABENTO_PIT_OVERLAP_REPRESENTATIVE_TRIAL_NOT_RUN`
+- Phase 03 authorization: FALSE
 
 ## Gate result
 
-### Core provider private-retention license
+### Reconciliation engineering and offline adversarial tests
 
-**PASS — scope-bound to the personal local project**
+**PASS**
 
-### Credentialed provider trial
+### Source selection
+
+**PASS — EDI long-history primary / Databento PIT-overlap secondary**
+
+### Licensed representative provider reconciliation
 
 **BLOCKED**
 

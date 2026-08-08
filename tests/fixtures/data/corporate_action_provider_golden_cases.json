@@ -1,0 +1,66 @@
+{
+  "version": "0.1.0",
+  "purpose": "Official-source economic golden cases for provider reconciliation; not licensed-provider observations.",
+  "cases": [
+    {
+      "case_id": "NVDA_2024_FORWARD_SPLIT",
+      "symbol": "NVDA",
+      "action_type": "SPLIT",
+      "effective_date": "2024-06-10",
+      "split_old_shares": "1",
+      "split_new_shares": "10",
+      "official_source": "https://investor.nvidia.com/files/doc_downloads/2024/06/nvidia-2024-stock-split_faq_investors.pdf",
+      "expected_provider_fields": ["effective/ex date", "ratio", "stable event id", "revision timestamp"]
+    },
+    {
+      "case_id": "GE_2021_REVERSE_SPLIT",
+      "symbol": "GE",
+      "action_type": "REVERSE_SPLIT",
+      "effective_date": "2021-08-02",
+      "split_old_shares": "8",
+      "split_new_shares": "1",
+      "official_source": "https://www.ge.com/news/press-releases/ge-completes-one-for-eight-reverse-stock-split",
+      "expected_provider_fields": ["effective/ex date", "ratio", "new security identifier where applicable", "revision timestamp"]
+    },
+    {
+      "case_id": "IBM_2021_KYNDRYL_SPINOFF",
+      "symbol": "IBM",
+      "action_type": "SPINOFF",
+      "effective_date": "2021-11-03",
+      "stock_ratio": "0.2",
+      "outturn_symbol": "KD",
+      "official_source": "https://www.ibm.com/investor/services/faqs-about-the-kyndryl-holdings-inc-distribution",
+      "expected_provider_fields": ["effective/ex date", "record date", "outturn security", "distribution ratio", "revision timestamp"]
+    },
+    {
+      "case_id": "XLNX_2022_AMD_STOCK_ACQUISITION",
+      "symbol": "XLNX",
+      "action_type": "ACQUISITION",
+      "effective_date": "2022-02-14",
+      "stock_ratio": "1.7234",
+      "outturn_symbol": "AMD",
+      "official_source": "https://ir.amd.com/financial-information/sec-filings/content/0000002488-22-000031/amd-20220214.htm",
+      "expected_provider_fields": ["effective date", "successor security", "exchange ratio", "revision timestamp"]
+    },
+    {
+      "case_id": "TWTR_2022_CASH_MERGER",
+      "symbol": "TWTR",
+      "action_type": "MERGER",
+      "effective_date": "2022-10-27",
+      "cash_amount": "54.20",
+      "currency": "USD",
+      "official_source": "https://www.sec.gov/Archives/edgar/data/1418091/000119312522272772/d411753d8k.htm",
+      "expected_provider_fields": ["effective date", "cash consideration", "currency", "delisting/suspension linkage", "revision timestamp"]
+    },
+    {
+      "case_id": "BBBYQ_2023_BANKRUPTCY_ZERO_RECOVERY",
+      "symbol": "BBBYQ",
+      "action_type": "BANKRUPTCY",
+      "effective_date": "2023-09-29",
+      "cash_amount": "0",
+      "currency": "USD",
+      "official_source": "https://www.sec.gov/Archives/edgar/data/886158/000119312523247428/d579010d8k.htm",
+      "expected_provider_fields": ["effective date", "cancellation/zero-consideration evidence", "listing-status linkage", "revision timestamp"]
+    }
+  ]
+}
