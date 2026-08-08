@@ -1,3 +1,18 @@
+from .databento_companion import DatabentoCompanionClient, DatabentoCompanionError, DatabentoLicenseError, dataframe_row_count
+from .kibot import (
+    KibotAdjustment,
+    KibotClient,
+    KibotLicenseError,
+    KibotMinuteBar,
+    KibotSchemaError,
+    KibotTrade,
+    exact_trade_vwap,
+    normalize_daily_history,
+    parse_adjustments,
+    parse_daily_history,
+    parse_minute_history,
+    parse_tick_history,
+)
 """Production provider adapters for Phase 02 research ingestion."""
 
 from .massive import (
@@ -45,6 +60,18 @@ from .storage import RawSnapshotStore
 from .vwap import ExecutionVwap, build_execution_vwap
 
 __all__ = [
+    "KibotClient",
+    "KibotSchemaError",
+    "KibotLicenseError",
+    "KibotMinuteBar",
+    "KibotTrade",
+    "KibotAdjustment",
+    "parse_daily_history",
+    "normalize_daily_history",
+    "parse_minute_history",
+    "parse_tick_history",
+    "exact_trade_vwap",
+    "parse_adjustments",
     "MassiveClient",
     "MassiveSchemaError",
     "SecEdgarClient",

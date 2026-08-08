@@ -1,21 +1,23 @@
 {
-  "audit_date": "2026-08-06",
+  "audit_date": "2026-08-08",
   "phase": "PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN",
   "result": "NOT_READY",
   "phase03_authorized": false,
-  "mandatory_total": 17,
-  "pass": 9,
+  "mandatory_total": 18,
+  "pass": 10,
   "blocked": 7,
   "conditional": 1,
   "blocked_gate_ids": [
     "P02-G04",
-    "P02-G05",
     "P02-G07",
     "P02-G09",
     "P02-G11",
     "P02-G13",
-    "P02-G15"
+    "P02-G15",
+    "P02-G18"
   ],
-  "conditional_gate_ids": ["P02-G17"],
-  "note": "Engineering integration is coherent, but external provider/license/coverage evidence remains incomplete."
+  "conditional_gate_ids": [
+    "P02-G17"
+  ],
+  "note": "Core retention/private-use license gate is satisfied by Kibot within the approved personal scope; credentialed core-price and PIT identity/execution companion trials plus other external evidence remain incomplete."
 }

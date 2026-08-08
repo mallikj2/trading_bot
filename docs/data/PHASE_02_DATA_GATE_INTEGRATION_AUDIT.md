@@ -1,11 +1,11 @@
 # Phase 02 — Data Gate Integration Audit
 
-**Audit date:** 2026-08-06  
+**Audit date:** 2026-08-08  
 **Overall:** `ACTIVE — NOT READY FOR PHASE 03`
 
 ## Executive result
 
-The engineering architecture is coherent and cumulative regression is clean, but Phase 02 cannot close because mandatory external evidence is still missing.
+The engineering architecture remains coherent and cumulative regression is clean. The core provider retention decision has improved: Kibot's published private-use license satisfies the project's local immutable-retention requirement within the approved personal scope. However, the paid representative trial is still unrun, and Kibot cannot safely serve as the point-in-time security master or sole exact execution source.
 
 The machine-readable audit is `configs/data/phase02_data_gate_audit.yaml`. The runtime gate evaluator in `src/trading_bot/data/gates.py` prohibits Phase 03 authorization unless every mandatory gate is `PASS`.
 
@@ -17,7 +17,7 @@ The machine-readable audit is `configs/data/phase02_data_gate_audit.yaml`. The r
 | Minimum data kernel | PASS | No |
 | Production provider adapters | PASS | No |
 | Core provider credentialed representative trial | BLOCKED | **Yes** |
-| Core provider non-display/retention license | BLOCKED | **Yes** |
+| Core provider retention/private-research license | PASS | No |
 | Historical sector engine | PASS | No |
 | Full historical-sector coverage crawl | BLOCKED | **Yes** |
 | Complex corporate-action/total-return engine | PASS | No |
@@ -30,8 +30,23 @@ The machine-readable audit is `configs/data/phase02_data_gate_audit.yaml`. The r
 | Historical short-borrow source/license/coverage | BLOCKED | **Yes** |
 | Financing/cash-carry engine | PASS | No |
 | Full acceptance-period regulatory fee basis | CONDITIONAL | **Yes** |
+| PIT security-master and exact-execution source license/trial | BLOCKED | **Yes** |
 
-Result: **9 PASS / 7 BLOCKED / 1 CONDITIONAL** across 17 mandatory gates.
+Result: **10 PASS / 7 BLOCKED / 1 CONDITIONAL** across 18 mandatory gates.
+
+## Core market-data stack decision
+
+### Retained raw EOD archive
+
+Kibot is selected for the first paid retained EOD trial. Its published license permits private use and archival copies and states that already-delivered data may be kept and privately used after subscription cancellation. This approval is scope-bound to the current personal, local, non-redistributed project.
+
+### Point-in-time identity and exact execution
+
+Kibot is not an acceptable sole security master because its documented ticker-change and ticker-reuse behavior can rewrite or concatenate symbol histories. An independent point-in-time identity/listing source is mandatory before a Kibot file can be bound to the local immutable `instrument_id` over a historical interval.
+
+Databento is the preferred next companion trial candidate because its security-master/symbology products are designed around point-in-time listed/delisted securities and historical symbol mappings. Historical trades or equivalent exact records are also required for the Phase 01 10:00–10:30 ET acceptance VWAP.
+
+No Databento account/license/coverage result is claimed yet.
 
 ## Cross-contract consistency checks
 
@@ -40,10 +55,11 @@ Result: **9 PASS / 7 BLOCKED / 1 CONDITIONAL** across 17 mandatory gates.
 - Daily signal data remain bound to official session close plus the approved decision delay.
 - Earnings revisions, sector changes, borrow observations, corporate-action revisions, spread calibration models, and financing rates all use `available_at` gates.
 - Next-session VWAP/NBBO observations are execution evidence only and cannot leak into prior-close decisions.
+- A historical vendor archive does not by itself prove same-day `close + 30 minutes` publication. Same-day signal availability requires a separately validated publication contract/source.
 
 ### Identity
 
-All historical datasets are required to map to immutable `instrument_id`; ticker strings remain effective-dated aliases.
+All historical datasets are required to map to immutable `instrument_id`; ticker strings remain effective-dated aliases. Kibot ticker values are specifically prohibited from acting as immutable identifiers.
 
 ### Prices and economics
 
@@ -65,10 +81,10 @@ All historical datasets are required to map to immutable `instrument_id`; ticker
 
 ## External blockers required before Phase 03
 
-1. Approve a core research-data license that explicitly permits non-display quantitative research, local immutable archival, reproducible backtesting, and required retention.
-2. Run and pass the credentialed representative-case trial against that approved source.
+1. Run and pass the paid Kibot representative-case EOD trial under the approved private-research scope.
+2. Approve and trial a point-in-time security-master/exact-execution companion (Databento preferred candidate or equivalent).
 3. Run the SEC filing-header SIC coverage crawl with a compliant monitored-contact User-Agent and approve coverage/error thresholds.
-4. Reconcile representative complex corporate actions and terminal events against the approved provider.
+4. Reconcile representative complex corporate actions and terminal events against approved provider evidence.
 5. Obtain and validate a revision-aware historical earnings source, including retention rights.
 6. Approve a historical quote source and run the preregistered spread-calibration panel.
 7. Approve a retainable securities-lending source and run the historical borrow coverage trial.

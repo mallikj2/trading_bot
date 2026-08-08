@@ -1,0 +1,13 @@
+{
+  "core_price_trial_ready": false,
+  "databento_companion_trial_ready": false,
+  "databento_credentials": "MISSING",
+  "databento_research_license_acknowledged": "NO",
+  "databento_us_equities_dataset": "MISSING",
+  "full_market_data_stack_trial_ready": false,
+  "kibot_credentials": "MISSING",
+  "kibot_private_research_license_acknowledged": "NO",
+  "sec_user_agent": "MISSING",
+  "selected_core_price_provider": "KIBOT",
+  "selected_pit_security_master_candidate": "DATABENTO"
+}

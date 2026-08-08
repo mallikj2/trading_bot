@@ -19,7 +19,7 @@ from ..time_utils import require_aware
 from .models import SnapshotReceipt
 
 
-_SECRET_KEYS = {"apikey", "api_key", "authorization", "token", "access_token", "secret"}
+_SECRET_KEYS = {"apikey", "api_key", "authorization", "token", "access_token", "secret", "password", "passwd", "username", "user"}
 
 
 def redact_secrets(value: Any) -> Any:
@@ -71,6 +71,63 @@ class RawSnapshotStore:
         payload_path = snapshot_root / "response.json"
         payload_bytes = (canonical_json(payload) + "\n").encode("utf-8")
         write_bytes_immutable(payload_path, payload_bytes)
+        source_file = build_source_file(payload_path, snapshot_root)
+        manifest = DatasetManifest(
+            manifest_id=str(uuid4()),
+            dataset_name=dataset_name,
+            dataset_version=dataset_version,
+            provider=provider,
+            adapter_version=adapter_version,
+            schema_version=schema_version,
+            retrieved_at=retrieved,
+            coverage_start=coverage_start,
+            coverage_end=coverage_end,
+            request_parameters=redact_secrets(request_parameters),
+            source_files=(source_file,),
+            record_count=record_count,
+            license_classification=license_classification,
+            parent_manifest_ids=parent_manifest_ids,
+        )
+        manifest_path = snapshot_root / "manifest.json"
+        write_manifest_immutable(manifest_path, manifest)
+        return SnapshotReceipt(
+            snapshot_id=sid,
+            snapshot_root=snapshot_root.as_posix(),
+            payload_path=payload_path.as_posix(),
+            manifest_path=manifest_path.as_posix(),
+            manifest_hash=manifest.content_hash,
+            record_count=record_count,
+        )
+
+    def persist_text(
+        self,
+        *,
+        provider: str,
+        dataset_name: str,
+        dataset_version: str,
+        adapter_version: str,
+        schema_version: str,
+        retrieved_at: datetime,
+        request_parameters: Mapping[str, Any],
+        payload_text: str,
+        record_count: int,
+        license_classification: str,
+        coverage_start: date | None = None,
+        coverage_end: date | None = None,
+        parent_manifest_ids: tuple[str, ...] = (),
+        snapshot_id: str | None = None,
+        filename: str = "response.txt",
+    ) -> SnapshotReceipt:
+        """Persist an immutable non-JSON provider response such as CSV/TSV."""
+        retrieved = require_aware(retrieved_at, "retrieved_at")
+        if record_count < 0:
+            raise ValueError("record_count cannot be negative")
+        if Path(filename).name != filename or not filename.strip():
+            raise ValueError("filename must be a simple non-empty file name")
+        sid = snapshot_id or str(uuid4())
+        snapshot_root = self.root / provider.lower() / dataset_name / retrieved.date().isoformat() / sid
+        payload_path = snapshot_root / filename
+        write_bytes_immutable(payload_path, payload_text.encode("utf-8"))
         source_file = build_source_file(payload_path, snapshot_root)
         manifest = DatasetManifest(
             manifest_id=str(uuid4()),

@@ -1,0 +1,36 @@
+{
+  "as_of_date": "2025-12-31",
+  "checks": [
+    {
+      "id": "KIBOT_CORE_PRICE_SMOKE",
+      "reason": "KIBOT credentials and explicit private-research license acknowledgement are required",
+      "status": "BLOCKED"
+    },
+    {
+      "id": "SEC_SMOKE",
+      "reason": "SEC_USER_AGENT missing",
+      "status": "BLOCKED"
+    },
+    {
+      "id": "DATABENTO_PIT_IDENTITY_EXECUTION_SMOKE",
+      "reason": "Databento API key, explicit research-license approval, and approved US-equities dataset are required",
+      "status": "BLOCKED"
+    }
+  ],
+  "environment": {
+    "core_price_trial_ready": false,
+    "databento_companion_trial_ready": false,
+    "databento_credentials": "MISSING",
+    "databento_research_license_acknowledged": "NO",
+    "databento_us_equities_dataset": "MISSING",
+    "full_market_data_stack_trial_ready": false,
+    "kibot_credentials": "MISSING",
+    "kibot_private_research_license_acknowledged": "NO",
+    "sec_user_agent": "MISSING",
+    "selected_core_price_provider": "KIBOT",
+    "selected_pit_security_master_candidate": "DATABENTO"
+  },
+  "run_at": "2026-08-08T13:22:09.286095+00:00",
+  "status": "BLOCKED",
+  "ticker": "AAPL"
+}
