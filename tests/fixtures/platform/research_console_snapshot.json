@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "expected_routes": [
+    "/api/v1/health",
+    "/api/v1/overview",
+    "/api/v1/leads",
+    "/api/v1/watchlist",
+    "/api/v1/portfolio",
+    "/api/v1/risk",
+    "/api/v1/gates",
+    "/api/v1/data-health",
+    "/api/v1/audit"
+  ],
+  "expected_fixture_symbols": ["ALFA", "BETA", "GAMM", "DELT"],
+  "forbidden_mutation_words": ["buy", "sell", "submit", "cancel", "order"]
+}

@@ -1,40 +1,52 @@
-# Phase 02B — P02-PF01 TradeLead + Watchlist Bundle
+# Phase 02B — P02-PF02 Read-Only Research Console Bundle
 
-This is the cumulative repository-ready Phase 02 bundle after completing the first task in the reshaped pre-purchase platform foundation.
+This is the cumulative repository-ready Phase 02 bundle after completing the second task in the reshaped pre-purchase platform foundation.
 
 ## Result
 
-`P02-PF01 TRADELEAD_AND_WATCHLIST_DOMAIN = PASS`
+```text
+P02-PF01 TRADELEAD_AND_WATCHLIST_DOMAIN = PASS
+P02-PF02 READ_ONLY_API_AND_RESEARCH_CONSOLE = PASS
+P02-PF03 EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY = NEXT
+```
 
-The task adds the canonical deterministic `TradeLead`, lifecycle state machine, structured rejection/block reasons, watchlist projection, provenance/future-data guards, serialization/content hashes, once-only allocation, and an idempotent conflict-safe lead registry.
+PF02 adds a GET-only FastAPI API and a React + TypeScript Research Console for Overview, Trade Leads, Watchlist, synthetic Portfolio, Risk boundaries, Phase Gates, Data Health, and Audit Trail.
 
-It does **not** add broker connectivity, paper/live order submission, provider credentials, secrets, or strategy changes.
+It does **not** add broker connectivity, provider credentials, paper/live trading, mutation routes, browser secret storage, or frontend strategy logic.
 
 ## Current governance state
 
 ```text
-PHASE_02=ACTIVE
-P02-PF01=PASS
-P02-PF02=NEXT
+PHASE_02=ACTIVE_RESHAPED
 P02-PF-GATE=BLOCKED_REMAINING_TASKS
 PROCUREMENT_AUTHORIZED=false
 PROCUREMENT_READY_FOR_MANUAL_APPROVAL=false
 PHASE03_AUTHORIZED=false
 ```
 
-## Primary new files
+## New primary files
 
-- `src/trading_bot/platform/leads.py`
-- `docs/platform/TRADELEAD_WATCHLIST_CONTRACT.md`
-- `docs/phases/PHASE_02_PF01_TRADELEAD_WATCHLIST.md`
-- `configs/platform/trade_lead_watchlist.yaml`
-- `tests/unit/platform/test_trade_leads.py`
-- `tests/integration/platform/test_trade_lead_watchlist_flow.py`
-- `tests/fixtures/platform/trade_lead_cases.json`
-- `configs/project/phase02_roadmap_v0_3.yaml`
-- `PF01_TRADELEAD_WATCHLIST_RESULTS.json`
-- `VALIDATION_RESULTS.md`
+- `src/trading_bot/platform/research_console.py`
+- `src/trading_bot/platform/api/research_api.py`
+- `web/src/App.tsx`
+- `web/src/pages/`
+- `web/src/lib/`
+- `docs/platform/READ_ONLY_RESEARCH_CONSOLE_CONTRACT.md`
+- `docs/phases/PHASE_02_PF02_READ_ONLY_RESEARCH_CONSOLE.md`
+- `configs/platform/research_console.yaml`
+- `OPENAPI_PF02.json`
+- `PF02_RESEARCH_CONSOLE_RESULTS.json`
+- `tests/unit/platform/test_research_api.py`
+- `tests/integration/platform/test_research_console_api_flow.py`
 
 ## Validation
 
-Cumulative regression: **316 tests passed + 12 taxonomy subtests**.
+- **330 Python tests passed + 12 taxonomy subtests**
+- **5 Node/TypeScript frontend view-model tests passed**
+- React/TypeScript source type validation passed
+- live Uvicorn/OpenAPI smoke test passed
+- OpenAPI: 9 routes, GET only
+- YAML/JSON validation passed
+- no frontend broker/secret/mutation path detected
+
+The sandbox's internal npm mirror does not expose the public React/Vite packages, so the Vite production bundle was not built here. The React source and view-model logic were still type/test validated, and the package is configured for normal public npm installation.

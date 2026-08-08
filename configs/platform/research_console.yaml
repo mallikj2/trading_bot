@@ -1,0 +1,26 @@
+version: 0.2-pf02
+mode: READ_ONLY_RESEARCH
+environment: PHASE_02_FIXTURE
+api:
+  prefix: /api/v1
+  allowed_methods: [GET, HEAD, OPTIONS]
+  cors_origins:
+    - http://127.0.0.1:5173
+    - http://localhost:5173
+views:
+  - OVERVIEW
+  - TRADE_LEADS
+  - WATCHLIST
+  - PORTFOLIO
+  - RISK
+  - PHASE_GATES
+  - DATA_HEALTH
+  - AUDIT
+hard_boundaries:
+  mutation_routes_allowed: false
+  order_submission_allowed: false
+  broker_connectivity_allowed: false
+  frontend_strategy_logic_allowed: false
+  frontend_secret_storage_allowed: false
+  commercial_credentials_required: false
+fixture_banner_required: true

@@ -1,2 +1,8 @@
-# P02-PF01 adds no third-party runtime dependencies.
-# Python 3.11+ is required. pytest/PyYAML are development/test dependencies already used by Phase 02.
+# Phase 02B platform foundation runtime dependencies.
+# P02-PF02 adds a read-only FastAPI surface; React dependencies are isolated under web/package.json.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+# Development/test dependencies used by repository validation:
+pytest>=8,<10
+httpx>=0.27,<1
+PyYAML>=6,<7

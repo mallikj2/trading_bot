@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": ".test-dist",
+    "rootDir": ".",
+    "types": []
+  },
+  "include": ["src/lib/models.ts", "src/lib/selectors.ts", "tests/*.test.ts", "tests/node-shims.d.ts"]
+}

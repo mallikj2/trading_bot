@@ -30,11 +30,20 @@ subphases:
       - tests/integration/platform/test_trade_lead_watchlist_flow.py
     - id: P02-PF02
       name: READ_ONLY_API_AND_RESEARCH_CONSOLE
-      status: NOT_STARTED
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF02_READ_ONLY_RESEARCH_CONSOLE.md
+      - docs/platform/READ_ONLY_RESEARCH_CONSOLE_CONTRACT.md
+      - src/trading_bot/platform/research_console.py
+      - src/trading_bot/platform/api/research_api.py
+      - web/src/App.tsx
+      - OPENAPI_PF02.json
+      - tests/unit/platform/test_research_api.py
+      - tests/integration/platform/test_research_console_api_flow.py
     - id: P02-PF03
       name: EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     - id: P02-PF04
       name: RUNTIME_SAFETY_STATE_AND_PROTECTIONS
@@ -105,5 +114,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF02
-  name: READ_ONLY_API_AND_RESEARCH_CONSOLE
+  id: P02-PF03
+  name: EVENT_JOURNAL_AND_DETERMINISTIC_REPLAY
