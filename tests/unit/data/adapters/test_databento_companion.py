@@ -55,6 +55,7 @@ def test_security_master_range_uses_pit_effective_index():
     assert dataframe_row_count(rows) == 1
     assert ref.security_master.calls[0]["index"] == "ts_effective"
     assert ref.security_master.calls[0]["countries"] == ["US"]
+    assert ref.security_master.calls[0]["security_types"] == ["EQS"]
 
 
 def test_historical_trades_requires_explicit_dataset_and_trade_schema():
@@ -75,3 +76,4 @@ def test_historical_trades_requires_explicit_dataset_and_trade_schema():
     call = hist.timeseries.calls[0]
     assert call["schema"] == "trades"
     assert call["dataset"] == "TEST.US.EQUITIES"
+    assert call["stype_in"] == "figi"

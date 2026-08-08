@@ -1,0 +1,101 @@
+version: "0.2.0"
+decision_date: "2026-08-08"
+gates:
+  - P02-G04
+  - P02-G18
+status: BLOCKED_PENDING_CREDENTIALED_EVIDENCE
+
+security_master:
+  preferred_candidate: DATABENTO
+  minimum_history_years_for_acceptance: 10
+  documented_history_start: "2005-01-01"
+  require_point_in_time_record_timestamp: true
+  record_knowledge_timestamp_field: ts_record
+  economic_effective_timestamp_field: ts_effective
+  required_fields:
+    - listing_id
+    - security_id
+    - issuer_id
+    - listing_status
+    - listing_source
+    - security_type
+    - primary_exchange
+    - cik
+    - figi
+    - listing_date
+    - delisting_date
+  panel:
+    active_listings_minimum: 10
+    delisted_listings_minimum: 5
+    symbol_change_sequences_minimum: 5
+    ticker_reuse_examples_minimum: 1
+    security_type_exclusions_minimum: 5
+    random_identity_review_minimum: 25
+  fail_closed:
+    - FUTURE_TS_RECORD
+    - AMBIGUOUS_PRIMARY_LISTING
+    - CONFLICTING_LATEST_RECORDS
+    - MISSING_CIK_FOR_OTHERWISE_ELIGIBLE_SECURITY
+    - MISSING_STABLE_MARKET_IDENTIFIER
+    - UNKNOWN_SECURITY_TYPE
+    - UNKNOWN_EXCHANGE
+
+sector_blind_target_ledger:
+  required: true
+  output_schema_version: "0.2.0"
+  final_universe_rules_applied_except:
+    - sector
+  monthly_freeze_required: true
+  eligible_target_missing_cik_allowed: false
+  ticker_as_identity_allowed: false
+  consumer: P02-G07
+
+market_cap_corroboration:
+  formula: raw_close_times_pit_shares_outstanding
+  require_shares_record_known_by_decision: true
+  require_shares_effective_date_not_future: true
+  replace_sec_companyfacts_without_reconciliation: false
+
+exact_execution:
+  benchmark: NEXT_SESSION_1000_1030_ET_TRADE_VWAP
+  timezone: America/New_York
+  schema: trades
+  stable_query_symbology_preference:
+    - figi
+    - us_code
+    - isin
+  required_days:
+    total_minimum: 20
+    standard_time_minimum: 5
+    daylight_time_minimum: 5
+    high_liquidity_minimum: 5
+    lower_liquidity_minimum: 5
+  coverage_profile:
+    manually_approved: false
+    must_document_component_venues: true
+    must_document_off_exchange_coverage: true
+    must_document_historical_coverage_changes: true
+    partial_venue_feed_may_be_called_market_wide: false
+  data_quality:
+    reject_bad_ts_recv: true
+    reject_maybe_bad_book: true
+    reject_multiple_provider_instrument_ids_in_window: true
+    require_positive_price_and_size: true
+  vwap:
+    numerator: sum_price_times_size
+    denominator: sum_size
+    end_time_exclusive: true
+
+credentialed_trial:
+  required_environment:
+    - DATABENTO_API_KEY
+    - DATABENTO_RESEARCH_LICENSE_APPROVED
+    - DATABENTO_EXECUTION_DATASET
+    - DATABENTO_EXECUTION_COVERAGE_APPROVED
+  pass_requires:
+    - ACCOUNT_TERMS_REVIEWED_FOR_PRIVATE_NON_DISPLAY_RESEARCH
+    - RETENTION_AND_REPRODUCIBILITY_RIGHTS_APPROVED
+    - SECURITY_MASTER_PANEL_PASS
+    - EXACT_EXECUTION_PANEL_PASS
+    - SECTOR_BLIND_TARGET_LEDGER_GENERATED
+    - NO_UNRESOLVED_IDENTITY_CONFLICTS

@@ -9,6 +9,8 @@ def _clear(monkeypatch):
         "DATABENTO_API_KEY",
         "DATABENTO_RESEARCH_LICENSE_APPROVED",
         "DATABENTO_US_EQUITIES_DATASET",
+        "DATABENTO_EXECUTION_DATASET",
+        "DATABENTO_EXECUTION_COVERAGE_APPROVED",
         "SEC_USER_AGENT",
     ):
         monkeypatch.delenv(key, raising=False)
@@ -39,6 +41,9 @@ def test_databento_companion_requires_credentials_license_and_dataset(monkeypatc
     monkeypatch.setenv("DATABENTO_RESEARCH_LICENSE_APPROVED", "true")
     status = core_trial.environment_status()
     assert status["databento_companion_trial_ready"] is False
-    monkeypatch.setenv("DATABENTO_US_EQUITIES_DATASET", "TEST.US.EQUITIES")
+    monkeypatch.setenv("DATABENTO_EXECUTION_DATASET", "TEST.US.EQUITIES")
+    status = core_trial.environment_status()
+    assert status["databento_companion_trial_ready"] is False
+    monkeypatch.setenv("DATABENTO_EXECUTION_COVERAGE_APPROVED", "true")
     status = core_trial.environment_status()
     assert status["databento_companion_trial_ready"] is True

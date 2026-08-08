@@ -1,8 +1,9 @@
-# Validation Results — Phase 02 SEC Historical Sector Coverage Crawl
+# Validation Results — Phase 02 PIT Security-Master and Exact-Execution Integration
 
 **Date:** 2026-08-08  
-**Task status:** `IMPLEMENTATION PASS / REAL CRAWL BLOCKED`  
-**P02-G07:** `BLOCKED`  
+**Task status:** `ENGINEERING PASS / CREDENTIALED EVIDENCE BLOCKED`  
+**P02-G04:** `BLOCKED`  
+**P02-G18:** `BLOCKED`  
 **Phase 02 status:** `ACTIVE — NOT READY FOR PHASE 03`
 
 ## Cumulative automated tests
@@ -16,90 +17,125 @@ PYTHONPATH=src pytest -q
 Result:
 
 ```text
-273 passed, 12 subtests passed
+287 passed, 12 subtests passed
 ```
 
-This includes the approved Phase 01 strategy tests and the cumulative Phase 02 stack.
+This includes the approved Phase 01 strategy tests and the full cumulative Phase 02 stack.
 
-## Focused SEC sector coverage tests
+## Focused PIT companion / target-ledger tests
 
 Command:
 
 ```bash
 PYTHONPATH=src pytest -q \
-  tests/unit/data/test_sector_coverage.py \
-  tests/unit/data/adapters/test_sec_sector_crawl.py \
-  tests/integration/data/adapters/test_sec_sector_coverage_crawl_pipeline.py \
-  tests/integration/data/test_sec_sector_coverage_gate.py \
-  tests/unit/data/adapters/test_sec_filing_sic.py
+  tests/unit/data/adapters/test_databento_companion.py \
+  tests/unit/data/adapters/test_databento_pit_execution.py \
+  tests/unit/data/adapters/test_core_trial.py \
+  tests/unit/data/adapters/test_pit_companion_trial.py \
+  tests/unit/data/test_pit_acceptance.py \
+  tests/integration/data/test_pit_companion_sector_ledger.py
 ```
 
 Result:
 
 ```text
-19 passed, 12 subtests passed
+20 passed
 ```
 
 Focused coverage includes:
 
-- modern and legacy SEC filing-header SIC parsing;
-- exact target-CIK selection;
-- frozen FF12 mapping boundaries;
-- conservative 3-minute publication buffer;
-- future sector-change exclusion;
-- SEC daily master-index parsing;
-- duplicate/conflicting accession rejection;
-- sector-blind target-ledger enforcement;
-- resumable crawl checkpointing;
-- immutable raw daily-index and filing persistence;
-- end-to-end offline daily-index -> filing -> sector history pipeline;
-- 99% coverage arithmetic;
-- zero-unresolved-filing requirement;
-- actual-sector-change manual review matching;
-- P02-G07 machine gate remains blocked without real evidence.
+- approval-gated Databento SDK client construction;
+- US common-equity security-master filtering;
+- separate `ts_effective` and `ts_record` handling;
+- future provider-record exclusion;
+- PIT primary-listing selection;
+- ticker-reuse detection;
+- stable FIGI historical execution queries;
+- EST/EDT-correct 10:00–10:30 ET execution windows;
+- exact trade-size-weighted VWAP;
+- bad timestamp/book-quality rejection;
+- mixed provider-instrument rejection;
+- sector-blind monthly universe behavior;
+- PIT CIK/exchange/security-type cross-checks;
+- PIT shares-outstanding market-cap corroboration;
+- direct sector-ledger compatibility with the SEC crawler;
+- fail-closed credential/license/execution-coverage governance.
 
-## Real runner invocation
+## Credentialed runner invocation
 
-The real CLI entrypoint was invoked without inventing credentials:
+The standalone companion runner was invoked with external secrets intentionally absent:
 
 ```bash
-env -u SEC_USER_AGENT -u SEC_SECTOR_TARGET_LEDGER \
-  PYTHONPATH=src python -m trading_bot.data.adapters.sec_sector_crawl \
-  --output SEC_SECTOR_COVERAGE_RESULTS.json
+env -u DATABENTO_API_KEY \
+    -u DATABENTO_RESEARCH_LICENSE_APPROVED \
+    -u DATABENTO_EXECUTION_DATASET \
+    -u DATABENTO_US_EQUITIES_DATASET \
+    -u DATABENTO_EXECUTION_COVERAGE_APPROVED \
+  PYTHONPATH=src python -m trading_bot.data.adapters.pit_companion_trial smoke \
+    --ticker AAPL \
+    --as-of-date 2025-12-31 \
+    --output PIT_COMPANION_TRIAL_RESULTS.json
 ```
 
 Result: exit code `2`, `BLOCKED`.
 
-Blocking reasons recorded by the runner:
+The runner requires:
 
 ```text
-SEC_USER_AGENT_WITH_MONITORED_CONTACT_REQUIRED
-SECTOR_BLIND_TARGET_LEDGER_REQUIRED_FROM_UPSTREAM_PIT_UNIVERSE
+DATABENTO_API_KEY
+DATABENTO_RESEARCH_LICENSE_APPROVED=true
+DATABENTO_EXECUTION_DATASET=<approved dataset>
+DATABENTO_EXECUTION_COVERAGE_APPROVED=true
 ```
 
-No full-crawl coverage percentage or 25-case manual review is claimed.
+No PIT provider coverage, execution coverage, license, or VWAP accuracy claim is made from offline fixtures.
+
+## End-to-end integration evidence
+
+The integration test validates this chain without vendor fabrication:
+
+```text
+PIT security-master record
+    -> immutable internal instrument identity
+    -> sector-blind Phase 01 monthly universe target
+    -> P02-G07 SEC target-ledger payload
+    -> SEC crawler target-ledger parser
+
+stable instrument identity
+    -> trade-level 10:00–10:30 ET records
+    -> exact size-weighted VWAP
+```
+
+The target-ledger path deliberately removes only the sector requirement. Missing PIT CIK for an otherwise eligible security blocks the build instead of shrinking the P02-G07 denominator.
 
 ## Compilation and artifact parsing
 
 - Python `compileall`: PASS
-- YAML parse: PASS — 15 files
-- JSON parse: PASS — 11 files
+- YAML parse: PASS
+- JSON parse: PASS
 - Gate audit: 18 mandatory = 11 PASS / 7 BLOCKED / 0 CONDITIONAL
 - Phase 03 authorization: FALSE
 
-## Governance correction validated
+## Current gate conclusions
 
-The SEC filing-header availability buffer is now 3 minutes rather than 1 minute. This change is limited to historical filing-header SIC availability and does not alter the Phase 01 strategy specification.
+### P02-G04
 
-## P02-G07 result
+**BLOCKED** until the paid/composite core-provider representative trial is completed.
 
-**BLOCKED** until all real evidence is present:
+### P02-G18
 
-1. monitored-contact SEC User-Agent;
-2. sector-blind PIT target ledger from upstream historical universe/security-master evidence;
-3. real full crawl with >=99% coverage;
-4. zero unresolved selected filing headers;
-5. >=25 approved real sector-change original-archive reviews.
+**BLOCKED** until:
+
+1. account-specific research and retention rights are approved;
+2. the execution dataset is explicitly selected;
+3. the historical venue/off-exchange execution coverage profile is approved;
+4. the security-master representative panel passes;
+5. the exact execution representative panel passes;
+6. a real sector-blind monthly target ledger is produced from credentialed PIT data.
+
+### P02-G07 dependency
+
+The internal sector-blind ledger builder is now complete, but the real ledger still depends on P02-G04/P02-G18 external evidence. The SEC monitored-contact crawl remains separately required.
 
 ### Phase 03
 

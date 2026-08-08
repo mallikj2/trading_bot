@@ -1,12 +1,6 @@
 {
   "audit_date": "2026-08-08",
-  "phase": "PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN",
-  "result": "NOT_READY",
-  "phase03_authorized": false,
-  "mandatory_total": 18,
-  "pass": 11,
   "blocked": 7,
-  "conditional": 0,
   "blocked_gate_ids": [
     "P02-G04",
     "P02-G07",
@@ -16,6 +10,12 @@
     "P02-G15",
     "P02-G18"
   ],
+  "conditional": 0,
   "conditional_gate_ids": [],
-  "note": "P02-G07 crawl runner is implemented and validated offline, but the real SEC sector coverage gate remains BLOCKED pending a monitored-contact SEC_USER_AGENT and a sector-blind PIT target ledger from the unresolved core provider/security-master gates. Seven external/dependency gates remain BLOCKED."
+  "mandatory_total": 18,
+  "overall_status": "ACTIVE_NOT_READY_FOR_PHASE03",
+  "pass": 11,
+  "phase": "PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN",
+  "phase03_authorized": false,
+  "version": "0.2.0"
 }

@@ -1,4 +1,4 @@
-version: "0.2.0"
+version: "0.2.1"
 decision_date: "2026-08-08"
 status: SELECTED_PENDING_CREDENTIALED_TRIAL
 
@@ -27,16 +27,58 @@ core_price_archive:
 
 pit_identity_and_execution_companion:
   preferred_candidate: DATABENTO
-  status: BLOCKED_PENDING_ACCOUNT_LICENSE_AND_TRIAL
+  status: BLOCKED_PENDING_ACCOUNT_LICENSE_COVERAGE_PROFILE_AND_TRIAL
   credential_env: DATABENTO_API_KEY
   license_ack_env: DATABENTO_RESEARCH_LICENSE_APPROVED
-  dataset_env: DATABENTO_US_EQUITIES_DATASET
+  execution_dataset_env: DATABENTO_EXECUTION_DATASET
+  execution_coverage_ack_env: DATABENTO_EXECUTION_COVERAGE_APPROVED
+  documented_security_master_history_start: "2005-01-01"
   required_capabilities:
     - POINT_IN_TIME_SECURITY_MASTER
     - LISTING_AND_DELISTING_DATES
+    - LISTING_SECURITY_AND_ISSUER_IDENTIFIERS
     - SECURITY_TYPE
-    - HISTORICAL_SYMBOL_MAPPING_WITH_REUSE
-    - TRADE_LEVEL_OR_EQUIVALENT_EXACT_1000_1030_ET_VWAP_INPUT
+    - PRIMARY_EXCHANGE
+    - CIK_AND_STABLE_MARKET_IDENTIFIERS
+    - HISTORICAL_SYMBOL_MAPPING_WITH_TICKER_REUSE_DETECTION
+    - POINT_IN_TIME_SHARES_OUTSTANDING_FOR_CORROBORATION
+    - TRADE_LEVEL_1000_1030_ET_EXECUTION_INPUT
+  timestamp_policy:
+    economic_effective_timestamp: ts_effective
+    earliest_provider_knowledge_timestamp: ts_record
+    rule: RECORD_MUST_SATISFY_TS_EFFECTIVE_AND_TS_RECORD_LE_DECISION_TIME
+  security_master_query_policy:
+    country: US
+    security_type: EQS
+    prefer_stable_trade_query_symbology:
+      - figi
+      - us_code
+      - isin
+    prohibit_symbol_only_identity: true
+  exact_execution_policy:
+    window_timezone: America/New_York
+    start: "10:00:00"
+    end_exclusive: "10:30:00"
+    schema: trades
+    vwap_weight: trade_size
+    reject_quality_flags:
+      - BAD_TS_RECV
+      - MAYBE_BAD_BOOK
+    coverage_profile_must_be_separately_approved: true
+    prohibit_assumption_that_any_single_dataset_is_market_wide: true
+    note: >-
+      The configured dataset must have a documented historical venue/off-exchange
+      coverage profile sufficient for the frozen Phase 01 execution benchmark.
+      EQUS.MINI or any venue-only feed is not automatically accepted as a
+      complete market-wide tape.
+  sector_blind_ledger_output:
+    required: true
+    consumer: P02-G07_SEC_HISTORICAL_SECTOR_COVERAGE_CRAWL
+    all_phase01_universe_rules_except_sector: true
+    missing_pit_cik_fails_closed: true
+  market_cap_role:
+    status: ALTERNATE_OR_CORROBORATING_UNTIL_CREDENTIALED_RECONCILIATION
+    formula: RAW_CLOSE_X_PIT_SHARES_OUTSTANDING
   acceptance_history_requirement_years: 10
 
 sec_companion:
@@ -50,5 +92,8 @@ prohibited_shortcuts:
   - DO_NOT_USE_KIBOT_CURRENT_SYMBOL_LIST_AS_HISTORICAL_UNIVERSE
   - DO_NOT_TREAT_KIBOT_TICKER_AS_IMMUTABLE_INSTRUMENT_ID
   - DO_NOT_USE_BACK_ADJUSTED_KIBOT_HISTORY_AS_RAW_EXECUTION_PRICE
+  - DO_NOT_USE_TS_EFFECTIVE_WITHOUT_TS_RECORD_FOR_PIT_KNOWLEDGE
+  - DO_NOT_QUERY_FINAL_ACCEPTANCE_TRADES_BY_TICKER_WHEN_A_STABLE_ID_IS_AVAILABLE
+  - DO_NOT_CALL_A_PARTIAL_VENUE_FEED_MARKET_WIDE_VWAP
   - DO_NOT_APPROXIMATE_FINAL_ACCEPTANCE_VWAP_FROM_OHLC_BARS
   - DO_NOT_RUN_PHASE03_UNTIL_ALL_MANDATORY_GATES_PASS

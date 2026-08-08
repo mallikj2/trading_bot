@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "purpose": "Representative case categories; not vendor observations and not evidence of a provider PASS.",
+  "security_master_cases": [
+    {"case_id": "ACTIVE_LISTINGS", "minimum": 10},
+    {"case_id": "DELISTED_LISTINGS", "minimum": 5},
+    {"case_id": "SYMBOL_CHANGE_SEQUENCES", "minimum": 5},
+    {"case_id": "TICKER_REUSE", "minimum": 1},
+    {"case_id": "SECURITY_TYPE_EXCLUSIONS", "minimum": 5},
+    {"case_id": "RANDOM_IDENTITY_REVIEW", "minimum": 25}
+  ],
+  "execution_cases": [
+    {"case_id": "STANDARD_TIME", "minimum": 5},
+    {"case_id": "DAYLIGHT_TIME", "minimum": 5},
+    {"case_id": "HIGH_LIQUIDITY", "minimum": 5},
+    {"case_id": "LOWER_ELIGIBLE_LIQUIDITY", "minimum": 5}
+  ],
+  "prohibited_interpretations": [
+    "DO_NOT_TREAT_THIS_FIXTURE_AS_PROVIDER_EVIDENCE",
+    "DO_NOT_ASSUME_ANY_SINGLE_DATABENTO_DATASET_IS_COMPLETE_MARKET_WIDE_COVERAGE",
+    "DO_NOT_QUERY_BY_CURRENT_TICKER_WHEN_STABLE_IDENTITY_IS_AVAILABLE"
+  ]
+}

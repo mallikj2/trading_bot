@@ -1,17 +1,19 @@
-# Phase 02 Regulatory Fee Basis Freeze Bundle
+# Phase 02 PIT Security-Master and Exact-Execution Integration Bundle
 
-Cumulative repository-ready Phase 02 bundle through `P02-G17 FULL_ACCEPTANCE_PERIOD_REGULATORY_FEE_BASIS`.
+Cumulative repository-ready Phase 02 bundle through the internal P02-G04/P02-G18 integration layer.
 
 ## New in this bundle
 
-- frozen SEC Section 31 history from 2010-01-01 through 2026-08-08;
-- frozen FINRA covered-equity TAF history over the same interval;
-- deterministic rate composition and acceptance-period coverage validator;
-- FINRA low-price TAF exemption;
-- regulatory fee contract and official evidence register;
-- updated transaction-cost config;
-- updated Phase 02 integration audit and machine gate state;
-- P02-G17 promoted from CONDITIONAL to PASS.
+- hardened PIT security-master normalization using both `ts_effective` and `ts_record`;
+- stable provider security/listing identity and ticker-reuse detection;
+- approval-gated stable-ID historical trade queries;
+- exact DST-aware 10:00–10:30 ET trade VWAP;
+- separate execution-coverage governance gate;
+- PIT shares-outstanding market-cap corroboration;
+- sector-blind monthly universe/target-ledger builder for P02-G07;
+- direct integration test from PIT identity to SEC target-ledger parsing;
+- standalone credentialed PIT companion runner;
+- machine-readable representative acceptance policy.
 
 ## Current gate state
 
@@ -23,25 +25,13 @@ Cumulative repository-ready Phase 02 bundle through `P02-G17 FULL_ACCEPTANCE_PER
 PHASE03_AUTHORIZED=false
 ```
 
-The seven remaining gates require external licensed data, provider credentials, or external coverage evidence.
+P02-G04 and P02-G18 remain BLOCKED because no approved Databento/equivalent account license, execution coverage profile, or credentialed representative trial is present. P02-G07 remains blocked until the real sector-blind ledger and monitored-contact SEC crawl are completed.
 
 See:
 
-- `docs/phases/PHASE_02_REGULATORY_FEE_BASIS_FREEZE.md`
-- `docs/data/REGULATORY_FEE_BASIS_CONTRACT.md`
-- `docs/data/TRANSACTION_FEE_EVIDENCE_REGISTER.md`
+- `docs/phases/PHASE_02_PIT_SECURITY_MASTER_AND_EXECUTION_INTEGRATION.md`
+- `docs/data/PIT_SECURITY_MASTER_EXECUTION_CONTRACT.md`
+- `docs/data/PIT_COMPANION_REPRESENTATIVE_TRIAL_RUNBOOK.md`
+- `configs/data/pit_security_master_execution_acceptance.yaml`
+- `PIT_COMPANION_TRIAL_RESULTS.json`
 - `VALIDATION_RESULTS.md`
-
-## Latest Phase 02 increment — SEC historical sector coverage crawl
-
-This cumulative bundle adds the P02-G07 crawl/evidence layer:
-
-- `src/trading_bot/data/sector_coverage.py`
-- `src/trading_bot/data/adapters/sec_sector_crawl.py`
-- `configs/data/sec_sector_coverage_crawl.yaml`
-- `docs/phases/PHASE_02_SEC_HISTORICAL_SECTOR_COVERAGE_CRAWL.md`
-- `docs/data/SEC_SECTOR_COVERAGE_CRAWL_CONTRACT.md`
-- `docs/data/SEC_SECTOR_COVERAGE_RUNBOOK.md`
-- `SEC_SECTOR_COVERAGE_RESULTS.json`
-
-The engineering is complete, but P02-G07 remains BLOCKED until the real sector-blind PIT target ledger and compliant monitored-contact SEC User-Agent are available.

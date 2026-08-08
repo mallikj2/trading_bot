@@ -32,7 +32,13 @@ class UniversePolicy:
     max_vol20_annualized: Decimal = Decimal("0.80")
 
 
-def _reasons(value: UniverseInput, freeze_at: datetime, policy: UniversePolicy) -> tuple[UniverseReason, ...]:
+def _reasons(
+    value: UniverseInput,
+    freeze_at: datetime,
+    policy: UniversePolicy,
+    *,
+    require_sector: bool = True,
+) -> tuple[UniverseReason, ...]:
     reasons: list[UniverseReason] = []
     if value.latest_available_at > freeze_at:
         reasons.append(UniverseReason.FUTURE_INFORMATION)
@@ -54,7 +60,7 @@ def _reasons(value: UniverseInput, freeze_at: datetime, policy: UniversePolicy) 
         reasons.append(UniverseReason.INSUFFICIENT_HISTORY)
     if value.vol20_annualized is None or value.vol20_annualized > policy.max_vol20_annualized:
         reasons.append(UniverseReason.VOLATILITY_TOO_HIGH)
-    if value.sector_code is None or not value.sector_code.strip():
+    if require_sector and (value.sector_code is None or not value.sector_code.strip()):
         reasons.append(UniverseReason.MISSING_SECTOR)
     if value.quality_status != DataQualityStatus.VALID:
         reasons.append(UniverseReason.DATA_QUALITY_FAILURE)
@@ -87,7 +93,7 @@ def build_monthly_universe(
 
     memberships: list[UniverseMembership] = []
     for row in rows:
-        reasons = _reasons(row, freeze, cfg)
+        reasons = _reasons(row, freeze, cfg, require_sector=True)
         eligible = not reasons
         frozen_hash = content_hash(row)
         memberships.append(
@@ -105,6 +111,54 @@ def build_monthly_universe(
         )
     return tuple(memberships)
 
+
+
+def build_sector_blind_monthly_universe(
+    inputs: Iterable[UniverseInput],
+    *,
+    effective_month: date,
+    freeze_at: datetime,
+    source_manifest_hash: str,
+    universe_version: str,
+    policy: UniversePolicy | None = None,
+) -> tuple[UniverseMembership, ...]:
+    """Freeze the otherwise-eligible universe without applying sector.
+
+    This is the canonical denominator builder for the Phase 02 historical-sector
+    coverage audit. Every rule from :func:`build_monthly_universe` is applied
+    except ``MISSING_SECTOR``. The caller must not derive any other input from a
+    sector field.
+    """
+    if effective_month.day != 1:
+        raise UniverseBuildError("effective_month must be the first day of a month")
+    freeze = require_aware(freeze_at, "freeze_at")
+    if len(source_manifest_hash) != 64:
+        raise UniverseBuildError("source_manifest_hash must be SHA-256")
+    cfg = policy or UniversePolicy()
+    rows = sorted(inputs, key=lambda item: item.instrument_id.hex)
+    if not rows:
+        raise UniverseBuildError("universe input is empty")
+    if len({row.instrument_id for row in rows}) != len(rows):
+        raise UniverseBuildError("duplicate instrument in universe input")
+
+    memberships: list[UniverseMembership] = []
+    for row in rows:
+        reasons = _reasons(row, freeze, cfg, require_sector=False)
+        eligible = not reasons
+        memberships.append(
+            UniverseMembership(
+                universe_version=universe_version,
+                effective_month=effective_month,
+                instrument_id=row.instrument_id,
+                eligible=eligible,
+                reason_codes=(UniverseReason.ELIGIBLE,) if eligible else reasons,
+                freeze_at=freeze,
+                source_manifest_hash=source_manifest_hash,
+                calculation_version=cfg.policy_version + "-SECTOR-BLIND",
+                frozen_values_hash=content_hash(row),
+            )
+        )
+    return tuple(memberships)
 
 def universe_membership_hash(memberships: Iterable[UniverseMembership]) -> str:
     ordered = sorted(memberships, key=lambda row: row.instrument_id.hex)

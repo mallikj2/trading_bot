@@ -1,0 +1,22 @@
+{
+  "as_of_date": "2025-12-31",
+  "checks": [
+    {
+      "id": "PIT_SECURITY_MASTER_AND_EXACT_EXECUTION_SMOKE",
+      "reason": "DATABENTO_API_KEY, DATABENTO_RESEARCH_LICENSE_APPROVED=true, DATABENTO_EXECUTION_DATASET, and DATABENTO_EXECUTION_COVERAGE_APPROVED=true are required",
+      "status": "BLOCKED"
+    }
+  ],
+  "environment": {
+    "credentials": "MISSING",
+    "execution_coverage_approved": "NO",
+    "execution_dataset": "MISSING",
+    "provider": "DATABENTO",
+    "research_license_approved": "NO",
+    "trial_ready": false
+  },
+  "run_at": "2026-08-08T14:56:19.372938+00:00",
+  "status": "BLOCKED",
+  "ticker": "AAPL",
+  "version": "0.2.0"
+}
