@@ -1,7 +1,8 @@
-# Validation Results — Phase 02 Corporate-Action Provider Reconciliation
+# Validation Results — Phase 02 Regulatory Fee Basis Freeze
 
 **Date:** 2026-08-08  
-**Task status:** `ENGINEERING PASS / LICENSED PROVIDER TRIAL BLOCKED`  
+**Task status:** `PASS`  
+**P02-G17:** `PASS`  
 **Phase 02 status:** `ACTIVE — NOT READY FOR PHASE 03`
 
 ## Cumulative automated tests
@@ -15,87 +16,66 @@ PYTHONPATH=src pytest -q tests
 Result:
 
 ```text
-243 passed, 12 subtests passed
+262 passed, 12 subtests passed
 ```
 
 This includes the approved Phase 01 strategy suite and all cumulative Phase 02 tests.
 
-## New provider-reconciliation focused tests
+## New regulatory-fee focused tests
 
-```text
-24 passed
-```
-
-Coverage includes:
-
-- provider-neutral corporate-action evidence contracts;
-- split/reverse-split economics;
-- spinoff ratio and mandatory outturn identifier;
-- merger/acquisition cash, currency, stock ratio and successor checks;
-- explicit zero-recovery terminal events;
-- missing provider evidence fail-closed behavior;
-- future provider revision exclusion at a reconciliation cut-off;
-- conflicting latest provider revisions;
-- multiple distinct same-day provider events;
-- provider cancellation/deletion behavior;
-- EDI historical-export parsing and explicit ratio semantics;
-- Databento license gating, US/PIT request enforcement and ratio normalization;
-- representative-trial environment gating;
-- six official-source golden-case shapes;
-- multi-action integration reconciliation.
-
-## Credentialed representative trial
-
-The executable trial runner was invoked:
+Command:
 
 ```bash
-PYTHONPATH=src python -m trading_bot.data.adapters.corporate_action_trial \
-  --output CORPORATE_ACTION_PROVIDER_TRIAL_RESULTS.json
-```
-
-Observed prerequisites:
-
-```text
-EDI_CORPORATE_ACTIONS_EXPORT_PATH: MISSING
-EDI_CORPORATE_ACTIONS_LICENSE_APPROVED: NO
-DATABENTO_API_KEY: MISSING
-DATABENTO_CORPORATE_ACTIONS_LICENSE_APPROVED: NO
+PYTHONPATH=src pytest -q \
+  tests/unit/data/test_regulatory_fee_basis.py \
+  tests/integration/data/test_regulatory_fee_gate.py
 ```
 
 Result:
 
 ```text
-CORPORATE_ACTION_PROVIDER_TRIAL_RESULTS.json: BLOCKED
+19 passed
 ```
 
-No EDI or Databento paid-data accuracy, completeness, retention-right, or coverage result is claimed.
+Coverage includes:
 
-## Compilation and artifact validation
+- contiguous Section 31 schedule coverage;
+- contiguous FINRA TAF schedule coverage;
+- deterministic composition of independent fee schedules;
+- exact effective-date boundary selection;
+- 2025 zero Section 31 interval;
+- 2026 Section 31 restart;
+- FINRA TAF per-trade cap;
+- FINRA low-price exemption;
+- gap/overlap fail-closed behavior;
+- acceptance-period out-of-range failure;
+- machine gate promotion of P02-G17 to PASS.
+
+## Compilation and artifact parsing
 
 - Python `compileall`: PASS
-- YAML parse: PASS
-- JSON parse: PASS
-- Gate audit: 18 mandatory = 10 PASS / 7 BLOCKED / 1 CONDITIONAL
-- `P02-G09`: BLOCKED with reason `EDI_LONG_HISTORY_AND_DATABENTO_PIT_OVERLAP_REPRESENTATIVE_TRIAL_NOT_RUN`
+- YAML parse: PASS — 14 files
+- JSON parse: PASS — 9 files
+- Gate audit: 18 mandatory = 11 PASS / 7 BLOCKED / 0 CONDITIONAL
 - Phase 03 authorization: FALSE
 
 ## Gate result
 
-### Reconciliation engineering and offline adversarial tests
+### P02-G17 full acceptance-period regulatory fee basis
 
 **PASS**
 
-### Source selection
+Frozen coverage:
 
-**PASS — EDI long-history primary / Databento PIT-overlap secondary**
-
-### Licensed representative provider reconciliation
-
-**BLOCKED**
+```text
+2010-01-01 through 2026-08-08
+```
 
 ### Phase 02 final data gate
 
 **NOT READY**
+
+Seven external evidence/license/credential gates remain BLOCKED.
 
 ### Phase 03 final acceptance backtest
 

@@ -408,7 +408,12 @@ def regulatory_sell_fees_usd(
         raise DataContractError("shares and price must be positive")
     notional = Decimal(shares) * price
     section31 = notional * schedule.sec_section31_per_million / ONE_MILLION
-    taf = min(Decimal(shares) * schedule.finra_taf_per_share, schedule.finra_taf_max_per_trade)
+    # FINRA Schedule A provides that no TAF is assessed when the execution
+    # price is below the per-share TAF rate.  The Phase 01 universe has a
+    # much higher price floor, but the data kernel still models the rule.
+    taf = Decimal("0")
+    if price >= schedule.finra_taf_per_share:
+        taf = min(Decimal(shares) * schedule.finra_taf_per_share, schedule.finra_taf_max_per_trade)
     return section31 + taf
 
 

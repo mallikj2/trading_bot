@@ -1,7 +1,7 @@
 # Transaction-Cost Input Contract
 
 **Strategy:** `CSMOM-LS-v0.2`  
-**Status:** Input architecture implemented; exact Phase 03 parameters intentionally not frozen  
+**Status:** Input architecture implemented; regulatory-fee basis frozen; residual slippage/impact parameters intentionally deferred  
 **Date:** 2026-08-06
 
 ## 1. Scope
@@ -43,7 +43,6 @@ Phase 03 must freeze before the final backtest:
 - residual slippage bps;
 - impact floor bps;
 - impact coefficient/model;
-- whether regulatory/broker fees use historical schedules or current-deployment economics.
 
 A simple square-root participation input is implemented for controlled experiments:
 
@@ -67,7 +66,7 @@ Current official evidence as of 2026-08-06:
 - SEC Section 31: USD 20.60 per USD 1,000,000 of covered sales effective 2026-04-04.
 - FINRA 2026 TAF for covered equity securities: USD 0.000195/share, maximum USD 9.79/trade.
 
-These current values are evidence for the contract, not permission to backfill 2026 rates into earlier years. Phase 03 must pre-register the desired fee-basis policy and provide full effective-date coverage where historical fees are selected.
+These current values are evidence for the contract, not permission to backfill 2026 rates into earlier years. P02-G17 subsequently froze the historical regulatory-equivalent basis in `configs/data/regulatory_fee_basis.yaml` for 2010-01-01 through 2026-08-08. Phase 03 must use that effective-dated schedule and record its configuration hash.
 
 ## 6. Costs deliberately outside this module
 
@@ -109,4 +108,4 @@ No aggregate `slippage` field may hide the decomposition.
 
 ## 9. Current gate
 
-The transaction-cost **input architecture passes Phase 02 implementation**. Exact non-spread execution-cost parameters remain intentionally deferred to Phase 03, consistent with the approved reconciliation.
+The transaction-cost **input architecture passes Phase 02 implementation**. P02-G17 now freezes the regulatory-fee basis; exact residual-slippage and market-impact parameters remain intentionally deferred to Phase 03, consistent with the approved reconciliation.

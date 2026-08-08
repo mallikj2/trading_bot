@@ -5,7 +5,7 @@
 
 ## Executive result
 
-The engineering architecture remains coherent and cumulative regression is clean. The core provider retention decision has improved: Kibot's published private-use license satisfies the project's local immutable-retention requirement within the approved personal scope. However, the paid representative trial is still unrun, and Kibot cannot safely serve as the point-in-time security master or sole exact execution source.
+The engineering architecture remains coherent and cumulative regression is clean. The full acceptance-period regulatory-fee basis is now frozen from 2010-01-01 through 2026-08-08, moving P02-G17 to PASS and removing the only conditional gate. The core provider retention decision remains approved for Kibot within the personal scope, but the paid representative trial is still unrun, and Kibot cannot safely serve as the point-in-time security master or sole exact execution source.
 
 The machine-readable audit is `configs/data/phase02_data_gate_audit.yaml`. The runtime gate evaluator in `src/trading_bot/data/gates.py` prohibits Phase 03 authorization unless every mandatory gate is `PASS`.
 
@@ -29,10 +29,10 @@ The machine-readable audit is `configs/data/phase02_data_gate_audit.yaml`. The r
 | Historical short-borrow engine | PASS | No |
 | Historical short-borrow source/license/coverage | BLOCKED | **Yes** |
 | Financing/cash-carry engine | PASS | No |
-| Full acceptance-period regulatory fee basis | CONDITIONAL | **Yes** |
+| Full acceptance-period regulatory fee basis | PASS | No |
 | PIT security-master and exact-execution source license/trial | BLOCKED | **Yes** |
 
-Result: **10 PASS / 7 BLOCKED / 1 CONDITIONAL** across 18 mandatory gates.
+Result: **11 PASS / 7 BLOCKED / 0 CONDITIONAL** across 18 mandatory gates.
 
 ## Core market-data stack decision
 
@@ -93,7 +93,10 @@ All historical datasets are required to map to immutable `instrument_id`; ticker
 5. Obtain and validate a revision-aware historical earnings source, including retention rights.
 6. Approve a historical quote source and run the preregistered spread-calibration panel.
 7. Approve a retainable securities-lending source and run the historical borrow coverage trial.
-8. Freeze the acceptance-period regulatory-fee basis before the final backtest.
+
+## Gate closed in this audit
+
+- `P02-G17 FULL_ACCEPTANCE_PERIOD_REGULATORY_FEE_BASIS` — **PASS**. Official SEC Section 31 and FINRA equity TAF rates are frozen from 2010-01-01 through 2026-08-08.
 
 ## Items that do not block Phase 03 historical research
 

@@ -70,8 +70,8 @@ mandatory_gates:
   evidence: docs/phases/PHASE_02_FINANCING_AND_DATA_GATE_AUDIT.md
 - id: P02-G17
   name: FULL_ACCEPTANCE_PERIOD_REGULATORY_FEE_BASIS
-  status: CONDITIONAL
-  reason: PHASE03_MUST_FREEZE_HISTORICAL_FEE_SCHEDULE_OR_CONSERVATIVE_CURRENT_FEE_BASIS_BEFORE_RUN
+  status: PASS
+  evidence: docs/phases/PHASE_02_REGULATORY_FEE_BASIS_FREEZE.md
 - id: P02-G18
   name: PIT_SECURITY_MASTER_AND_EXACT_EXECUTION_SOURCE_LICENSE_AND_TRIAL
   status: BLOCKED
@@ -86,7 +86,7 @@ non_phase03_live_gates:
   note: INITIAL_LIMITED_LIVE_DOES_NOT_REQUIRE_MARGIN_BORROWING
 integration_result:
   mandatory_total: 18
-  pass: 10
+  pass: 11
   blocked: 7
-  conditional: 1
+  conditional: 0
   phase03_authorized: false

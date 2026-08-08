@@ -1,0 +1,72 @@
+version: "0.2.0"
+status: FROZEN_FOR_PHASE03_ACCEPTANCE
+as_of_date: "2026-08-08"
+strategy: CSMOM-LS-v0.2
+scope: US_COVERED_EQUITY_SALES_REGULATORY_EQUIVALENT_BASIS
+
+coverage:
+  effective_from: "2010-01-01"
+  effective_to: "2026-08-08"
+  minimum_required_contiguous_calendar_years: 10
+  phase03_acceptance_period_must_be_subset: true
+  earlier_dates_policy: FAIL_CLOSED_AND_EXTEND_SCHEDULE_BEFORE_RUN
+  later_dates_policy: REFRESH_OFFICIAL_RATES_AND_REFREEZE_BEFORE_RUN
+
+modeling_policy:
+  section31_basis: OFFICIAL_SEC_EFFECTIVE_DATED_RATE
+  finra_taf_basis: OFFICIAL_FINRA_EFFECTIVE_DATED_EQUITY_RATE_AND_CAP
+  charge_side: SELL_ONLY
+  finra_taf_low_price_exemption: true
+  customer_invoice_replication_claimed: false
+  broker_rounding_replication_claimed: false
+  description: >-
+    Research regulatory-equivalent basis. Official SEC/FINRA rates are modeled
+    consistently; historical broker customer pass-through and rounding are not claimed.
+
+section31_usd_per_million:
+  - {from: "2010-01-01", to: "2010-01-14", rate: 25.70, source: "SEC_FY2010_ADVISORY_4"}
+  - {from: "2010-01-15", to: "2010-03-31", rate: 12.70, source: "SEC_FY2010_ADVISORY_4"}
+  - {from: "2010-04-01", to: "2011-01-20", rate: 16.90, source: "SEC_FY2010_ADVISORY_5_AND_FY2011_ADVISORY_5"}
+  - {from: "2011-01-21", to: "2012-02-20", rate: 19.20, source: "SEC_FY2011_ADVISORY_5"}
+  - {from: "2012-02-21", to: "2012-03-31", rate: 18.00, source: "SEC_FY2012_ADVISORY_5"}
+  - {from: "2012-04-01", to: "2013-05-24", rate: 22.40, source: "SEC_FY2012_ADVISORY_6_AND_FY2013_ADVISORY_2"}
+  - {from: "2013-05-25", to: "2014-03-17", rate: 17.40, source: "SEC_FY2013_ADVISORY_3_AND_FY2014_ADVISORY_4"}
+  - {from: "2014-03-18", to: "2015-02-13", rate: 22.10, source: "SEC_FY2014_ADVISORY_3_4_AND_FY2015_ADVISORY_2"}
+  - {from: "2015-02-14", to: "2016-02-15", rate: 18.40, source: "SEC_FY2015_ADVISORY_3_4_AND_FY2016_ADVISORY_3"}
+  - {from: "2016-02-16", to: "2017-07-03", rate: 21.80, source: "SEC_FY2016_ADVISORY_3_4_AND_FY2017_ADVISORY_2_3"}
+  - {from: "2017-07-04", to: "2018-05-21", rate: 23.10, source: "SEC_FY2017_ADVISORY_3_AND_FY2018_ADVISORY_3"}
+  - {from: "2018-05-22", to: "2019-04-15", rate: 13.00, source: "SEC_FY2018_ADVISORY_3_AND_FY2019_ADVISORY_2"}
+  - {from: "2019-04-16", to: "2020-02-17", rate: 20.70, source: "SEC_FY2019_ADVISORY_2_AND_FY2020_ADVISORY_2"}
+  - {from: "2020-02-18", to: "2021-02-24", rate: 22.10, source: "SEC_FY2020_ADVISORY_2_3_AND_FY2021_ADVISORY_2"}
+  - {from: "2021-02-25", to: "2022-05-13", rate: 5.10, source: "SEC_FY2021_ADVISORY_2_3_AND_FY2022_ADVISORY_2"}
+  - {from: "2022-05-14", to: "2023-02-26", rate: 22.90, source: "SEC_FY2022_ADVISORY_2_AND_FY2023_ADVISORY_2"}
+  - {from: "2023-02-27", to: "2024-05-21", rate: 8.00, source: "SEC_FY2023_ADVISORY_2_3_AND_FY2024_ADVISORY_2"}
+  - {from: "2024-05-22", to: "2025-05-13", rate: 27.80, source: "SEC_FY2024_ADVISORY_2_AND_FY2025_ADVISORY"}
+  - {from: "2025-05-14", to: "2026-04-03", rate: 0.00, source: "SEC_FY2025_ADVISORY_AND_FY2026_ADVISORY"}
+  - {from: "2026-04-04", to: "2026-08-08", rate: 20.60, source: "SEC_FY2026_ADVISORY"}
+
+finra_taf_equity:
+  - {from: "2010-01-01", to: "2011-06-30", per_share: 0.000075, cap_per_trade: 3.75, source: "FINRA_RN11_27_PRECHANGE"}
+  - {from: "2011-07-01", to: "2012-02-29", per_share: 0.000090, cap_per_trade: 4.50, source: "FINRA_RN11_27"}
+  - {from: "2012-03-01", to: "2012-06-30", per_share: 0.000095, cap_per_trade: 4.75, source: "FINRA_RN12_06"}
+  - {from: "2012-07-01", to: "2021-12-31", per_share: 0.000119, cap_per_trade: 5.95, source: "FINRA_RN12_31_AND_SR_FINRA_2020_032"}
+  - {from: "2022-01-01", to: "2022-12-31", per_share: 0.000130, cap_per_trade: 6.49, source: "SR_FINRA_2020_032"}
+  - {from: "2023-01-01", to: "2023-12-31", per_share: 0.000145, cap_per_trade: 7.27, source: "SR_FINRA_2020_032"}
+  - {from: "2024-01-01", to: "2025-12-31", per_share: 0.000166, cap_per_trade: 8.30, source: "SR_FINRA_2020_032_AND_SR_FINRA_2024_019"}
+  - {from: "2026-01-01", to: "2026-08-08", per_share: 0.000195, cap_per_trade: 9.79, source: "SR_FINRA_2024_019"}
+
+phase03_freeze_requirements:
+  - ACCEPTANCE_START_AND_END_WITHIN_COVERAGE
+  - NO_GAPS_OR_OVERLAPS_IN_SECTION31
+  - NO_GAPS_OR_OVERLAPS_IN_FINRA_TAF
+  - CONFIG_HASH_RECORDED_WITH_BACKTEST
+  - FEE_SCHEDULE_VERSION_RECORDED_WITH_BACKTEST
+  - SELL_FEES_COMPUTED_FROM_TRADE_DATE
+  - RATE_REFRESH_REQUIRED_IF_ACCEPTANCE_END_EXCEEDS_2026_08_08
+
+not_frozen_by_this_gate:
+  - BROKER_COMMISSION_ASSUMPTION
+  - SPREAD_AND_SLIPPAGE_PARAMETERS
+  - MARKET_IMPACT_PARAMETERS
+  - STOCK_BORROW_FEES
+  - FINANCING

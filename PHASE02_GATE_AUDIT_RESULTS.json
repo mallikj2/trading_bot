@@ -4,9 +4,9 @@
   "result": "NOT_READY",
   "phase03_authorized": false,
   "mandatory_total": 18,
-  "pass": 10,
+  "pass": 11,
   "blocked": 7,
-  "conditional": 1,
+  "conditional": 0,
   "blocked_gate_ids": [
     "P02-G04",
     "P02-G07",
@@ -16,8 +16,6 @@
     "P02-G15",
     "P02-G18"
   ],
-  "conditional_gate_ids": [
-    "P02-G17"
-  ],
-  "note": "Core retention/private-use license remains satisfied by Kibot within personal scope. Corporate-action provider architecture now selects EDI for long history and Databento for PIT overlap, but P02-G09 remains blocked until licensed representative trials pass; all other external evidence gates remain unchanged."
+  "conditional_gate_ids": [],
+  "note": "P02-G17 regulatory-fee basis is frozen and PASS for 2010-01-01 through 2026-08-08. Seven external evidence/license/credential gates remain BLOCKED, so Phase 03 remains unauthorized."
 }
