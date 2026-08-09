@@ -4,7 +4,7 @@ phase: PHASE_02_DATA_AND_POINT_IN_TIME_DESIGN
 overall_status: ACTIVE_RESHAPED
 phase03_authorized: false
 procurement_authorized: false
-procurement_ready_for_manual_approval: false
+procurement_ready_for_manual_approval: true
 subphases:
   phase02a_data_foundation:
     status: ACTIVE_EXTERNAL_GATES_REMAIN
@@ -15,7 +15,7 @@ subphases:
       blocked: 7
       conditional: 0
   phase02b_pre_purchase_platform_foundation:
-    status: ACTIVE
+    status: PASS_PRE_PURCHASE_FOUNDATION_COMPLETE
     prerequisite_for_procurement: true
     tasks:
     - id: P02-PF01
@@ -149,13 +149,25 @@ subphases:
     integrated_gate:
       id: P02-PF-GATE
       name: PRE_PURCHASE_PLATFORM_FOUNDATION
-      status: READY_FOR_INTEGRATED_VALIDATION
+      status: PASS
       requires_all_tasks_pass: true
       on_pass:
         procurement_ready_for_manual_approval: true
         procurement_authorized: false
+      evidence:
+      - docs/phases/PHASE_02_PF_GATE_INTEGRATED_PRE_PURCHASE_VALIDATION.md
+      - docs/platform/PRE_PURCHASE_PLATFORM_FOUNDATION_GATE_CONTRACT.md
+      - src/trading_bot/platform/pre_purchase_gate.py
+      - src/trading_bot/platform/pre_purchase_gate_cli.py
+      - tests/integration/platform/test_pre_purchase_foundation_gate.py
+      - P02_PF_GATE_RESULTS.json
+      - OPENAPI_PF_GATE.json
+      outcome:
+        procurement_ready_for_manual_approval: true
+        procurement_authorized: false
+        phase03_authorized: false
   phase02c_external_procurement_and_evidence:
-    status: DEFERRED_UNTIL_P02_PF_GATE_PASS
+    status: READY_FOR_MANUAL_PROCUREMENT_APPROVAL
     purchase_requires_manual_approval: true
     sequence:
     - SEC_MONITORED_CONTACT_CONFIGURATION
@@ -185,5 +197,7 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF-GATE
-  name: PRE_PURCHASE_PLATFORM_FOUNDATION_INTEGRATED_VALIDATION
+  id: P02-PROCUREMENT-REVIEW
+  name: EXTERNAL_ACCOUNT_LICENSE_PROCUREMENT_REVIEW
+  status: AWAITING_EXPLICIT_USER_GOVERNANCE_APPROVAL
+  note: Review provider sequence, current pricing/licensing/retention terms and spend before purchasing or entering credentials.

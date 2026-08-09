@@ -1,109 +1,89 @@
-# Validation Results — P02-PF10 Recovery + Reconciliation Simulation
+# Validation Results — P02-PF-GATE Integrated Pre-Purchase Platform Foundation
 
-## Status
+**Date:** 2026-08-08  
+**Gate:** `P02-PF-GATE`  
+**Outcome:** **PASS**
 
-**PASS**
+## Integrated gate
+
+`PYTHONPATH=src python -m trading_bot.platform.pre_purchase_gate_cli . --output P02_PF_GATE_RESULTS.json`
+
+Result: **10/10 integrated checks PASS**.
+
+The checks cover:
+
+- PF01–PF10 individual PASS state;
+- PF05 clean lookahead/recursive controls and contaminated-control failures;
+- deterministic TradeLead/Watchlist identity and blocker reasons;
+- OMS/fills, journal completeness, reopen/replay determinism;
+- `REDUCING` runtime enforcement;
+- crash-window recovery without duplicate broker submit;
+- Recovery → Alert/Incident journal integration;
+- immutable `SIMULATION_ONLY` experiment lineage;
+- GET-only Research Console API and network-free SimulatedBroker;
+- embedded commercial credential scan.
 
 ## Cumulative Python regression
 
 ```text
-473 passed, 12 subtests passed
+477 passed, 12 subtests passed in 26.57s
 ```
 
-All cumulative Phase 01/02 Python tests pass.
+Command:
 
-## PF10 focused recovery tests
+```bash
+PYTHONPATH=src pytest -q
+```
+
+The dedicated integrated gate test file contributes **4 tests**, all passing.
+
+## Frontend validation
 
 ```text
-12 passed
+5 Node/TypeScript view-model tests PASS
+TypeScript type validation PASS
 ```
 
-The focused PF10 unit/integration suite covers all mandatory adversarial scenarios:
+Commands:
 
-1. process crash after submission but before acknowledgement;
-2. missed partial fill;
-3. external/simulated order unknown locally;
-4. local nonterminal order absent externally;
-5. position quantity mismatch;
-6. duplicate broker execution;
-7. stale startup snapshot;
-8. journal replay after restart.
-
-Additional PF10 checks cover future-snapshot rejection, auto-repair disposition, incident generation/resolution, and duplicate-risk invariants.
-
-## Duplicate-risk evidence
-
-Crash-window recovery leaves the simulated broker submission count at **1**. The local OMS transitions through `UNKNOWN -> RECONCILING` and never submits the order a second time.
-
-Duplicate external execution IDs are detected and never double-counted.
-
-## Runtime safety / incidents
-
-Unresolved external-order, missing-order, position, duplicate-execution, stale-snapshot, and other material reconciliation divergences create PF09 incident/audit evidence and drive PF04 runtime safety to `HALTED` where applicable.
-
-Runtime de-escalation is not automatic.
-
-## Read-only API
-
-Generated OpenAPI contains:
-
-```text
-13 paths
-GET only
-0 POST
-0 PUT
-0 PATCH
-0 DELETE
+```bash
+cd web
+npm run test:view-models
+npm run validate:types
 ```
 
-PF10 adds only:
+The Research Console OpenAPI has **13 paths** and exactly one operation method class: **GET**. There are no POST/PUT/PATCH/DELETE routes.
 
-```text
-GET /api/v1/recovery
-```
+### Production-build environment limitation
 
-## Frontend
-
-```text
-5 Node/TypeScript view-model tests passed
-TypeScript application validation passed
-```
-
-A Vite production build was attempted. TypeScript compilation succeeds, but this sandbox does not have the `vite` executable installed:
+`npm run build` completes the TypeScript step and then fails because this sandbox does not provide the `vite` executable:
 
 ```text
 sh: 1: vite: not found
 ```
 
-Therefore no unsupported production-bundle PASS is claimed.
+Therefore the final Vite production-bundle step is **not claimed as passed**. This is an environment/dependency-installation limitation, not substituted with fabricated evidence.
 
-## Configuration / artifact validation
+## Structural validation
 
-- 27 YAML files parsed successfully.
-- 37 JSON files parsed successfully.
-- PF10 recovery CLI fixture report returns `status=PASS`.
-- Python compilation passed for PF10 implementation/CLI/API/read-model modules.
-- Static PF10 safety scan found no external HTTP/Schwab/live-order implementation.
-- SHA-256 package manifest and ZIP integrity are verified during final packaging.
+- Python compile/compileall: PASS
+- YAML parse: **27 files PASS**
+- JSON parse: **39 files PASS**
+- OpenAPI generation: PASS
+- Gate CLI: PASS
+- Known secret-file/token scan: PASS, no findings
+- No commercial provider credentials used
+- No Schwab/live broker connection used
 
-## Governance
+## Governance result
 
 ```text
-P02-PF01 = PASS
-P02-PF02 = PASS
-P02-PF03 = PASS
-P02-PF04 = PASS
-P02-PF05 = PASS
-P02-PF06 = PASS
-P02-PF07 = PASS
-P02-PF08 = PASS
-P02-PF09 = PASS
-P02-PF10 = PASS
-
-P02-PF-GATE = READY_FOR_INTEGRATED_VALIDATION
+P02-PF01..P02-PF10 = PASS
+P02-PF-GATE = PASS
+PROCUREMENT_READY_FOR_MANUAL_APPROVAL = true
 PROCUREMENT_AUTHORIZED = false
-PROCUREMENT_READY_FOR_MANUAL_APPROVAL = false
 PHASE03_AUTHORIZED = false
+STRATEGY_PROFITABILITY_VALIDATED = false
 ```
 
-Passing PF10 completes the individual pre-purchase tasks but does not itself authorize procurement or Phase 03.
+The existing 18 Phase 02 data gates remain unchanged at **11 PASS / 7 BLOCKED / 0 CONDITIONAL**.

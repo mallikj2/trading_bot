@@ -108,6 +108,7 @@ class ResearchConsoleSnapshot:
     incident_reporting: dict[str, Any] = field(default_factory=dict)
     recovery_reporting: dict[str, Any] = field(default_factory=dict)
     environment: str = "PHASE_02_FIXTURE"
+    procurement_ready_for_manual_approval: bool = False
 
     def _lead_view(self, lead: TradeLead) -> dict[str, Any]:
         reasons = [reason.to_dict() for reason in lead.active_reasons]
@@ -157,6 +158,7 @@ class ResearchConsoleSnapshot:
             "phase": "PHASE_02",
             "phase03_authorized": False,
             "procurement_authorized": False,
+            "procurement_ready_for_manual_approval": self.procurement_ready_for_manual_approval,
             "lead_counts": lead_counts,
             "portfolio": {
                 "position_count": len(self.positions),
@@ -433,6 +435,7 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         {"gate_id": "P02-PF08", "name": "Experiment Registry + Reporting + Attribution", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-PF09", "name": "Alerts + Incident Center", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-PF10", "name": "Recovery + Reconciliation Simulation", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF-GATE", "name": "Pre-Purchase Platform Foundation", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-G04", "name": "Core provider credentialed trial", "status": "BLOCKED", "category": "DATA"},
         {"gate_id": "P02-G18", "name": "PIT security master + exact execution", "status": "BLOCKED", "category": "DATA"},
     )
@@ -442,6 +445,7 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         {"component": "PF08_EXPERIMENT_REGISTRY", "status": "PASS", "freshness": "STATIC", "detail": "Immutable synthetic experiment definitions/runs and attribution fixtures verified; not Phase 03 evidence."},
         {"component": "PF09_INCIDENT_CENTER", "status": "PASS", "freshness": "STATIC", "detail": "Deterministic synthetic alert deduplication, escalation, acknowledgement and resolution fixtures verified."},
         {"component": "PF10_RECOVERY_RECONCILIATION", "status": "PASS", "freshness": "STATIC", "detail": "Crash-window, missed-fill and divergence recovery fixtures verified without real broker access."},
+        {"component": "P02_PF_GATE", "status": "PASS", "freshness": "STATIC", "detail": "Integrated pre-purchase platform foundation gate passed; procurement is ready for manual review but not authorized."},
         {"component": "COMMERCIAL_MARKET_DATA", "status": "BLOCKED", "freshness": "NOT_CONNECTED", "detail": "Procurement intentionally deferred until P02-PF-GATE."},
         {"component": "BROKER", "status": "BLOCKED", "freshness": "NOT_CONNECTED", "detail": "No broker connectivity is permitted in Phase 02B."},
     )
@@ -517,5 +521,6 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
             experiment_reporting=build_pf08_fixture_report(as_of=now),
             incident_reporting=build_pf09_fixture_incident_report(as_of=now),
             recovery_reporting=build_pf10_fixture_recovery_report(as_of=now),
+            procurement_ready_for_manual_approval=True,
         )
     )

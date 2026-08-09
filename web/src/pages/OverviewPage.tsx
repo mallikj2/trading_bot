@@ -15,6 +15,7 @@ export function OverviewPage({ overview, gates, health }: { overview: OverviewVi
         <KpiCard label="Research positions" value={overview.portfolio.position_count} detail={`Gross $${overview.portfolio.gross_market_value}`} />
         <KpiCard label="Non-pass gates" value={overview.gate_summary.blocked_or_nonpass} detail={`${overview.gate_summary.total} shown`} />
         <KpiCard label="Data health" value={overview.data_health_summary.nonpass === 0 ? 'PASS' : `${overview.data_health_summary.nonpass} attention`} />
+        <KpiCard label="Procurement review" value={overview.procurement_ready_for_manual_approval ? 'READY' : 'LOCKED'} detail="Manual approval required" />
       </div>
       <div className="two-col">
         <div className="panel"><div className="panel-title"><h3>Phase gates</h3></div>{gates.map((gate) => <div className="list-row" key={gate.gate_id}><div><strong>{gate.gate_id}</strong><span>{gate.name}</span></div><StatusBadge value={gate.status} /></div>)}</div>

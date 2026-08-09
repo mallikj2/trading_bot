@@ -50,6 +50,7 @@ export interface OverviewView {
   phase: string;
   phase03_authorized: boolean;
   procurement_authorized: boolean;
+  procurement_ready_for_manual_approval: boolean;
   lead_counts: Record<string, number>;
   portfolio: {
     position_count: number;

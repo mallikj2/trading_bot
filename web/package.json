@@ -1,7 +1,7 @@
 {
   "name": "quant-trading-research-console",
   "private": true,
-  "version": "0.2.0-pf10",
+  "version": "0.2.0-pf-gate",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",

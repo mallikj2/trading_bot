@@ -1,0 +1,146 @@
+{
+  "checks": [
+    {
+      "check_id": "ALL_PF_TASKS_PASS",
+      "detail": "PF01-PF10 are individually PASS.",
+      "evidence": {
+        "statuses": {
+          "P02-PF01": "PASS",
+          "P02-PF02": "PASS",
+          "P02-PF03": "PASS",
+          "P02-PF04": "PASS",
+          "P02-PF05": "PASS",
+          "P02-PF06": "PASS",
+          "P02-PF07": "PASS",
+          "P02-PF08": "PASS",
+          "P02-PF09": "PASS",
+          "P02-PF10": "PASS"
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "STRATEGY_VALIDATION_CONTROLS",
+      "detail": "Clean lookahead/recursive evidence passes and all contaminated controls fail.",
+      "evidence": {
+        "contaminated_controls": [
+          "future_exit_dependency",
+          "future_row_dependency",
+          "history_start_dependency"
+        ],
+        "suite_hash": "295823b335a2edbc927aee119f717f704c8b320c8a8fdda15cbe86bdba9ea392"
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "LEADS_AND_WATCHLIST",
+      "detail": "Deterministic leads and explicit rejection/watchlist reason verified.",
+      "evidence": {
+        "qualified_lead_id": "lead_dd223f8bc3e3c232896dd71f4b41824cf23fc6a1735519b20cd7861cc033b60a",
+        "reason_codes": [
+          "SCORE_THRESHOLD_NOT_MET"
+        ],
+        "watchlist_lead_id": "lead_03d8da2418562eb4c5ad23cf3e71be41ca113e9eafb4731198ee9fa21a2b4f84"
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "SIMULATION_OMS_JOURNAL_REPLAY",
+      "detail": "OMS/fill flow, journal completeness and deterministic rerun verified.",
+      "evidence": {
+        "composite_state_hash": "9fc08c3d3531e32eaf2ca1fb73cacea3e0355918cc1915716b4af97e4ca58b92",
+        "event_count": 23,
+        "journal_head_hash": "03099de55d142f9b6d289fe554a8212e5f6b7cedc5aff05420875b03d6b00d91"
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "RUNTIME_STATE_ENFORCEMENT",
+      "detail": "REDUCING blocks new exposure while ACTIVE remains simulation-only.",
+      "evidence": {
+        "active_live_authority": false,
+        "reducing_blocks_new_exposure": true
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "RECOVERY_RECONCILIATION",
+      "detail": "Crash-window broker truth reconciled without duplicate submit.",
+      "evidence": {
+        "broker_submission_count": 1,
+        "journal_head_hash": "79ac8e5c9d32ffa1d268dc9d755b29918800475b6c3bdd3621f33494984dcb1f",
+        "recovered_oms_hash": "61bb7a19019ac8103ea7aea0bc957404b474d51722dc53e2e08878eb2a6e1e27",
+        "unresolved_count": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "ALERT_INCIDENT_INTEGRATION",
+      "detail": "Recovery findings flow through the journal-backed Incident Center and resolve when fully repaired.",
+      "evidence": {
+        "incident_summary": {
+          "acknowledged_incident_count": 0,
+          "active_by_severity": {
+            "CRITICAL": 0,
+            "INFO": 0,
+            "WARNING": 0
+          },
+          "active_incident_count": 0,
+          "journal_head_hash": "79ac8e5c9d32ffa1d268dc9d755b29918800475b6c3bdd3621f33494984dcb1f",
+          "open_incident_count": 0,
+          "resolved_incident_count": 1,
+          "total_alert_count": 2
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "EXPERIMENT_LINEAGE",
+      "detail": "Integrated runtime hash is bound to immutable SIMULATION_ONLY experiment evidence.",
+      "evidence": {
+        "definition_id": "0668cb759f896ca4ef02fee194c50c3cce4bcf06e7396f2f103f18f6d6091278",
+        "registry": {
+          "definitions": 1,
+          "runs": 1,
+          "status": "PASS"
+        },
+        "result_hash": "3c4158b60fd55932267fdc69ee342df00586ed9f2932ba7953690385a1dd59ba",
+        "run_id": "786448b7c6263ee50d4b4662eabf3105e0598cdeede1a9908fda03dc2d31d769"
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "READ_ONLY_UI_AND_ZERO_LIVE_MUTATION",
+      "detail": "Integrated leads/report lineage are visible through a GET-only API; broker remains simulated/network-free.",
+      "evidence": {
+        "api_path_count": 13,
+        "live_order_submission_enabled": false,
+        "methods": [
+          "GET"
+        ],
+        "network_io_enabled": false
+      },
+      "status": "PASS"
+    },
+    {
+      "check_id": "NO_EMBEDDED_COMMERCIAL_CREDENTIALS",
+      "detail": "No embedded secret files/tokens detected.",
+      "evidence": {
+        "findings": []
+      },
+      "status": "PASS"
+    }
+  ],
+  "evidence_class": "SYNTHETIC_PRE_PURCHASE_GATE",
+  "gate_id": "P02-PF-GATE",
+  "phase03_authorized": false,
+  "procurement_authorized": false,
+  "procurement_ready_for_manual_approval": true,
+  "status": "PASS",
+  "strategy_profitability_validated": false,
+  "summary": {
+    "fail": 0,
+    "pass": 10,
+    "total": 10
+  }
+}
