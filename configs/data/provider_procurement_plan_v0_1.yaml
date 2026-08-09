@@ -1,0 +1,105 @@
+version: 0.1.0
+date: 2026-08-08
+review_id: P02-PROCUREMENT-REVIEW
+status: PASS
+procurement_authorized: false
+procurement_ready_for_manual_approval: true
+objective: Close the seven remaining external Phase 02 data gates with the minimum necessary spend while preserving point-in-time, non-display research, retention, and reproducibility requirements.
+remaining_gates:
+  - P02-G04
+  - P02-G07
+  - P02-G09
+  - P02-G11
+  - P02-G13
+  - P02-G15
+  - P02-G18
+providers:
+  sec_edgar:
+    role: Historical filing headers / SIC coverage
+    cost: 0
+    action: CONFIGURE_NOW_AFTER_USER_APPROVAL
+    credentials: SEC_USER_AGENT monitored contact; no API key
+    gates: [P02-G07]
+  databento:
+    role: PIT security master, execution/trades, observed spread panel, recent PIT corporate-action overlap
+    initial_cost: 0
+    signup_credit_usd: 125
+    paid_plan_now: false
+    required_before_gate_pass:
+      - Confirm account-specific internal research and retained-archive rights for requested datasets
+      - Obtain quote for Security Master full US coverage; 1,000-symbol starter allocation is insufficient for full universe ledger
+      - Confirm execution dataset and trade/TRF coverage for the frozen 10:00-10:30 ET VWAP benchmark
+      - Run representative PIT, execution, and spread trials
+    gates: [P02-G18, P02-G13, P02-G09, P02-G07]
+  kibot:
+    role: Retained long-history EOD core price archive
+    plan: EOD
+    monthly_cost_usd: 14
+    minimum_commitment_assumed: one_month
+    retention: Published license explicitly allows permanent private retention/use of delivered data after cancellation or license termination
+    action: PURCHASE_ONE_MONTH_ONLY_AFTER_EXPLICIT_USER_APPROVAL
+    gates: [P02-G04]
+  wall_street_horizon:
+    role: DateBreaks / historical earnings revisions and snapshots
+    public_price: custom
+    trial: request_free_trial
+    action: TRIAL_AND_QUOTE_FIRST
+    required_before_gate_pass:
+      - Historical revisions/snapshots representative sample
+      - Written internal research and retention terms
+      - Exact coverage dates and delivery method
+    gates: [P02-G11]
+  edi:
+    role: Long-history complex corporate actions
+    public_price: custom
+    trial: free_trial_available
+    retention: Public materials advertise perpetual ownership rights; final client agreement controls
+    action: TRIAL_AND_QUOTE_FIRST
+    gates: [P02-G09]
+  s3_partners_aws:
+    role: Candidate historical borrow cost and availability
+    public_price: free_subscription_listing; AWS infrastructure may cost extra
+    history: since_2015
+    pit: true
+    issue: Standard AWS DSA requires data removal within 90 days after subscription termination/expiration
+    action: REQUEST_RETENTION_AMENDMENT_BEFORE_GATE_USE
+    gates: [P02-G15]
+  sp_global_securities_finance:
+    role: Institutional fallback historical borrow source
+    public_price: custom
+    history: 20_plus_years_daily_and_23_years_PIT_claimed
+    action: REQUEST_QUOTE_IF_S3_RETENTION_UNRESOLVED
+    gates: [P02-G15]
+  ortex:
+    role: Rejected standard-license borrow candidate
+    public_api_prices_usd_month: {Trader: 49, Quant: 149, Developer: 499}
+    decision: DO_NOT_BUY_STANDARD_PLAN_FOR_PHASE02_ARCHIVE
+    issue: Standard consumer terms prohibit persistent archive and require deletion within 30 days after termination
+    gates: [P02-G15]
+  cboe_datashop:
+    role: Observed equity quote/spread fallback
+    public_price: dynamic_cart_quote
+    history: since_2010
+    action: USE_ONLY_IF_DATABENTO_PANEL_FAILS_COVERAGE_OR_COST_TEST
+    gates: [P02-G13]
+minimum_spend_plan:
+  immediate_paid_if_user_approves_usd: 14
+  immediate_paid_item: Kibot EOD one month
+  no_cost_or_trial_actions:
+    - SEC EDGAR configuration
+    - Databento account plus $125 historical credits
+    - EDI free trial request
+    - WSH trial request
+    - S3 Partners/AWS retention-rights inquiry
+  unknown_quote_items:
+    - Databento full-US Security Master/reference entitlement if required
+    - Wall Street Horizon historical DateBreaks/snapshots
+    - EDI long-history corporate actions
+    - Retainable historical securities-finance source
+    - Cboe DataShop only if Databento spread calibration is insufficient
+hard_rules:
+  - No provider flag may be set to license-approved from marketing language alone when an account-specific or signed agreement controls.
+  - No standard ORTEX plan may be used as the immutable historical borrow archive.
+  - No S3 AWS standard subscription may close P02-G15 unless termination-retention requirements are amended or the gate policy is formally changed.
+  - No Databento monthly US Equities subscription is required merely to run historical usage-based trials.
+  - No Phase 03 authorization until all 18 existing Phase 02 data gates pass and the final PIT/reproducibility audit passes.

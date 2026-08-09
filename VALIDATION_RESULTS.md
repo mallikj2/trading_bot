@@ -1,32 +1,17 @@
-# Validation Results — P02-PF-GATE Integrated Pre-Purchase Platform Foundation
+# Validation Results — P02-PROCUREMENT-REVIEW
 
 **Date:** 2026-08-08  
-**Gate:** `P02-PF-GATE`  
+**Task:** `P02-PROCUREMENT-REVIEW`  
 **Outcome:** **PASS**
 
-## Integrated gate
+## Scope
 
-`PYTHONPATH=src python -m trading_bot.platform.pre_purchase_gate_cli . --output P02_PF_GATE_RESULTS.json`
-
-Result: **10/10 integrated checks PASS**.
-
-The checks cover:
-
-- PF01–PF10 individual PASS state;
-- PF05 clean lookahead/recursive controls and contaminated-control failures;
-- deterministic TradeLead/Watchlist identity and blocker reasons;
-- OMS/fills, journal completeness, reopen/replay determinism;
-- `REDUCING` runtime enforcement;
-- crash-window recovery without duplicate broker submit;
-- Recovery → Alert/Incident journal integration;
-- immutable `SIMULATION_ONLY` experiment lineage;
-- GET-only Research Console API and network-free SimulatedBroker;
-- embedded commercial credential scan.
+This task changes procurement documentation/configuration only. It does not add a provider credential, make a purchase, accept a vendor agreement, alter strategy mathematics, or modify the existing 18 Phase 02 data-gate acceptance criteria.
 
 ## Cumulative Python regression
 
 ```text
-477 passed, 12 subtests passed in 26.57s
+477 passed, 12 subtests passed in 27.02s
 ```
 
 Command:
@@ -35,9 +20,7 @@ Command:
 PYTHONPATH=src pytest -q
 ```
 
-The dedicated integrated gate test file contributes **4 tests**, all passing.
-
-## Frontend validation
+## Frontend regression
 
 ```text
 5 Node/TypeScript view-model tests PASS
@@ -52,33 +35,35 @@ npm run test:view-models
 npm run validate:types
 ```
 
-The Research Console OpenAPI has **13 paths** and exactly one operation method class: **GET**. There are no POST/PUT/PATCH/DELETE routes.
+No Research Console mutation endpoint or broker/provider integration was added by this task.
 
-### Production-build environment limitation
+## Configuration/artifact validation
 
-`npm run build` completes the TypeScript step and then fails because this sandbox does not provide the `vite` executable:
+- YAML parse: **28 files PASS**
+- JSON parse: **40 files PASS**
+- Procurement roadmap/config consistency: PASS
+- `PROCUREMENT_REVIEW_RESULTS.json`: PASS
+- `PROCUREMENT_AUTHORIZED=false`: verified
+- `PHASE03_AUTHORIZED=false`: verified
+- Existing data-gate snapshot remains **11 PASS / 7 BLOCKED / 0 CONDITIONAL**
+- No commercial credential entered or used
+- No external purchase/subscription performed
 
-```text
-sh: 1: vite: not found
-```
+## Procurement conclusions checked
 
-Therefore the final Vite production-bundle step is **not claimed as passed**. This is an environment/dependency-installation limitation, not substituted with fabricated evidence.
-
-## Structural validation
-
-- Python compile/compileall: PASS
-- YAML parse: **27 files PASS**
-- JSON parse: **39 files PASS**
-- OpenAPI generation: PASS
-- Gate CLI: PASS
-- Known secret-file/token scan: PASS, no findings
-- No commercial provider credentials used
-- No Schwab/live broker connection used
+- SEC current public access policy supports free access, declared User-Agent, and a maximum of 10 requests/second; project policy remains 5 requests/second.
+- Databento current public pricing supports usage-based historical access and $125 new-user credits; monthly subscription is not required merely for the initial historical trial.
+- Databento Security Master entry allocation is not assumed sufficient for the full historical US universe; full-US entitlement/quote remains required.
+- Kibot current EOD price is $14/month and its current public license explicitly allows permanent private retention/use of already-delivered data after cancellation/lapse/termination.
+- WSH and EDI remain trial/quote-first and account/client-license-gated.
+- S3 Partners/AWS remains blocked for permanent archive use under standard termination/deletion terms unless amended.
+- Standard ORTEX remains rejected for the permanent historical borrow archive.
+- Cboe DataShop remains a spread-data fallback.
 
 ## Governance result
 
 ```text
-P02-PF01..P02-PF10 = PASS
+P02-PROCUREMENT-REVIEW = PASS
 P02-PF-GATE = PASS
 PROCUREMENT_READY_FOR_MANUAL_APPROVAL = true
 PROCUREMENT_AUTHORIZED = false
@@ -86,4 +71,4 @@ PHASE03_AUTHORIZED = false
 STRATEGY_PROFITABILITY_VALIDATED = false
 ```
 
-The existing 18 Phase 02 data gates remain unchanged at **11 PASS / 7 BLOCKED / 0 CONDITIONAL**.
+The next task is `P02-PROCUREMENT-AUTHORIZATION`, which requires an explicit user decision.

@@ -167,20 +167,72 @@ subphases:
         procurement_authorized: false
         phase03_authorized: false
   phase02c_external_procurement_and_evidence:
-    status: READY_FOR_MANUAL_PROCUREMENT_APPROVAL
+    status: PROCUREMENT_REVIEW_PASS_AWAITING_EXPLICIT_USER_PURCHASE_APPROVAL
     purchase_requires_manual_approval: true
     sequence:
-    - SEC_MONITORED_CONTACT_CONFIGURATION
-    - DATABENTO_OR_EQUIVALENT_PIT_EXECUTION_ACCOUNT_AND_LICENSE
-    - PIT_SECURITY_MASTER_AND_EXECUTION_TRIAL
-    - REAL_SECTOR_BLIND_TARGET_LEDGER
-    - SEC_FULL_SECTOR_COVERAGE_CRAWL
-    - KIBOT_RETENTION_CONFIRMATION_AND_EOD_PURCHASE_IF_STILL_REQUIRED
-    - CORE_PROVIDER_REPRESENTATIVE_TRIAL
-    - WSH_EARNINGS_REVISION_SAMPLE_AND_LICENSE
-    - EDI_CORPORATE_ACTION_SAMPLE_AND_LICENSE
-    - OBSERVED_SPREAD_CALIBRATION
-    - HISTORICAL_SHORT_BORROW_SOURCE_AND_LICENSE
+    - SEC_MONITORED_CONTACT_CONFIGURATION_NO_COST
+    - DATABENTO_FREE_ACCOUNT_AND_HISTORICAL_CREDITS_NO_PAID_PLAN_YET
+    - DATABENTO_SECURITY_MASTER_US_UNLIMITED_QUOTE_AND_RETENTION_CONFIRMATION
+    - KIBOT_EOD_ONE_MONTH_PURCHASE_14_USD
+    - DATABENTO_PIT_SECURITY_MASTER_EXECUTION_AND_SPREAD_TRIAL
+    - REAL_SECTOR_BLIND_TARGET_LEDGER_AND_SEC_FULL_COVERAGE_CRAWL
+    - KIBOT_COMPOSITE_CORE_PROVIDER_TRIAL
+    - WSH_DATEBREAKS_HISTORICAL_FREE_TRIAL_AND_RETENTION_QUOTE
+    - EDI_CORPORATE_ACTIONS_FREE_TRIAL_AND_PERPETUAL_LICENSE_QUOTE
+    - S3_PARTNERS_AWS_FREE_LISTING_RETENTION_AMENDMENT_REQUEST
+    - S_AND_P_GLOBAL_OR_DATALEND_BORROW_QUOTE_IF_S3_RETENTION_NOT_APPROVED
+    - FINAL_EXTERNAL_GATE_CLOSURE_AUDIT
+    review_id: P02-PROCUREMENT-REVIEW
+    review_status: PASS
+    review_date: '2026-08-08'
+    minimum_initial_cash_outlay_usd: 14.0
+    minimum_initial_cash_outlay_note: Kibot EOD one month only; Databento signup/credits,
+      SEC, EDI trial, WSH trial, and S3/AWS evaluation can begin without provider
+      subscription charges, subject to each provider/account terms and AWS infrastructure
+      costs.
+    provider_decisions:
+      sec_edgar:
+        decision: APPROVE_NO_COST_CONFIGURATION
+        paid: false
+        gates:
+        - P02-G07
+      databento:
+        decision: APPROVE_ACCOUNT_AND_FREE_CREDIT_TRIAL_ONLY
+        paid_subscription_authorized: false
+        gates:
+        - P02-G18
+        - P02-G13
+        - P02-G09
+        - P02-G07
+      kibot:
+        decision: RECOMMEND_ONE_MONTH_EOD_PURCHASE_AFTER_USER_APPROVAL
+        monthly_usd: 14
+        gates:
+        - P02-G04
+      wall_street_horizon:
+        decision: REQUEST_FREE_TRIAL_AND_QUOTE_BEFORE_PURCHASE
+        gates:
+        - P02-G11
+      edi:
+        decision: REQUEST_FREE_TRIAL_AND_PERPETUAL_LICENSE_QUOTE_BEFORE_PURCHASE
+        gates:
+        - P02-G09
+      s3_partners_aws:
+        decision: EVALUATE_FREE_LISTING_BUT_DO_NOT_CLOSE_GATE_UNDER_STANDARD_TERMINATION_TERMS
+        gates:
+        - P02-G15
+      sp_global_securities_finance:
+        decision: FALLBACK_QUOTE_IF_S3_RETENTION_AMENDMENT_FAILS
+        gates:
+        - P02-G15
+      ortex:
+        decision: REJECT_STANDARD_CONSUMER_API_FOR_RETAINED_ARCHIVE
+        gates:
+        - P02-G15
+      cboe_datashop:
+        decision: FALLBACK_ONLY_IF_DATABENTO_SPREAD_PANEL_INADEQUATE
+        gates:
+        - P02-G13
   phase02d_final_gate_closure:
     status: DEFERRED
     requires:
@@ -197,7 +249,8 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PROCUREMENT-REVIEW
-  name: EXTERNAL_ACCOUNT_LICENSE_PROCUREMENT_REVIEW
-  status: AWAITING_EXPLICIT_USER_GOVERNANCE_APPROVAL
-  note: Review provider sequence, current pricing/licensing/retention terms and spend before purchasing or entering credentials.
+  id: P02-PROCUREMENT-AUTHORIZATION
+  name: MANUAL_ACCOUNT_AND_LICENSE_PURCHASE_AUTHORIZATION
+  status: AWAITING_EXPLICIT_USER_APPROVAL
+  note: No paid purchase, subscription, credential entry, or vendor agreement acceptance
+    is authorized by the procurement review itself.
