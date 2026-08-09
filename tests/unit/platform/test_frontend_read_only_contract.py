@@ -20,7 +20,7 @@ def test_frontend_has_no_secret_storage_or_broker_urls():
 
 def test_frontend_exposes_required_pf02_views():
     app = (WEB / "App.tsx").read_text()
-    for label in ("Overview", "Trade Leads", "Watchlist", "Portfolio", "Risk", "Phase Gates", "Data Health", "Audit Trail"):
+    for label in ("Overview", "Trade Leads", "Watchlist", "Portfolio", "Risk", "Recovery", "Phase Gates", "Data Health", "Audit Trail"):
         assert label in app
 
 

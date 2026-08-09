@@ -259,3 +259,20 @@ export interface IncidentReportingView {
   live_notification_delivery_enabled: boolean;
   notice: string;
 }
+
+
+export interface RecoveryFindingView {
+  code: string; severity: 'INFO' | 'WARNING' | 'CRITICAL'; entity_id: string; detail: string;
+  disposition: 'AUTO_REPAIRED' | 'OBSERVED' | 'UNRESOLVED'; detected_at: string; evidence_hash: string; unresolved: boolean;
+}
+
+export interface RecoveryScenarioView {
+  name: string; result: string; runtime_state: string; findings: RecoveryFindingView[]; report_hash: string;
+}
+
+export interface RecoveryReportingView {
+  mode: string; status: string; real_broker_used: boolean; duplicate_risk_created: boolean;
+  scenarios: RecoveryScenarioView[];
+  acceptance: { crash_recovered_without_resubmit: boolean; unexplained_divergence_halts: boolean; incident_audit_generated: boolean; phase03_authorized: boolean; procurement_authorized: boolean };
+  notice: string; fixture_hash: string;
+}

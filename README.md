@@ -17,3 +17,7 @@ Next internal task: **P02-PF10 Recovery + Reconciliation Simulation**.
 PF09 adds journal-backed alert deduplication, severity escalation, acknowledgement/reopen/resolution lifecycle, related-alert incident grouping, deterministic restart/replay, and a read-only Incident Center page/API.
 
 No paid notification service, commercial-data credential, Schwab connection, live broker mutation, or Phase 03 trading authorization is included.
+
+## P02-PF10 update
+
+The cumulative bundle now includes deterministic recovery + reconciliation simulation. All ten pre-purchase platform-foundation tasks are individually PASS. The next task is the separate integrated `P02-PF-GATE`; procurement remains unauthorized until that gate passes and is then manually approved.

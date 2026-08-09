@@ -1,0 +1,34 @@
+version: 1
+phase_task: P02-PF10
+mode: SIMULATED_ONLY
+real_broker_allowed: false
+max_startup_snapshot_age_seconds: 60
+truth_sources:
+  local: APPEND_ONLY_PF03_EVENT_JOURNAL
+  external: POINT_IN_TIME_SIMULATED_BROKER_SNAPSHOT
+repair_policy:
+  missed_execution_on_known_order: AUTO_REPAIR_FROM_BROKER_EVIDENCE
+  crash_after_submission_before_ack: RECONCILE_NO_RESUBMIT
+  broker_terminal_state_on_known_open_order: RECONCILE_FROM_BROKER_EVIDENCE
+  external_order_unknown_locally: HALT_NO_AUTO_IMPORT
+  local_nonterminal_order_absent_external: HALT_NO_RESUBMIT
+  position_quantity_mismatch: HALT_NO_SILENT_REPAIR
+  duplicate_execution_id: HALT_NO_DOUBLE_COUNT
+  stale_startup_snapshot: HALT_REQUIRE_FRESH_SNAPSHOT
+  broker_order_id_mismatch: HALT
+runtime_policy:
+  unresolved_material_mismatch: HALTED
+  automatic_deescalation: false
+  explicit_recovery_required_after_halt: true
+incident_policy:
+  journal_findings: true
+  create_pf09_incident: true
+  auto_resolve_only_when_all_findings_repaired: true
+hard_boundaries:
+  live_broker_network_io: false
+  live_order_submission: false
+  blind_unknown_order_resubmit: false
+  unexplained_external_order_auto_import: false
+  position_auto_adjustment: false
+  phase03_authorized: false
+  procurement_authorized: false

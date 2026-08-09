@@ -33,6 +33,7 @@ def test_expected_read_routes_respond():
             "/api/v1/strategy-validation",
             "/api/v1/experiments",
             "/api/v1/incidents",
+            "/api/v1/recovery",
         ):
             response = client.get(path)
             assert response.status_code == 200, path

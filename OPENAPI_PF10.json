@@ -1,0 +1,267 @@
+{
+  "info": {
+    "description": "Read-only Phase 02 research/operations API. No broker/order mutation routes exist in this application.",
+    "title": "Quant Trading Bot Research Console API",
+    "version": "0.2-pf10"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/audit": {
+      "get": {
+        "operationId": "audit_api_v1_audit_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Audit",
+        "tags": [
+          "governance"
+        ]
+      }
+    },
+    "/api/v1/data-health": {
+      "get": {
+        "operationId": "data_health_api_v1_data_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Data Health",
+        "tags": [
+          "governance"
+        ]
+      }
+    },
+    "/api/v1/experiments": {
+      "get": {
+        "operationId": "experiments_api_v1_experiments_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Experiments",
+        "tags": [
+          "research",
+          "reporting"
+        ]
+      }
+    },
+    "/api/v1/gates": {
+      "get": {
+        "operationId": "gates_api_v1_gates_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Gates",
+        "tags": [
+          "governance"
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Api V1 Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "system"
+        ]
+      }
+    },
+    "/api/v1/incidents": {
+      "get": {
+        "operationId": "incidents_api_v1_incidents_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Incidents",
+        "tags": [
+          "operations",
+          "governance"
+        ]
+      }
+    },
+    "/api/v1/leads": {
+      "get": {
+        "operationId": "leads_api_v1_leads_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Leads",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/overview": {
+      "get": {
+        "operationId": "overview_api_v1_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Overview",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/portfolio": {
+      "get": {
+        "operationId": "portfolio_api_v1_portfolio_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Portfolio",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/recovery": {
+      "get": {
+        "operationId": "recovery_api_v1_recovery_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Recovery",
+        "tags": [
+          "operations",
+          "governance"
+        ]
+      }
+    },
+    "/api/v1/risk": {
+      "get": {
+        "operationId": "risk_api_v1_risk_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Risk",
+        "tags": [
+          "research"
+        ]
+      }
+    },
+    "/api/v1/strategy-validation": {
+      "get": {
+        "operationId": "strategy_validation_api_v1_strategy_validation_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Strategy Validation",
+        "tags": [
+          "research",
+          "governance"
+        ]
+      }
+    },
+    "/api/v1/watchlist": {
+      "get": {
+        "operationId": "watchlist_api_v1_watchlist_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Watchlist",
+        "tags": [
+          "research"
+        ]
+      }
+    }
+  }
+}

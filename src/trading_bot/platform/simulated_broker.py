@@ -118,6 +118,35 @@ class SimulatedBroker:
     def submission_count(self, order_id: str) -> int:
         return self._orders[order_id].submission_count if order_id in self._orders else 0
 
+    @property
+    def order_ids(self) -> tuple[str, ...]:
+        """Stable view of simulated external order identities for reconciliation."""
+        return tuple(sorted(self._orders))
+
+    def order_intent(self, order_id: str) -> OrderIntent:
+        if order_id not in self._orders:
+            raise SimulatedBrokerError("simulated broker has no such order")
+        return self._orders[order_id].intent
+
+    def reconciliation_snapshots(self, *, reconciled_at: datetime) -> tuple[ReconciliationSnapshot, ...]:
+        require_aware(reconciled_at, "reconciled_at")
+        return tuple(self.reconcile(order_id, reconciled_at=reconciled_at) for order_id in self.order_ids)
+
+    def position_quantities(self) -> dict[str, int]:
+        """Derive simulated broker positions from execution truth only."""
+        result: dict[str, int] = {}
+        side_sign = {
+            "BUY": 1,
+            "BUY_TO_COVER": 1,
+            "SELL": -1,
+            "SELL_SHORT": -1,
+        }
+        for record in self._orders.values():
+            signed = side_sign[record.intent.side.value] * record.filled_quantity
+            key = str(record.intent.instrument_id)
+            result[key] = result.get(key, 0) + signed
+        return {key: qty for key, qty in sorted(result.items()) if qty != 0}
+
     def submit(
         self,
         intent: OrderIntent,
@@ -267,13 +296,12 @@ class OMSService:
             recorded_at=approved_at,
         )
 
-    def submit(
-        self,
-        order_id: str,
-        *,
-        submitted_at: datetime,
-        plan: SubmissionPlan | None = None,
-    ) -> OrderSnapshot:
+    def stage_submission(self, order_id: str, *, submitted_at: datetime) -> OrderSnapshot:
+        """Persist client-side submission intent before touching broker truth.
+
+        PF10 uses this explicit crash boundary to simulate a process disappearing
+        after the venue accepted an order but before the client recorded an acknowledgement.
+        """
         current = self.projector.get(order_id)
         if current.state == OrderState.UNKNOWN:
             raise OMSStateError("UNKNOWN order must reconcile; blind resubmission is prohibited")
@@ -284,10 +312,19 @@ class OMSService:
             self._event(event_type="OMS.ORDER_SUBMITTING", snapshot=current, occurred_at=submitted_at),
             recorded_at=submitted_at,
         )
-        current = self._record(
+        return self._record(
             self._event(event_type="OMS.ORDER_SUBMITTED", snapshot=current, occurred_at=submitted_at),
             recorded_at=submitted_at,
         )
+
+    def submit(
+        self,
+        order_id: str,
+        *,
+        submitted_at: datetime,
+        plan: SubmissionPlan | None = None,
+    ) -> OrderSnapshot:
+        current = self.stage_submission(order_id, submitted_at=submitted_at)
         result = self.broker.submit(current.intent, submitted_at=submitted_at, plan=plan)
         if result.client_outcome == ClientSubmissionOutcome.ACKNOWLEDGED:
             event_type = "OMS.ORDER_ACKNOWLEDGED"
@@ -384,6 +421,34 @@ class OMSService:
                 payload={"broker_order_id": current.broker_order_id},
             ),
             recorded_at=expired_at,
+        )
+
+    def mark_unknown(self, order_id: str, *, observed_at: datetime, reason: str) -> OrderSnapshot:
+        """Move a known open order into UNKNOWN before recovery reconciliation."""
+        current = self.projector.get(order_id)
+        if current.state == OrderState.UNKNOWN:
+            return current
+        if current.state not in {
+            OrderState.SUBMITTED,
+            OrderState.ACKNOWLEDGED,
+            OrderState.PARTIALLY_FILLED,
+            OrderState.CANCEL_PENDING,
+        }:
+            raise OMSStateError("only an open/nonterminal order can be marked UNKNOWN")
+        detail = str(reason).strip()
+        if not detail:
+            raise OMSStateError("UNKNOWN transition requires reason")
+        return self._record(
+            self._event(
+                event_type="OMS.ORDER_UNKNOWN",
+                snapshot=current,
+                occurred_at=observed_at,
+                payload={
+                    "broker_order_id": current.broker_order_id,
+                    "reason": detail,
+                },
+            ),
+            recorded_at=observed_at,
         )
 
     def reconcile(self, order_id: str, *, reconciled_at: datetime) -> OrderSnapshot:

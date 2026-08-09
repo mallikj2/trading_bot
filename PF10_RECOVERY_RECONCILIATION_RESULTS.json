@@ -1,0 +1,89 @@
+{
+  "cumulative_python_tests": 473,
+  "evidence_class": "SYNTHETIC_RECOVERY_RECONCILIATION",
+  "fixture_console_evidence": {
+    "acceptance": {
+      "crash_recovered_without_resubmit": true,
+      "incident_audit_generated": true,
+      "phase03_authorized": false,
+      "procurement_authorized": false,
+      "unexplained_divergence_halts": true
+    },
+    "duplicate_risk_created": false,
+    "fixture_hash": "c1eefc4c9dd3075a22ff3c4b794903116a3dd29a5331b986d680a95137c8e6cb",
+    "mode": "SYNTHETIC_PF10_FIXTURE",
+    "notice": "Synthetic PF10 recovery/reconciliation evidence only. Real broker reconciliation remains an external validation requirement.",
+    "real_broker_used": false,
+    "scenarios": [
+      {
+        "findings": [
+          {
+            "code": "CRASH_AFTER_SUBMISSION",
+            "detail": "Recovered submission crash window without resubmission; broker truth resolved to ACKNOWLEDGED.",
+            "detected_at": "2026-08-08T21:09:59+00:00",
+            "disposition": "AUTO_REPAIRED",
+            "entity_id": "order_b5b2569d139e5d562522b71ae762b4cc9c9f00d9b2dd0ecc5e201bbc061c7a01",
+            "evidence_hash": "b266587352cefe03e10c3a8b8ebdda50b3bacd17dc51207fcc778bb55f7d7aa2",
+            "severity": "WARNING",
+            "unresolved": false
+          }
+        ],
+        "name": "CRASH_AFTER_SUBMISSION",
+        "report_hash": "7481a0b41e2cf3caecce6423eaaf8f81b2fb3c2fa6e321ca52148dddb62b12e6",
+        "result": "RECOVERED",
+        "runtime_state": "ACTIVE"
+      },
+      {
+        "findings": [
+          {
+            "code": "EXTERNAL_ORDER_UNKNOWN_LOCALLY",
+            "detail": "Broker snapshot contains external order sim_570be735ab9a1bc6a5284a38 with no local immutable order history; no auto-import performed.",
+            "detected_at": "2026-08-08T21:09:59+00:00",
+            "disposition": "UNRESOLVED",
+            "entity_id": "order_d63571a57f7be3536549c3b475483bd076d4ec94155f2bd3ea2076c58df564d1",
+            "evidence_hash": "3ccc75c9740c52c4560545da566ed39a5e172a5985ba5e761c2f5ef27060ac94",
+            "severity": "CRITICAL",
+            "unresolved": true
+          }
+        ],
+        "name": "UNKNOWN_EXTERNAL_ORDER",
+        "report_hash": "b4aa4bedb834399c9fcdca7688c83ee5257a83246d3a9c0bb45f7516f0d9daea",
+        "result": "BLOCKED",
+        "runtime_state": "HALTED"
+      }
+    ],
+    "status": "PASS"
+  },
+  "focused_pf10_tests": 12,
+  "frontend_view_model_tests": 5,
+  "governance": {
+    "p02_pf_gate": "READY_FOR_INTEGRATED_VALIDATION",
+    "phase03_authorized": false,
+    "procurement_authorized": false,
+    "procurement_ready_for_manual_approval": false
+  },
+  "mandatory_adversarial_scenarios": {
+    "duplicate_broker_execution": "PASS",
+    "external_order_unknown_locally": "PASS",
+    "journal_replay_after_restart": "PASS",
+    "local_nonterminal_order_absent_externally": "PASS",
+    "missed_partial_fill": "PASS",
+    "position_quantity_mismatch": "PASS",
+    "process_crash_after_submission_before_acknowledgement": "PASS",
+    "stale_startup_snapshot": "PASS"
+  },
+  "real_broker_used": false,
+  "safety_invariants": {
+    "automatic_runtime_deescalation": false,
+    "blind_resubmit_prohibited": true,
+    "crash_recovery_submission_count_unchanged": true,
+    "duplicate_execution_not_double_counted": true,
+    "external_unknown_order_auto_imported": false,
+    "position_mismatch_silently_adjusted": false,
+    "unresolved_material_divergence_halts": true
+  },
+  "status": "PASS",
+  "strategy_profitability_evidence": false,
+  "task": "P02-PF10",
+  "taxonomy_subtests": 12
+}

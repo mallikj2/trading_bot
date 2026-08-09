@@ -34,3 +34,12 @@ def test_watchlist_explains_future_qualification_condition():
     beta = next(row for row in entries if row["symbol"] == "BETA")
     assert beta["blocking_reasons"][0]["code"] == "SCORE_THRESHOLD_NOT_MET"
     assert any("future decision cycle" in action for action in beta["qualification_actions"])
+
+
+def test_recovery_console_exposes_pf10_synthetic_safety_evidence():
+    recovery = build_fixture_console().recovery()
+    assert recovery["status"] == "PASS"
+    assert recovery["real_broker_used"] is False
+    assert recovery["acceptance"]["crash_recovered_without_resubmit"] is True
+    assert recovery["acceptance"]["unexplained_divergence_halts"] is True
+    assert recovery["acceptance"]["phase03_authorized"] is False

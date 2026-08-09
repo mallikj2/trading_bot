@@ -134,12 +134,22 @@ subphases:
       - web/src/pages/IncidentsPage.tsx
     - id: P02-PF10
       name: RECOVERY_AND_RECONCILIATION_SIMULATION
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF10_RECOVERY_RECONCILIATION.md
+      - docs/platform/RECOVERY_RECONCILIATION_CONTRACT.md
+      - src/trading_bot/platform/recovery.py
+      - src/trading_bot/platform/recovery_cli.py
+      - configs/platform/recovery_reconciliation.yaml
+      - PF10_RECOVERY_RECONCILIATION_RESULTS.json
+      - tests/unit/platform/test_recovery.py
+      - tests/integration/platform/test_recovery_reconciliation_flow.py
+      - web/src/pages/RecoveryPage.tsx
     integrated_gate:
       id: P02-PF-GATE
       name: PRE_PURCHASE_PLATFORM_FOUNDATION
-      status: BLOCKED_REMAINING_TASKS
+      status: READY_FOR_INTEGRATED_VALIDATION
       requires_all_tasks_pass: true
       on_pass:
         procurement_ready_for_manual_approval: true
@@ -175,5 +185,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF10
-  name: RECOVERY_AND_RECONCILIATION_SIMULATION
+  id: P02-PF-GATE
+  name: PRE_PURCHASE_PLATFORM_FOUNDATION_INTEGRATED_VALIDATION
