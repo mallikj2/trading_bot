@@ -1,0 +1,33 @@
+version: 1
+phase_task: P02-PF07
+runtime_kind: deterministic_synthetic
+clock:
+  source: plan_timestamp_only
+  wall_clock_allowed: false
+journal:
+  required: true
+  append_only: true
+  deterministic_recorded_at: command_or_session_timestamp
+broker:
+  kind: SIMULATED
+  network_io: false
+  live_submission: false
+  deployed_paper_trading: false
+restart:
+  allowed_at_quiescent_checkpoint: true
+  open_or_unknown_order_resume: false
+  deferred_to_task: P02-PF10
+commands:
+  - LEAD_SNAPSHOT
+  - SAFETY_STATUS
+  - OMS_CREATE
+  - OMS_RISK_APPROVE
+  - OMS_SUBMIT
+  - OMS_FILL
+  - OMS_CANCEL
+  - OMS_EXPIRE
+hard_boundaries:
+  strategy_math_changes: false
+  commercial_credentials: false
+  broker_credentials: false
+  phase03_authorization: false

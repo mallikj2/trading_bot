@@ -95,13 +95,20 @@ subphases:
       - tests/integration/platform/test_oms_simulated_broker_flow.py
     - id: P02-PF07
       name: DETERMINISTIC_SIMULATION_RUNTIME
-      status: NEXT
+      status: PASS
       external_account_required: false
-      note: Future-paper-compatible architecture only; no deployed paper/live trading
-        claim.
+      evidence:
+      - docs/phases/PHASE_02_PF07_DETERMINISTIC_SIMULATION_RUNTIME.md
+      - docs/platform/DETERMINISTIC_SIMULATION_RUNTIME_CONTRACT.md
+      - src/trading_bot/platform/simulation_runtime.py
+      - src/trading_bot/platform/simulation_cli.py
+      - configs/platform/simulation_runtime.yaml
+      - PF07_SIMULATION_RUNTIME_RESULTS.json
+      - tests/unit/platform/test_simulation_runtime.py
+      - tests/integration/platform/test_simulation_runtime_flow.py
     - id: P02-PF08
       name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     - id: P02-PF09
       name: ALERT_AND_INCIDENT_CENTER
@@ -150,5 +157,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF07
-  name: DETERMINISTIC_SIMULATION_RUNTIME
+  id: P02-PF08
+  name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION

@@ -1,0 +1,262 @@
+{
+  "commands": [
+    {
+      "at": "2026-08-08T13:32:00+00:00",
+      "command_id": "81eafa60f166fb4037d22e8e59f473b736c4fe6c44118c2541b4488dcd22f746",
+      "kind": "LEAD_SNAPSHOT",
+      "ordinal": 1,
+      "payload": {
+        "lead": {
+          "active_reasons": [],
+          "borrow_state": "NOT_APPLICABLE",
+          "cost_state": "CLEAR",
+          "decision_at": "2026-08-08T13:30:00+00:00",
+          "decision_symbol": "LONG",
+          "decision_symbol_available_at": "2026-08-07T13:30:00+00:00",
+          "direction": "LONG",
+          "display_symbol": "LONG",
+          "display_symbol_as_of": "2026-08-08T13:30:00+00:00",
+          "earnings_state": "CLEAR",
+          "estimated_cost_bps": "14",
+          "estimated_spread_bps": "9",
+          "factors": [
+            {
+              "available_at": "2026-08-08T13:29:59+00:00",
+              "name": "mom_12_1",
+              "value": "1.1"
+            }
+          ],
+          "generated_at": "2026-08-08T13:31:00+00:00",
+          "instrument_id": "11111111-2222-3333-4444-555555555555",
+          "lead_id": "lead_605d9c32fd50f53d03ae0ac62ff55a6f851e027e58e78af594d9bfb6a129ab43",
+          "proposed_shares": 2,
+          "proposed_weight": "0.15",
+          "provenance": {
+            "dataset_manifest_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+            "feature_manifest_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+            "max_input_available_at": "2026-08-08T13:29:59+00:00",
+            "source_event_ids": [],
+            "universe_manifest_hash": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          "score": "1.1",
+          "state": "PLANNED",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "v0.2",
+          "transition_history": [
+            {
+              "changed_at": "2026-08-08T13:31:00+00:00",
+              "from_state": null,
+              "reason_codes": [],
+              "to_state": "DISCOVERED",
+              "transition_id": "transition_501c389f89094952c4d564ab0711827cf7205db5ce924ee723e4b7d268ed1a74"
+            },
+            {
+              "changed_at": "2026-08-08T13:31:00+00:00",
+              "from_state": "DISCOVERED",
+              "reason_codes": [],
+              "to_state": "QUALIFIED",
+              "transition_id": "transition_3ad927a9989714acd09f7a2488c62999b69d976cfa49e7e4424676ca3bd7caea"
+            },
+            {
+              "changed_at": "2026-08-08T13:32:00+00:00",
+              "from_state": "QUALIFIED",
+              "reason_codes": [],
+              "to_state": "PLANNED",
+              "transition_id": "transition_3517c020f14bf203663e34625a5e6371f7fb0e06a5621125eb95d28d589f986d"
+            }
+          ],
+          "trend_state": "ABOVE_SMA200",
+          "universe_state": "ELIGIBLE",
+          "valid_until": "2026-08-09T16:00:00+00:00",
+          "volatility_state": "WITHIN_LIMIT"
+        }
+      }
+    },
+    {
+      "at": "2026-08-08T14:00:00+00:00",
+      "command_id": "f83cc36ee67982fb1fba77b02b22dc5ecf6dff168dc0f4d0c753a066544d04da",
+      "kind": "OMS_CREATE",
+      "ordinal": 2,
+      "payload": {
+        "intent": {
+          "created_at": "2026-08-08T14:00:00+00:00",
+          "decision_at": "2026-08-08T13:30:00+00:00",
+          "instrument_id": "11111111-2222-3333-4444-555555555555",
+          "limit_price": null,
+          "order_id": "order_005c099c8df9163dddd421a0af8e462affaa8d5ac91528380ca07bc6616dcbc5",
+          "order_type": "MARKET",
+          "purpose": "INCREASE_EXPOSURE",
+          "quantity": 2,
+          "side": "BUY",
+          "source_lead_hash": "247c85860695997320a97fe1dfc19bfc4dbffa107536a5190b9e95b69dc35df1",
+          "source_lead_id": "lead_605d9c32fd50f53d03ae0ac62ff55a6f851e027e58e78af594d9bfb6a129ab43",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "v0.2",
+          "symbol": "LONG",
+          "time_in_force": "DAY"
+        }
+      }
+    },
+    {
+      "at": "2026-08-08T14:00:01+00:00",
+      "command_id": "796ef420fa695ffb36629980f1ebc5c4eaee9fa00c6d24479a200b7868e7c547",
+      "kind": "OMS_RISK_APPROVE",
+      "ordinal": 3,
+      "payload": {
+        "order_id": "order_005c099c8df9163dddd421a0af8e462affaa8d5ac91528380ca07bc6616dcbc5"
+      }
+    },
+    {
+      "at": "2026-08-08T14:00:02+00:00",
+      "command_id": "cf25c05d0f67abdc32ac571d5dc140e540515dd5a2ee0569b836821ccb80baf8",
+      "kind": "OMS_SUBMIT",
+      "ordinal": 4,
+      "payload": {
+        "order_id": "order_005c099c8df9163dddd421a0af8e462affaa8d5ac91528380ca07bc6616dcbc5"
+      }
+    },
+    {
+      "at": "2026-08-08T14:00:03+00:00",
+      "command_id": "0e3d2f0740e71f3616d154e1740a720b3eda3ebc43d41ce54ba5c3feb145eb78",
+      "kind": "OMS_FILL",
+      "ordinal": 5,
+      "payload": {
+        "execution_id": "long-e1",
+        "order_id": "order_005c099c8df9163dddd421a0af8e462affaa8d5ac91528380ca07bc6616dcbc5",
+        "price": "100",
+        "quantity": 2
+      }
+    },
+    {
+      "at": "2026-08-08T14:15:00+00:00",
+      "command_id": "31f37abbee2c3efa3d655af1980e5883f042ac799ee5afef75455e7d724b4a61",
+      "kind": "LEAD_SNAPSHOT",
+      "ordinal": 6,
+      "payload": {
+        "lead": {
+          "active_reasons": [],
+          "borrow_state": "AVAILABLE",
+          "cost_state": "CLEAR",
+          "decision_at": "2026-08-08T13:30:00+00:00",
+          "decision_symbol": "SHORT",
+          "decision_symbol_available_at": "2026-08-07T13:30:00+00:00",
+          "direction": "SHORT",
+          "display_symbol": "SHORT",
+          "display_symbol_as_of": "2026-08-08T13:30:00+00:00",
+          "earnings_state": "CLEAR",
+          "estimated_cost_bps": "14",
+          "estimated_spread_bps": "9",
+          "factors": [
+            {
+              "available_at": "2026-08-08T13:29:59+00:00",
+              "name": "mom_12_1",
+              "value": "-1.1"
+            }
+          ],
+          "generated_at": "2026-08-08T13:31:00+00:00",
+          "instrument_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+          "lead_id": "lead_a70ed3a14b93a90e1bb984f8c3a2f0d8a1ab0865ac0175d5d2f81a18c9ed187f",
+          "proposed_shares": 2,
+          "proposed_weight": "-0.15",
+          "provenance": {
+            "dataset_manifest_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+            "feature_manifest_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+            "max_input_available_at": "2026-08-08T13:29:59+00:00",
+            "source_event_ids": [],
+            "universe_manifest_hash": "2222222222222222222222222222222222222222222222222222222222222222"
+          },
+          "score": "-1.1",
+          "state": "PLANNED",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "v0.2",
+          "transition_history": [
+            {
+              "changed_at": "2026-08-08T13:31:00+00:00",
+              "from_state": null,
+              "reason_codes": [],
+              "to_state": "DISCOVERED",
+              "transition_id": "transition_9e6fd78270a77a935f7ba5c20e2d834356e7295bda35fbbe5504c8faafaa8eec"
+            },
+            {
+              "changed_at": "2026-08-08T13:31:00+00:00",
+              "from_state": "DISCOVERED",
+              "reason_codes": [],
+              "to_state": "QUALIFIED",
+              "transition_id": "transition_167baccbc29f18964680ae68f94a0350b71a55668b834791d2747cc00b1bdd4f"
+            },
+            {
+              "changed_at": "2026-08-08T13:32:00+00:00",
+              "from_state": "QUALIFIED",
+              "reason_codes": [],
+              "to_state": "PLANNED",
+              "transition_id": "transition_252c86300f2c41354604aad633d25a74f16d60da7f0009d6df8a03d88cffbbaf"
+            }
+          ],
+          "trend_state": "BELOW_SMA200",
+          "universe_state": "ELIGIBLE",
+          "valid_until": "2026-08-09T16:00:00+00:00",
+          "volatility_state": "WITHIN_LIMIT"
+        }
+      }
+    },
+    {
+      "at": "2026-08-08T14:30:00+00:00",
+      "command_id": "799ca408777acd79dc511c3c47aba6adb447d843e8f803d6c55c9da689d5afdd",
+      "kind": "OMS_CREATE",
+      "ordinal": 7,
+      "payload": {
+        "intent": {
+          "created_at": "2026-08-08T14:30:00+00:00",
+          "decision_at": "2026-08-08T13:30:00+00:00",
+          "instrument_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+          "limit_price": null,
+          "order_id": "order_0e02495d042bd187784a071781e66a1cd9e913d1ed38a78b81b886374359b201",
+          "order_type": "MARKET",
+          "purpose": "INCREASE_EXPOSURE",
+          "quantity": 2,
+          "side": "SELL_SHORT",
+          "source_lead_hash": "14fc1a497092e11382ee9fa56466a2e0cf69bd0b2e5dccd131288d9ef1e93052",
+          "source_lead_id": "lead_a70ed3a14b93a90e1bb984f8c3a2f0d8a1ab0865ac0175d5d2f81a18c9ed187f",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "v0.2",
+          "symbol": "SHORT",
+          "time_in_force": "DAY"
+        }
+      }
+    },
+    {
+      "at": "2026-08-08T14:30:01+00:00",
+      "command_id": "9ce751a2dec9509aebdda26973357817c18123d769ad18e231ab73bfb6ae2d37",
+      "kind": "OMS_RISK_APPROVE",
+      "ordinal": 8,
+      "payload": {
+        "order_id": "order_0e02495d042bd187784a071781e66a1cd9e913d1ed38a78b81b886374359b201"
+      }
+    },
+    {
+      "at": "2026-08-08T14:30:02+00:00",
+      "command_id": "89bc1292438011204096dd4fb2a4f882063601368d964bb4e3eca78f9d389dd7",
+      "kind": "OMS_SUBMIT",
+      "ordinal": 9,
+      "payload": {
+        "order_id": "order_0e02495d042bd187784a071781e66a1cd9e913d1ed38a78b81b886374359b201"
+      }
+    },
+    {
+      "at": "2026-08-08T14:30:03+00:00",
+      "command_id": "eca0316a5889d8ef2926c96ab1d4ed7f88a5e97f499feb38d68a0dea87b3bd0b",
+      "kind": "OMS_FILL",
+      "ordinal": 10,
+      "payload": {
+        "execution_id": "short-e1",
+        "order_id": "order_0e02495d042bd187784a071781e66a1cd9e913d1ed38a78b81b886374359b201",
+        "price": "50",
+        "quantity": 2
+      }
+    }
+  ],
+  "ends_at": "2026-08-08T16:00:00+00:00",
+  "name": "two-order-session",
+  "plan_id": "fbb48aec40750156f9c1575d8ac7ff052d42166fa05b23fa4bec4d256b24ed7a",
+  "started_at": "2026-08-08T13:30:00+00:00"
+}

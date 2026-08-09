@@ -1,0 +1,27 @@
+{
+  "applied_commands": 10,
+  "composite_state_hash": "807c3bb9b7470d923447fe8cf60f7edc02fe239bfb5f8cc45dbe56efa71706e0",
+  "current_at": "2026-08-08T16:00:00+00:00",
+  "deployed_paper_trading_enabled": false,
+  "gate": "PASS",
+  "journal_event_count": 37,
+  "journal_head_hash": "b01a0645240d24309b612c43c4a86c83f1eaebf91b719394f6d2d8d259a82111",
+  "lead_state_hash": "a8e1d6c11613c511d44c9d8ef1516f10e75067eb78bc927c4b7a1b7b89104503",
+  "live_order_submission_enabled": false,
+  "network_io_enabled": false,
+  "order_state_hash": "4150ec77da50628d5f4fedc9e4ed6247b1c0dcac74228e51ba0071d66599f6e5",
+  "plan_id": "fbb48aec40750156f9c1575d8ac7ff052d42166fa05b23fa4bec4d256b24ed7a",
+  "restart_equivalence": {
+    "composite_state_hash_equal": true,
+    "event_count_equal": true,
+    "journal_head_hash_equal": true,
+    "lead_state_hash_equal": true,
+    "order_state_hash_equal": true
+  },
+  "restart_partial_status": "IN_PROGRESS",
+  "restart_scope": "QUIESCENT_CHECKPOINT_ONLY_OPEN_ORDER_RECOVERY_DEFERRED_PF10",
+  "runtime_state": "ACTIVE",
+  "status": "COMPLETED",
+  "task": "P02-PF07",
+  "total_commands": 10
+}
