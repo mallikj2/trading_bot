@@ -10,5 +10,5 @@ function lead(symbol: string, direction: 'LONG'|'SHORT', score: string): TradeLe
 test('rankLeads sorts by absolute score', () => { assert.deepEqual(rankLeads([lead('A','LONG','0.8'),lead('B','SHORT','-1.2')]).map(x=>x.symbol), ['B','A']); });
 test('filterDirection keeps requested side', () => { assert.deepEqual(filterDirection([lead('A','LONG','1'),lead('B','SHORT','-1')], 'SHORT').map(x=>x.symbol), ['B']); });
 test('numericScore fails closed to zero for bad display input', () => { assert.equal(numericScore('nope'), 0); });
-test('statusClass distinguishes pass and block', () => { assert.equal(statusClass('PASS'), 'good'); assert.equal(statusClass('BLOCKED'), 'bad'); });
+test('statusClass distinguishes pass and block', () => { assert.equal(statusClass('PASS'), 'good'); assert.equal(statusClass('BLOCKED'), 'bad'); assert.equal(statusClass('ACKNOWLEDGED'), 'warn'); assert.equal(statusClass('CRITICAL'), 'bad'); assert.equal(statusClass('RESOLVED'), 'good'); });
 test('watchlist headline uses deterministic blocker detail', () => { const w: WatchlistView = { lead_id:'1',symbol:'A',direction:'LONG',state:'WATCHLIST',score:'0.6',blocking_reasons:[{code:'X',detail:'Need higher score',available_at:'x',blocking:true}],qualification_actions:['Wait'],valid_until:'x' }; assert.equal(watchlistHeadline(w), 'Need higher score'); });

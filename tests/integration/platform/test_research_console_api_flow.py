@@ -47,3 +47,14 @@ def test_pf08_experiments_are_visible_without_performance_claim():
         assert len(payload["experiments"]) == 3
         assert {row["label"] for row in payload["experiments"]} == {"NOT_STRATEGY_EVIDENCE"}
         assert client.post("/api/v1/experiments").status_code == 405
+
+
+def test_pf09_incident_center_is_visible_and_read_only():
+    with TestClient(create_app(build_fixture_console())) as client:
+        payload = client.get("/api/v1/incidents").json()
+        assert payload["status"] == "PASS"
+        assert payload["paid_notification_dependency"] is False
+        assert payload["live_notification_delivery_enabled"] is False
+        assert payload["summary"]["active_incident_count"] == 2
+        assert {row["status"] for row in payload["incidents"]} == {"OPEN", "ACKNOWLEDGED", "RESOLVED"}
+        assert client.post("/api/v1/incidents").status_code == 405

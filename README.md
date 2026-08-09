@@ -1,11 +1,19 @@
-# P02-PF06 OMS + SimulatedBroker repository delta
+# Phase 02B cumulative repository bundle — through P02-PF09
 
-Apply this bundle after PF05.
+This cumulative bundle includes the Phase 02 data/PIT foundation plus the reshaped pre-purchase platform work through:
 
-It adds the deterministic OMS, network-free simulated broker, PF06 tests/config/docs, updates the Phase 02 roadmap, and advances the next internal task to P02-PF07.
+- P02-PF01 TradeLead + Watchlist — PASS
+- P02-PF02 Read-only Research Console — PASS
+- P02-PF03 Event Journal + Deterministic Replay — PASS
+- P02-PF04 Runtime Safety + Protections — PASS
+- P02-PF05 Lookahead + Recursive Validation — PASS
+- P02-PF06 OMS + SimulatedBroker — PASS
+- P02-PF07 Deterministic Simulation Runtime — PASS
+- P02-PF08 Experiment Registry + Reporting + Attribution — PASS
+- **P02-PF09 Alerts + Incident Center — PASS**
 
-No credentials, paid provider access, Schwab connectivity, or live-order authority are included.
+Next internal task: **P02-PF10 Recovery + Reconciliation Simulation**.
 
-## Phase 02B PF08 update
+PF09 adds journal-backed alert deduplication, severity escalation, acknowledgement/reopen/resolution lifecycle, related-alert incident grouping, deterministic restart/replay, and a read-only Incident Center page/API.
 
-P02-PF08 Experiment Registry + Reporting + Attribution is PASS. The local Research Console now includes an Experiments view backed by immutable synthetic experiment definitions/runs, result hashes, long/short and cost attribution, and baseline-relative scenario comparison. All PF08 metrics are explicitly `NOT_STRATEGY_EVIDENCE`; procurement and Phase 03 remain disabled.
+No paid notification service, commercial-data credential, Schwab connection, live broker mutation, or Phase 03 trading authorization is included.

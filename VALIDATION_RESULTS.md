@@ -1,59 +1,61 @@
-# Validation Results — P02-PF08 Experiment Registry + Reporting + Attribution
+# P02-PF09 Validation Results
 
-**Result:** PASS  
+**Task:** Alerts + Incident Center  
+**Decision:** PASS  
 **Date:** 2026-08-08
 
-## Cumulative automated validation
+## Cumulative regression
 
-- Python test suite: **437 passed**
-- Taxonomy subtests: **12 passed**
-- PF08-focused experiment/API/integration tests: **22 passed** in focused validation
-- Frontend Node/TypeScript view-model tests: **5 passed**
-- TypeScript application validation: **PASS**
-- Python compilation: **PASS**
-- OpenAPI paths: **11**
-- OpenAPI mutation methods: **0**
-- YAML parse validation: **PASS**
-- JSON parse validation: **PASS**
-- PF08 fixture CLI/registry verification: **3 definitions / 3 runs / PASS**
-- Synthetic evidence labels: **NOT_STRATEGY_EVIDENCE**
-- `strategy_profitability_validated`: **false**
-- `phase03_acceptance_backtest`: **false**
+- Python tests: **460 PASS**
+- Taxonomy subtests: **12 PASS**
+- Runtime: 26.30s for the cumulative `pytest -q` run
 
-## Experiment-registry acceptance
+## PF09 focused validation
 
-Validated:
+- Alert/incident lifecycle tests: **22 PASS**
+- API integration includes PF09 Incident Center read-only evidence: PASS
+- Exact signal idempotency: PASS
+- Active-alert deduplication: PASS
+- Monotonic severity/escalation: PASS
+- Related-alert incident grouping: PASS
+- Acknowledge/reopen lifecycle: PASS
+- Explicit resolution lifecycle: PASS
+- New incident generation after resolved recurrence: PASS
+- Restart/replay projection equivalence: PASS
+- PF03 journal hash-chain integrity: PASS
 
-- deterministic definition IDs;
-- deterministic run IDs and independent result hashes;
-- required strategy/code/data/universe/parameter/cost provenance;
-- append-only SQLite registry;
-- identical duplicate registration is idempotent;
-- update/delete attempts rejected;
-- offline tampering detected;
-- registry close/reopen preserves run/result identities;
-- attribution identity reconciles net = long + short + costs;
-- positive cost components rejected;
-- PF08 rejects `PHASE03_ACCEPTANCE` evidence;
-- baseline-relative comparison is deterministic and does not select a winner.
+## Research Console / API
 
-## Research Console
+- OpenAPI paths: **12**
+- Allowed application methods: **GET only**
+- Mutation routes: **0**
+- New route: `GET /api/v1/incidents`
+- Frontend view-model tests: **5 PASS**
+- TypeScript application validation (`tsc -p tsconfig.json`): **PASS**
 
-`GET /api/v1/experiments` exposes synthetic PF08 experiment/reporting fixtures. The UI includes an Experiments & Attribution page. All API operations remain GET-only.
+A production Vite bundle was attempted with `npm run build`. TypeScript compilation completed, but the sandbox does not have the `vite` executable installed, so the Vite packaging stage ended with `vite: not found` (exit 127). No production-build success is claimed.
 
-## Frontend build environment limitation
+## Configuration/artifact validation
 
-`npm run build` could not complete in this sandbox because the `vite` executable is not installed in the available npm environment (`vite: not found`). TypeScript validation and view-model tests pass. No production Vite-build claim is made.
+- YAML files parsed: **26 PASS**
+- JSON files parsed: **35 PASS**
+- Python source/test compilation: PASS
+- PF09 implementation imports only Python standard library plus internal `trading_bot` modules; no paid notification SDK/runtime dependency was introduced.
+- PF09 delivery channel: `LOCAL_RESEARCH_CONSOLE`
+- Paid notification dependency: **false**
+- Live notification delivery: **false**
+- Commercial-data credentials used: **false**
+- Live broker connected: **false**
 
 ## Governance
 
 ```text
-P02-PF08 = PASS
-P02-PF09 = NEXT
+P02-PF09 = PASS
+P02-PF10 = NEXT
 P02-PF-GATE = BLOCKED_REMAINING_TASKS
 PROCUREMENT_AUTHORIZED = false
 PROCUREMENT_READY_FOR_MANUAL_APPROVAL = false
 PHASE03_AUTHORIZED = false
 ```
 
-No strategy profitability, deployed paper-trading, live trading, paid-provider, or broker result is claimed.
+No strategy profitability claim is made and no frozen strategy mathematics were changed.

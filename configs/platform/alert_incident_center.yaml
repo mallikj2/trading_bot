@@ -1,0 +1,39 @@
+version: 0.1.0
+phase: P02-PF09
+mode: LOCAL_READ_ONLY_INCIDENT_CENTER
+severity_order:
+  - INFO
+  - WARNING
+  - CRITICAL
+deduplication:
+  fingerprint_fields:
+    - rule_id
+    - component
+    - entity_id
+    - condition_key
+    - incident_key
+  exact_signal_reingest: NOOP
+  active_repeat: DEDUPLICATE
+  severity_downgrade_allowed: false
+incident_grouping:
+  default_key: "{component}:{entity_id}"
+  multiple_rules_same_active_incident: true
+lifecycle:
+  acknowledgement_required_for_human_ack: true
+  automatic_resolution: false
+  escalation_after_ack_reopens_incident: true
+  resolution_closes_active_alerts: true
+journal:
+  backend: PF03_SQLITE_EVENT_JOURNAL
+  append_only: true
+  replay_required: true
+notifications:
+  paid_service_required: false
+  enabled_channels:
+    - LOCAL_RESEARCH_CONSOLE
+  outbound_delivery_enabled: false
+hard_boundaries:
+  strategy_rule_mutation: false
+  broker_order_authority: false
+  live_order_submission: false
+  external_notification_credentials: false

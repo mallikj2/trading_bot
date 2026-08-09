@@ -1,0 +1,49 @@
+{
+  "api_methods": [
+    "GET"
+  ],
+  "api_path_count": 12,
+  "as_of": "2026-08-08T20:30:00+00:00",
+  "commercial_credentials_used": false,
+  "cumulative_python_tests": 460,
+  "delivery_channels": [
+    "LOCAL_RESEARCH_CONSOLE"
+  ],
+  "evidence_hash": "3065f15fc2d12c3cde3377fc1a225c90b937ba48c1f19fc6d9e5e164bb42ee77",
+  "fixture_incident_severities": [
+    "WARNING",
+    "CRITICAL",
+    "WARNING"
+  ],
+  "fixture_incident_statuses": [
+    "OPEN",
+    "ACKNOWLEDGED",
+    "RESOLVED"
+  ],
+  "fixture_summary": {
+    "acknowledged_incident_count": 1,
+    "active_by_severity": {
+      "CRITICAL": 1,
+      "INFO": 0,
+      "WARNING": 1
+    },
+    "active_incident_count": 2,
+    "journal_head_hash": "c936845af02b51b93a568e16c1ca24e86e1b4a7de7e0468301284184ce044a14",
+    "open_incident_count": 1,
+    "resolved_incident_count": 1,
+    "total_alert_count": 3
+  },
+  "focused_alert_incident_tests": 22,
+  "frontend_view_model_tests": 5,
+  "live_broker_connected": false,
+  "live_notification_delivery_enabled": false,
+  "mutation_route_count": 0,
+  "paid_notification_dependency": false,
+  "phase03_authorized": false,
+  "procurement_authorized": false,
+  "procurement_ready_for_manual_approval": false,
+  "status": "PASS",
+  "strategy_math_changed": false,
+  "task": "P02-PF09",
+  "taxonomy_subtests": 12
+}

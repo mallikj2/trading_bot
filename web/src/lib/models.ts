@@ -207,3 +207,55 @@ export interface ExperimentReportingView {
     comparison_hash: string;
   };
 }
+
+export interface AlertIncidentAlertView {
+  alert_id: string;
+  fingerprint: string;
+  incident_id: string;
+  rule_id: string;
+  component: string;
+  entity_id: string;
+  condition_key: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  status: 'OPEN' | 'RESOLVED';
+  title: string;
+  detail: string;
+  evidence_hash: string;
+  first_seen_at: string;
+  last_seen_at: string;
+  occurrence_count: number;
+}
+
+export interface IncidentView {
+  incident_id: string;
+  incident_key: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  status: 'OPEN' | 'ACKNOWLEDGED' | 'RESOLVED';
+  opened_at: string;
+  acknowledged_at: string | null;
+  acknowledged_by: string | null;
+  acknowledgement_note: string | null;
+  resolved_at: string | null;
+  resolved_by: string | null;
+  resolution: string | null;
+  alerts: AlertIncidentAlertView[];
+}
+
+export interface IncidentReportingView {
+  mode: string;
+  status: string;
+  summary: {
+    active_incident_count: number;
+    open_incident_count: number;
+    acknowledged_incident_count: number;
+    resolved_incident_count: number;
+    active_by_severity: Record<string, number>;
+    total_alert_count: number;
+    journal_head_hash: string;
+  };
+  incidents: IncidentView[];
+  delivery_channels: string[];
+  paid_notification_dependency: boolean;
+  live_notification_delivery_enabled: boolean;
+  notice: string;
+}

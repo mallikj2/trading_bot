@@ -121,11 +121,20 @@ subphases:
       - tests/integration/platform/test_experiment_registry_reporting_flow.py
     - id: P02-PF09
       name: ALERT_AND_INCIDENT_CENTER
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF09_ALERT_INCIDENT_CENTER.md
+      - docs/platform/ALERT_INCIDENT_CENTER_CONTRACT.md
+      - src/trading_bot/platform/alerts.py
+      - configs/platform/alert_incident_center.yaml
+      - PF09_ALERT_INCIDENT_RESULTS.json
+      - tests/unit/platform/test_alerts.py
+      - tests/integration/platform/test_alert_incident_center_flow.py
+      - web/src/pages/IncidentsPage.tsx
     - id: P02-PF10
       name: RECOVERY_AND_RECONCILIATION_SIMULATION
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     integrated_gate:
       id: P02-PF-GATE
@@ -166,5 +175,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF09
-  name: ALERT_AND_INCIDENT_CENTER
+  id: P02-PF10
+  name: RECOVERY_AND_RECONCILIATION_SIMULATION

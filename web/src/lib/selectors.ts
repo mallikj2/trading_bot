@@ -22,8 +22,8 @@ export function watchlistHeadline(entry: WatchlistView): string {
 }
 
 export function statusClass(status: string): 'good' | 'warn' | 'bad' | 'neutral' {
-  if (['PASS', 'OK', 'QUALIFIED'].includes(status)) return 'good';
-  if (['IN_PROGRESS', 'WATCHLIST', 'RESEARCH_ONLY'].includes(status)) return 'warn';
-  if (['BLOCKED', 'FAILED', 'HALTED'].includes(status)) return 'bad';
+  if (['PASS', 'OK', 'QUALIFIED', 'RESOLVED'].includes(status)) return 'good';
+  if (['IN_PROGRESS', 'WATCHLIST', 'RESEARCH_ONLY', 'WARNING', 'ACKNOWLEDGED'].includes(status)) return 'warn';
+  if (['BLOCKED', 'FAILED', 'HALTED', 'CRITICAL'].includes(status)) return 'bad';
   return 'neutral';
 }
