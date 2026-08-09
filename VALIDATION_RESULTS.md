@@ -1,99 +1,59 @@
-# P02-PF07 Validation Results
+# Validation Results — P02-PF08 Experiment Registry + Reporting + Attribution
 
-**Task:** P02-PF07 — Deterministic Simulation Runtime  
 **Result:** PASS  
 **Date:** 2026-08-08
 
-## Full cumulative Python regression
+## Cumulative automated validation
 
-The PF07 implementation was overlaid onto the complete PF06 cumulative repository snapshot and the full Python test suite was executed:
+- Python test suite: **437 passed**
+- Taxonomy subtests: **12 passed**
+- PF08-focused experiment/API/integration tests: **22 passed** in focused validation
+- Frontend Node/TypeScript view-model tests: **5 passed**
+- TypeScript application validation: **PASS**
+- Python compilation: **PASS**
+- OpenAPI paths: **11**
+- OpenAPI mutation methods: **0**
+- YAML parse validation: **PASS**
+- JSON parse validation: **PASS**
+- PF08 fixture CLI/registry verification: **3 definitions / 3 runs / PASS**
+- Synthetic evidence labels: **NOT_STRATEGY_EVIDENCE**
+- `strategy_profitability_validated`: **false**
+- `phase03_acceptance_backtest`: **false**
 
-```text
-422 passed, 12 subtests passed
-```
+## Experiment-registry acceptance
 
-This includes the approved Phase 01 strategy suite and all cumulative Phase 02/PF01–PF06 tests present in the snapshot.
+Validated:
 
-## PF07 focused suite
+- deterministic definition IDs;
+- deterministic run IDs and independent result hashes;
+- required strategy/code/data/universe/parameter/cost provenance;
+- append-only SQLite registry;
+- identical duplicate registration is idempotent;
+- update/delete attempts rejected;
+- offline tampering detected;
+- registry close/reopen preserves run/result identities;
+- attribution identity reconciles net = long + short + costs;
+- positive cost components rejected;
+- PF08 rejects `PHASE03_ACCEPTANCE` evidence;
+- baseline-relative comparison is deterministic and does not select a winner.
 
-```text
-13 passed
-```
+## Research Console
 
-Focused coverage includes:
+`GET /api/v1/experiments` exposes synthetic PF08 experiment/reporting fixtures. The UI includes an Experiments & Attribution page. All API operations remain GET-only.
 
-- deterministic controlled clock;
-- no backward/out-of-session time movement;
-- deterministic command and plan IDs;
-- plan ordering/boundary validation;
-- two independent executions produce identical hashes;
-- completed plan rerun is idempotent;
-- quiescent restart matches uninterrupted execution exactly;
-- open-order restart is rejected and deferred to PF10;
-- runtime capability flags prohibit network/live/deployed-paper behavior;
-- REDUCING blocks new simulated exposure;
-- explicit recovery approval restores ACTIVE before later simulated exposure;
-- one simulation session per journal;
-- journal contains session, clock, command, TradeLead, and OMS facts.
+## Frontend build environment limitation
 
-## Deterministic restart evidence
+`npm run build` could not complete in this sandbox because the `vite` executable is not installed in the available npm environment (`vite: not found`). TypeScript validation and view-model tests pass. No production Vite-build claim is made.
 
-The committed two-order fixture was executed in two ways:
-
-1. uninterrupted from start to completion;
-2. interrupted after command 5 when the first order was fully terminal, journal closed/reopened, then commands 6–10 executed.
-
-All final comparisons are `true` in `PF07_SIMULATION_RUNTIME_RESULTS.json`:
-
-- journal head hash equal;
-- composite state hash equal;
-- TradeLead state hash equal;
-- OMS state hash equal;
-- journal event count equal.
-
-The committed clean fixture produces 37 journal events and completes in `ACTIVE` runtime state.
-
-## CLI validation
-
-The committed JSON plan was run using:
+## Governance
 
 ```text
-PYTHONPATH=src python -m trading_bot.platform.simulation_cli \
-  tests/fixtures/platform/pf07_two_order_plan.json \
-  <temporary sqlite journal> \
-  --result <temporary result json>
-```
-
-Result: PASS.
-
-## Frontend regression
-
-PF07 makes no frontend behavior changes. Existing Research Console validation was rerun:
-
-```text
-5 Node/TypeScript tests passed
-TypeScript application validation passed
-```
-
-## Static/package validation
-
-- Python compilation: PASS
-- new PF07 network/live-broker safety scan: PASS (`live_order_submission_enabled = False` is the only live-order capability reference)
-- YAML parse: 24 files PASS
-- JSON parse: 31 files PASS before final manifest generation
-- Phase 02 roadmap parse/state: PASS
-- SHA-256 manifest verification: PASS
-- ZIP integrity verification: PASS
-
-## Governance assertions
-
-```text
-P02-PF07 = PASS
-P02-PF08 = NEXT
+P02-PF08 = PASS
+P02-PF09 = NEXT
 P02-PF-GATE = BLOCKED_REMAINING_TASKS
 PROCUREMENT_AUTHORIZED = false
 PROCUREMENT_READY_FOR_MANUAL_APPROVAL = false
 PHASE03_AUTHORIZED = false
 ```
 
-PF07 is a synthetic deterministic runtime only. It does not claim deployed paper trading, live execution, or external provider validation.
+No strategy profitability, deployed paper-trading, live trading, paid-provider, or broker result is claimed.

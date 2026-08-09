@@ -108,11 +108,20 @@ subphases:
       - tests/integration/platform/test_simulation_runtime_flow.py
     - id: P02-PF08
       name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF08_EXPERIMENT_REGISTRY_REPORTING.md
+      - docs/platform/EXPERIMENT_REGISTRY_REPORTING_CONTRACT.md
+      - src/trading_bot/platform/experiments.py
+      - src/trading_bot/platform/experiment_cli.py
+      - configs/platform/experiment_reporting.yaml
+      - PF08_EXPERIMENT_REPORTING_RESULTS.json
+      - tests/unit/platform/test_experiments.py
+      - tests/integration/platform/test_experiment_registry_reporting_flow.py
     - id: P02-PF09
       name: ALERT_AND_INCIDENT_CENTER
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     - id: P02-PF10
       name: RECOVERY_AND_RECONCILIATION_SIMULATION
@@ -157,5 +166,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF08
-  name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION
+  id: P02-PF09
+  name: ALERT_AND_INCIDENT_CENTER

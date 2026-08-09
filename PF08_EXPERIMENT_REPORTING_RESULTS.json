@@ -1,0 +1,219 @@
+{
+  "registry_verification": {
+    "definitions": 3,
+    "runs": 3,
+    "status": "PASS"
+  },
+  "report": {
+    "comparison": {
+      "baseline_run_id": "4e95a75215ec2f0324d96cc9194bd898091d57fed448d3154265a5c5cb719e97",
+      "comparison_hash": "76f53ee27c014d39112707f37a00dfd96fae9309d2f9dfef357a43549c4da6fa",
+      "rows": [
+        {
+          "delta_max_drawdown_bps": "-25",
+          "delta_net_return_bps": "-35",
+          "delta_sharpe": "-0.35",
+          "delta_total_cost_bps": "-35",
+          "delta_turnover_bps": "0",
+          "evidence_class": "SYNTHETIC_FIXTURE",
+          "max_drawdown_bps": "-205",
+          "net_return_bps": "-15",
+          "run_id": "3eb6b8bcb84e7ca3e612abeb5b5975972c6922bfa6f3511f9c1155a38830f898",
+          "sharpe": "-0.10",
+          "total_cost_bps": "-125",
+          "turnover_bps": "420"
+        },
+        {
+          "delta_max_drawdown_bps": "0",
+          "delta_net_return_bps": "0",
+          "delta_sharpe": "0.00",
+          "delta_total_cost_bps": "0",
+          "delta_turnover_bps": "0",
+          "evidence_class": "SYNTHETIC_FIXTURE",
+          "max_drawdown_bps": "-180",
+          "net_return_bps": "20",
+          "run_id": "4e95a75215ec2f0324d96cc9194bd898091d57fed448d3154265a5c5cb719e97",
+          "sharpe": "0.25",
+          "total_cost_bps": "-90",
+          "turnover_bps": "420"
+        },
+        {
+          "delta_max_drawdown_bps": "-50",
+          "delta_net_return_bps": "-50",
+          "delta_sharpe": "-0.45",
+          "delta_total_cost_bps": "-20",
+          "delta_turnover_bps": "-30",
+          "evidence_class": "SYNTHETIC_FIXTURE",
+          "max_drawdown_bps": "-230",
+          "net_return_bps": "-30",
+          "run_id": "c64d8f6de80ea955b98b3a73d805dde4a06f6e82edf2424c1d9beb5451a20df3",
+          "sharpe": "-0.20",
+          "total_cost_bps": "-110",
+          "turnover_bps": "390"
+        }
+      ]
+    },
+    "experiments": [
+      {
+        "definition": {
+          "acceptance_end": "2024-03-28",
+          "acceptance_start": "2024-01-02",
+          "code_commit": "pf08-synthetic-fixture",
+          "cost_model_version": "PF08-SYNTHETIC-v1",
+          "dataset_manifest_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "definition_id": "bbbc998570c0645e6596066233398b64451593c4abf9833cc775b0c83c6c2de7",
+          "name": "BASELINE_SYNTHETIC",
+          "parameter_manifest_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "purpose": "PF08 reporting/attribution fixture; not a Phase 03 acceptance backtest",
+          "random_seed": 20260808,
+          "scenario": "BASELINE",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "0.2",
+          "universe_manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "label": "NOT_STRATEGY_EVIDENCE",
+        "run": {
+          "artifact_hashes": {
+            "report_json": "e276f3d884a4eb1547cb33fd0a23a4fdd1c1e366700e625cce1b5af5fad85694"
+          },
+          "attribution": {
+            "cost_components_bps": {
+              "borrow": "-25",
+              "regulatory": "-5",
+              "slippage": "-25",
+              "spread": "-35"
+            },
+            "gross_return_bps": "110",
+            "long_contribution_bps": "90",
+            "net_return_bps": "20",
+            "short_contribution_bps": "20",
+            "total_cost_bps": "-90"
+          },
+          "completed_at": "2026-08-08T20:30:30+00:00",
+          "definition_id": "bbbc998570c0645e6596066233398b64451593c4abf9833cc775b0c83c6c2de7",
+          "evidence_class": "SYNTHETIC_FIXTURE",
+          "metrics": {
+            "benchmark_return_bps": "10",
+            "max_drawdown_bps": "-180",
+            "net_return_bps": "20",
+            "sharpe": "0.25",
+            "turnover_bps": "420"
+          },
+          "result_hash": "a46dae7150d155e6130fbc9e4df3499773a87c38a5545300f72eb74795b435c6",
+          "run_id": "4e95a75215ec2f0324d96cc9194bd898091d57fed448d3154265a5c5cb719e97",
+          "source_runtime_hash": "0399ffacf7d23bee5853009518fc5348a6d84b3fae1d763fae39c025955207e9",
+          "started_at": "2026-08-08T20:30:00+00:00"
+        }
+      },
+      {
+        "definition": {
+          "acceptance_end": "2024-03-28",
+          "acceptance_start": "2024-01-02",
+          "code_commit": "pf08-synthetic-fixture",
+          "cost_model_version": "PF08-SYNTHETIC-v1",
+          "dataset_manifest_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "definition_id": "392d31e2486e9dba731e2e06873ef7badf997039ee7c2ed194378ecbdbccb59d",
+          "name": "COST_2X_SYNTHETIC",
+          "parameter_manifest_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "purpose": "PF08 reporting/attribution fixture; not a Phase 03 acceptance backtest",
+          "random_seed": 20260808,
+          "scenario": "COST_2X",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "0.2",
+          "universe_manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "label": "NOT_STRATEGY_EVIDENCE",
+        "run": {
+          "artifact_hashes": {
+            "report_json": "c6243b55b9464a7adc4f5baca39ddeb6faa70d09b6c6a3ab3635a9f17b4dbf4c"
+          },
+          "attribution": {
+            "cost_components_bps": {
+              "borrow": "-25",
+              "regulatory": "-10",
+              "slippage": "-35",
+              "spread": "-55"
+            },
+            "gross_return_bps": "110",
+            "long_contribution_bps": "90",
+            "net_return_bps": "-15",
+            "short_contribution_bps": "20",
+            "total_cost_bps": "-125"
+          },
+          "completed_at": "2026-08-08T20:31:30+00:00",
+          "definition_id": "392d31e2486e9dba731e2e06873ef7badf997039ee7c2ed194378ecbdbccb59d",
+          "evidence_class": "SYNTHETIC_FIXTURE",
+          "metrics": {
+            "benchmark_return_bps": "10",
+            "max_drawdown_bps": "-205",
+            "net_return_bps": "-15",
+            "sharpe": "-0.10",
+            "turnover_bps": "420"
+          },
+          "result_hash": "55e37ca2583efa3315ac6cd24634811aa7185c3681107a4877e03a6a9b895781",
+          "run_id": "3eb6b8bcb84e7ca3e612abeb5b5975972c6922bfa6f3511f9c1155a38830f898",
+          "source_runtime_hash": "91bb0f3abff82423d739ca46f46a06bea54001f7bd2ba786c762abb22f503727",
+          "started_at": "2026-08-08T20:31:00+00:00"
+        }
+      },
+      {
+        "definition": {
+          "acceptance_end": "2024-03-28",
+          "acceptance_start": "2024-01-02",
+          "code_commit": "pf08-synthetic-fixture",
+          "cost_model_version": "PF08-SYNTHETIC-v1",
+          "dataset_manifest_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "definition_id": "3a7c0b83798d847905dcfee6eba27a4cbf5a1b19dd9f65d0f5c64dd9cd090db2",
+          "name": "DELAYED_EXECUTION_SYNTHETIC",
+          "parameter_manifest_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "purpose": "PF08 reporting/attribution fixture; not a Phase 03 acceptance backtest",
+          "random_seed": 20260808,
+          "scenario": "DELAYED_EXECUTION",
+          "strategy_id": "CSMOM-LS",
+          "strategy_version": "0.2",
+          "universe_manifest_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "label": "NOT_STRATEGY_EVIDENCE",
+        "run": {
+          "artifact_hashes": {
+            "report_json": "70fa959fe1d2375fa1964767f3a98a67de9b67073bbf1f9501eb9fc0772e827a"
+          },
+          "attribution": {
+            "cost_components_bps": {
+              "borrow": "-10",
+              "regulatory": "-5",
+              "slippage": "-50",
+              "spread": "-45"
+            },
+            "gross_return_bps": "80",
+            "long_contribution_bps": "70",
+            "net_return_bps": "-30",
+            "short_contribution_bps": "10",
+            "total_cost_bps": "-110"
+          },
+          "completed_at": "2026-08-08T20:32:30+00:00",
+          "definition_id": "3a7c0b83798d847905dcfee6eba27a4cbf5a1b19dd9f65d0f5c64dd9cd090db2",
+          "evidence_class": "SYNTHETIC_FIXTURE",
+          "metrics": {
+            "benchmark_return_bps": "10",
+            "max_drawdown_bps": "-230",
+            "net_return_bps": "-30",
+            "sharpe": "-0.20",
+            "turnover_bps": "390"
+          },
+          "result_hash": "4a139592dc6f1a6d01a13ce899df527ca71b2d7e7620f578bc066fb5386514b2",
+          "run_id": "c64d8f6de80ea955b98b3a73d805dde4a06f6e82edf2424c1d9beb5451a20df3",
+          "source_runtime_hash": "5966cfeac5f7b22d4ec492d3ffb68ea0d32828882c93fb202c98450584e534f2",
+          "started_at": "2026-08-08T20:32:00+00:00"
+        }
+      }
+    ],
+    "mode": "SYNTHETIC_PF08_FIXTURE",
+    "notice": "Illustrative synthetic metrics only. PF08 validates experiment lineage/reporting, not strategy performance.",
+    "phase03_acceptance_backtest": false,
+    "status": "PASS",
+    "strategy_profitability_validated": false
+  },
+  "status": "PASS",
+  "task": "P02-PF08"
+}

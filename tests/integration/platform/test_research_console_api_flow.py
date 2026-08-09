@@ -36,3 +36,14 @@ def test_pf05_strategy_validation_is_visible_and_read_only():
         assert payload["recursive"]["difference_count"] == 0
         assert payload["live_acceptance_backtest_validated"] is False
         assert client.post("/api/v1/strategy-validation").status_code == 405
+
+
+def test_pf08_experiments_are_visible_without_performance_claim():
+    with TestClient(create_app(build_fixture_console())) as client:
+        payload = client.get("/api/v1/experiments").json()
+        assert payload["status"] == "PASS"
+        assert payload["strategy_profitability_validated"] is False
+        assert payload["phase03_acceptance_backtest"] is False
+        assert len(payload["experiments"]) == 3
+        assert {row["label"] for row in payload["experiments"]} == {"NOT_STRATEGY_EVIDENCE"}
+        assert client.post("/api/v1/experiments").status_code == 405

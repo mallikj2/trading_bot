@@ -8,3 +8,4 @@ httpx>=0.27,<1
 PyYAML>=6,<7
 
 # P02-PF03 event journal uses Python standard-library sqlite3/hashlib/json only.
+# P02-PF08 experiment registry/reporting uses standard-library sqlite3/hashlib/decimal/json only.

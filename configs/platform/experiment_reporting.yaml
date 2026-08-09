@@ -1,0 +1,37 @@
+version: 0.1.0
+phase_task: P02-PF08
+mode: PRE_PURCHASE_SYNTHETIC_ONLY
+registry:
+  implementation: SQLITE_APPEND_ONLY
+  update_delete_allowed: false
+  idempotent_duplicate_registration: true
+required_definition_provenance:
+  - strategy_id
+  - strategy_version
+  - code_commit
+  - dataset_manifest_hash
+  - universe_manifest_hash
+  - parameter_manifest_hash
+  - cost_model_version
+  - acceptance_start
+  - acceptance_end
+  - random_seed
+required_metrics:
+  - net_return_bps
+  - benchmark_return_bps
+  - max_drawdown_bps
+  - sharpe
+  - turnover_bps
+required_attribution:
+  - long_contribution_bps
+  - short_contribution_bps
+  - cost_components_bps
+reporting:
+  baseline_comparison: true
+  automatic_winner_selection: false
+  synthetic_fixture_label: NOT_STRATEGY_EVIDENCE
+hard_boundaries:
+  phase03_acceptance_evidence_allowed: false
+  strategy_profitability_claim_allowed: false
+  live_or_paper_broker_required: false
+  commercial_credentials_required: false

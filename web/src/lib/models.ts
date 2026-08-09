@@ -139,3 +139,71 @@ export interface StrategyValidationView {
   live_acceptance_backtest_validated: boolean;
   notice: string;
 }
+
+export interface ExperimentDefinitionView {
+  definition_id: string;
+  name: string;
+  strategy_id: string;
+  strategy_version: string;
+  scenario: string;
+  purpose: string;
+  code_commit: string;
+  dataset_manifest_hash: string;
+  universe_manifest_hash: string;
+  parameter_manifest_hash: string;
+  cost_model_version: string;
+  acceptance_start: string;
+  acceptance_end: string;
+  random_seed: number;
+}
+
+export interface ExperimentAttributionView {
+  long_contribution_bps: string;
+  short_contribution_bps: string;
+  gross_return_bps: string;
+  cost_components_bps: Record<string, string>;
+  total_cost_bps: string;
+  net_return_bps: string;
+}
+
+export interface ExperimentRunView {
+  run_id: string;
+  result_hash: string;
+  definition_id: string;
+  evidence_class: string;
+  started_at: string;
+  completed_at: string;
+  source_runtime_hash: string;
+  metrics: Record<string, string>;
+  attribution: ExperimentAttributionView;
+  artifact_hashes: Record<string, string>;
+}
+
+export interface ExperimentComparisonRowView {
+  run_id: string;
+  evidence_class: string;
+  net_return_bps: string;
+  delta_net_return_bps: string;
+  max_drawdown_bps: string;
+  delta_max_drawdown_bps: string;
+  sharpe: string;
+  delta_sharpe: string;
+  turnover_bps: string;
+  delta_turnover_bps: string;
+  total_cost_bps: string;
+  delta_total_cost_bps: string;
+}
+
+export interface ExperimentReportingView {
+  mode: string;
+  status: string;
+  strategy_profitability_validated: boolean;
+  phase03_acceptance_backtest: boolean;
+  notice: string;
+  experiments: Array<{ definition: ExperimentDefinitionView; run: ExperimentRunView; label: string }>;
+  comparison: {
+    baseline_run_id: string;
+    rows: ExperimentComparisonRowView[];
+    comparison_hash: string;
+  };
+}

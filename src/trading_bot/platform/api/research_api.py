@@ -14,7 +14,7 @@ def create_app(console: ReadOnlyResearchConsole | None = None) -> FastAPI:
     service = console or build_fixture_console()
     app = FastAPI(
         title="Quant Trading Bot Research Console API",
-        version="0.2-pf05",
+        version="0.2-pf08",
         description=(
             "Read-only Phase 02 research/operations API. No broker/order mutation routes "
             "exist in this application."
@@ -69,6 +69,10 @@ def create_app(console: ReadOnlyResearchConsole | None = None) -> FastAPI:
     @app.get("/api/v1/strategy-validation", tags=["research", "governance"])
     def strategy_validation():
         return service.strategy_validation()
+
+    @app.get("/api/v1/experiments", tags=["research", "reporting"])
+    def experiments():
+        return service.experiments()
 
     schema = app.openapi()
     forbidden = []

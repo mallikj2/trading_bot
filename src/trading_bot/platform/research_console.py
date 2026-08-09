@@ -14,6 +14,8 @@ from typing import Any, Iterable
 from uuid import UUID
 
 
+from trading_bot.platform.experiments import build_pf08_fixture_report
+
 from trading_bot.platform.runtime_safety import (
     ProtectionEngine,
     ProtectionObservation,
@@ -100,6 +102,7 @@ class ResearchConsoleSnapshot:
     runtime_recovery_required: bool = False
     runtime_permissions: dict[str, bool] = field(default_factory=lambda: permissions_for(RuntimeSafetyState.ACTIVE).to_dict())
     strategy_validation: dict[str, Any] = field(default_factory=dict)
+    experiment_reporting: dict[str, Any] = field(default_factory=dict)
     environment: str = "PHASE_02_FIXTURE"
 
     def _lead_view(self, lead: TradeLead) -> dict[str, Any]:
@@ -230,6 +233,9 @@ class ResearchConsoleSnapshot:
     def validation(self) -> dict[str, Any]:
         return dict(self.strategy_validation)
 
+    def experiments(self) -> dict[str, Any]:
+        return dict(self.experiment_reporting)
+
 
 class ReadOnlyResearchConsole:
     """Read-only query service; intentionally has no mutation surface."""
@@ -263,6 +269,9 @@ class ReadOnlyResearchConsole:
 
     def strategy_validation(self) -> dict[str, Any]:
         return self._snapshot.validation()
+
+    def experiments(self) -> dict[str, Any]:
+        return self._snapshot.experiments()
 
 
 def _hash(char: str) -> str:
@@ -403,12 +412,16 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         {"gate_id": "P02-PF03", "name": "Event Journal + Replay", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-PF04", "name": "Runtime Safety + Protections", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-PF05", "name": "Lookahead + Recursive Validation", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF06", "name": "OMS + SimulatedBroker", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF07", "name": "Deterministic Simulation Runtime", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF08", "name": "Experiment Registry + Reporting + Attribution", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-G04", "name": "Core provider credentialed trial", "status": "BLOCKED", "category": "DATA"},
         {"gate_id": "P02-G18", "name": "PIT security master + exact execution", "status": "BLOCKED", "category": "DATA"},
     )
     health_rows = (
         {"component": "PF01_LEAD_FIXTURES", "status": "PASS", "freshness": "STATIC", "detail": "Deterministic synthetic fixtures loaded."},
         {"component": "PF05_STRATEGY_VALIDATION", "status": "PASS", "freshness": "STATIC", "detail": "Clean synthetic lookahead and recursive validation fixtures passed; contaminated controls failed as expected."},
+        {"component": "PF08_EXPERIMENT_REGISTRY", "status": "PASS", "freshness": "STATIC", "detail": "Immutable synthetic experiment definitions/runs and attribution fixtures verified; not Phase 03 evidence."},
         {"component": "COMMERCIAL_MARKET_DATA", "status": "BLOCKED", "freshness": "NOT_CONNECTED", "detail": "Procurement intentionally deferred until P02-PF-GATE."},
         {"component": "BROKER", "status": "BLOCKED", "freshness": "NOT_CONNECTED", "detail": "No broker connectivity is permitted in Phase 02B."},
     )
@@ -481,5 +494,6 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
             runtime_recovery_required=False,
             runtime_permissions=permissions_for(safety_evaluation.required_state).to_dict(),
             strategy_validation=strategy_validation,
+            experiment_reporting=build_pf08_fixture_report(as_of=now),
         )
     )
