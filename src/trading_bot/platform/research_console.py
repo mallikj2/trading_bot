@@ -99,6 +99,7 @@ class ResearchConsoleSnapshot:
     runtime_protections: tuple[dict[str, Any], ...] = ()
     runtime_recovery_required: bool = False
     runtime_permissions: dict[str, bool] = field(default_factory=lambda: permissions_for(RuntimeSafetyState.ACTIVE).to_dict())
+    strategy_validation: dict[str, Any] = field(default_factory=dict)
     environment: str = "PHASE_02_FIXTURE"
 
     def _lead_view(self, lead: TradeLead) -> dict[str, Any]:
@@ -226,6 +227,9 @@ class ResearchConsoleSnapshot:
     def audit(self) -> list[dict[str, str]]:
         return [record.to_dict() for record in sorted(self.audit_records, key=lambda item: item.occurred_at, reverse=True)]
 
+    def validation(self) -> dict[str, Any]:
+        return dict(self.strategy_validation)
+
 
 class ReadOnlyResearchConsole:
     """Read-only query service; intentionally has no mutation surface."""
@@ -256,6 +260,9 @@ class ReadOnlyResearchConsole:
 
     def audit(self) -> list[dict[str, str]]:
         return self._snapshot.audit()
+
+    def strategy_validation(self) -> dict[str, Any]:
+        return self._snapshot.validation()
 
 
 def _hash(char: str) -> str:
@@ -395,11 +402,13 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         {"gate_id": "P02-PF02", "name": "Read-only API + Research Console", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-PF03", "name": "Event Journal + Replay", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-PF04", "name": "Runtime Safety + Protections", "status": "PASS", "category": "PLATFORM"},
+        {"gate_id": "P02-PF05", "name": "Lookahead + Recursive Validation", "status": "PASS", "category": "PLATFORM"},
         {"gate_id": "P02-G04", "name": "Core provider credentialed trial", "status": "BLOCKED", "category": "DATA"},
         {"gate_id": "P02-G18", "name": "PIT security master + exact execution", "status": "BLOCKED", "category": "DATA"},
     )
     health_rows = (
         {"component": "PF01_LEAD_FIXTURES", "status": "PASS", "freshness": "STATIC", "detail": "Deterministic synthetic fixtures loaded."},
+        {"component": "PF05_STRATEGY_VALIDATION", "status": "PASS", "freshness": "STATIC", "detail": "Clean synthetic lookahead and recursive validation fixtures passed; contaminated controls failed as expected."},
         {"component": "COMMERCIAL_MARKET_DATA", "status": "BLOCKED", "freshness": "NOT_CONNECTED", "detail": "Procurement intentionally deferred until P02-PF-GATE."},
         {"component": "BROKER", "status": "BLOCKED", "freshness": "NOT_CONNECTED", "detail": "No broker connectivity is permitted in Phase 02B."},
     )
@@ -417,6 +426,20 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
         PortfolioPositionView("ALFA", "LONG", 3, Decimal("612.00"), Decimal("18.50"), "Technology", 7),
         PortfolioPositionView("OMEG", "SHORT", 2, Decimal("318.00"), Decimal("-4.20"), "Industrials", 4),
     )
+    strategy_validation = {
+        "mode": "SYNTHETIC_PF05_FIXTURE",
+        "strategy_id": "CSMOM-LS-v0.2",
+        "status": "PASS",
+        "lookahead": {"status": "PASS", "difference_count": 0, "method": "FULL_VS_TRUNCATED_AT_DECISION"},
+        "recursive": {"status": "PASS", "difference_count": 0, "warmup_sessions": [300, 320, 360]},
+        "contaminated_controls": {
+            "future_row_dependency": "FAIL_AS_EXPECTED",
+            "history_start_dependency": "FAIL_AS_EXPECTED",
+            "future_exit_dependency": "FAIL_AS_EXPECTED",
+        },
+        "live_acceptance_backtest_validated": False,
+        "notice": "PF05 synthetic validation evidence only; Phase 03 remains unauthorized.",
+    }
     safety_engine = ProtectionEngine((
         StatusProtectionRule("JOURNAL_INTEGRITY", ProtectionScope.JOURNAL),
         StatusProtectionRule("CONFIG_INTEGRITY", ProtectionScope.CONFIG),
@@ -457,5 +480,6 @@ def build_fixture_console(*, as_of: datetime | None = None) -> ReadOnlyResearchC
             runtime_protections=tuple(decision.to_dict() for decision in safety_evaluation.decisions),
             runtime_recovery_required=False,
             runtime_permissions=permissions_for(safety_evaluation.required_state).to_dict(),
+            strategy_validation=strategy_validation,
         )
     )

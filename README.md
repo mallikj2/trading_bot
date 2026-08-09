@@ -52,3 +52,10 @@ PF02 files were also updated so the read-only Risk screen exposes PF04 state/pro
 - SHA-256 package verification passed
 
 The existing PF02 sandbox limitation remains: a Vite production bundle cannot be built here because the sandbox does not have the public React/Vite dependency set installed. TypeScript source validation and view-model tests pass; no PF04 frontend dependency was added.
+
+
+## Phase 02B PF05
+
+P02-PF05 adds deterministic lookahead and recursive strategy validation. Clean synthetic CSMOM-LS-v0.2 fixtures pass, while deliberately future-dependent ranking/exit logic and arbitrary-history-start dependence fail as required. The Research Console now exposes a read-only Strategy Validation view.
+
+See `README_PF05_STRATEGY_VALIDATION.md`.

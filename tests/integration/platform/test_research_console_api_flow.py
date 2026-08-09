@@ -26,3 +26,13 @@ def test_governance_and_health_are_visible_without_secrets():
         assert "P02-G18" in combined
         for secret_word in ("PASSWORD", "API_KEY", "TOKEN", "SECRET"):
             assert secret_word not in combined.upper()
+
+
+def test_pf05_strategy_validation_is_visible_and_read_only():
+    with TestClient(create_app(build_fixture_console())) as client:
+        payload = client.get("/api/v1/strategy-validation").json()
+        assert payload["status"] == "PASS"
+        assert payload["lookahead"]["difference_count"] == 0
+        assert payload["recursive"]["difference_count"] == 0
+        assert payload["live_acceptance_backtest_validated"] is False
+        assert client.post("/api/v1/strategy-validation").status_code == 405

@@ -30,6 +30,7 @@ def test_expected_read_routes_respond():
             "/api/v1/gates",
             "/api/v1/data-health",
             "/api/v1/audit",
+            "/api/v1/strategy-validation",
         ):
             response = client.get(path)
             assert response.status_code == 200, path

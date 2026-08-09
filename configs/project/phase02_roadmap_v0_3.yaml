@@ -68,17 +68,27 @@ subphases:
       - tests/integration/platform/test_runtime_safety_event_flow.py
     - id: P02-PF05
       name: LOOKAHEAD_AND_RECURSIVE_VALIDATION
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF05_LOOKAHEAD_RECURSIVE_VALIDATION.md
+      - docs/platform/LOOKAHEAD_RECURSIVE_VALIDATION_CONTRACT.md
+      - src/trading_bot/platform/strategy_validation.py
+      - src/trading_bot/platform/validation_cli.py
+      - configs/platform/strategy_validation.yaml
+      - PF05_STRATEGY_VALIDATION_RESULTS.json
+      - tests/unit/platform/test_strategy_validation.py
+      - tests/integration/platform/test_strategy_validation_flow.py
     - id: P02-PF06
       name: OMS_AND_SIMULATED_BROKER
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
     - id: P02-PF07
       name: DETERMINISTIC_SIMULATION_RUNTIME
       status: NOT_STARTED
       external_account_required: false
-      note: Future-paper-compatible architecture only; no deployed paper/live trading claim.
+      note: Future-paper-compatible architecture only; no deployed paper/live trading
+        claim.
     - id: P02-PF08
       name: EXPERIMENT_REGISTRY_REPORTING_AND_ATTRIBUTION
       status: NOT_STARTED
@@ -130,5 +140,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF05
-  name: LOOKAHEAD_AND_RECURSIVE_VALIDATION
+  id: P02-PF06
+  name: OMS_AND_SIMULATED_BROKER

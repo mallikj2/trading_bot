@@ -127,3 +127,15 @@ export interface AuditView {
   summary: string;
   provenance_hash: string;
 }
+
+
+export interface StrategyValidationView {
+  mode: string;
+  strategy_id: string;
+  status: string;
+  lookahead: { status: string; difference_count: number; method: string };
+  recursive: { status: string; difference_count: number; warmup_sessions: number[] };
+  contaminated_controls: Record<string, string>;
+  live_acceptance_backtest_validated: boolean;
+  notice: string;
+}

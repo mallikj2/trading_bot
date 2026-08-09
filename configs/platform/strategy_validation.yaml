@@ -1,0 +1,42 @@
+version: 0.1.0
+phase_task: P02-PF05
+mode: PHASE_02_PRE_PURCHASE
+strategy_id: CSMOM-LS-v0.2
+lookahead:
+  method: FULL_VS_TRUNCATED_AT_DECISION
+  compare_sections:
+    - FEATURES
+    - UNIVERSE
+    - RANKING
+    - CANDIDATES
+    - TARGETS
+    - EXITS
+  future_difference_tolerance: ZERO_AFTER_CANONICAL_NUMERIC_ROUNDING
+recursive:
+  method: FULL_TRUNCATED_HISTORY_VS_WARMUP_WINDOWS
+  minimum_approved_history_sessions: 300
+  warmup_sessions: [300, 320, 360]
+  compare_sections:
+    - FEATURES
+    - UNIVERSE
+    - RANKING
+    - CANDIDATES
+    - TARGETS
+    - EXITS
+canonicalization:
+  numeric_decimals: 10
+  row_order: DETERMINISTIC
+hard_boundaries:
+  strategy_math_changes_allowed: false
+  alpha_threshold_changes_allowed: false
+  future_data_difference_accepted: false
+  live_order_submission_allowed: false
+  deployed_paper_trading_allowed: false
+  commercial_data_required: false
+  broker_credentials_required: false
+acceptance:
+  clean_fixture_lookahead: PASS
+  clean_fixture_recursive: PASS
+  contaminated_fixture_lookahead: FAIL
+  contaminated_fixture_recursive: FAIL
+  cumulative_regression_required: true

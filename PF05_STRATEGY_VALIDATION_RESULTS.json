@@ -1,0 +1,145 @@
+{
+  "acceptance_interpretation": "Clean fixtures must PASS and each contaminated control must FAIL.",
+  "clean_fixture": {
+    "lookahead": {
+      "checked_decisions": [
+        "2025-05-26"
+      ],
+      "comparisons": 1,
+      "configuration": {
+        "method": "FULL_VS_TRUNCATED_AT_DECISION"
+      },
+      "difference_count": 0,
+      "differences": [],
+      "generated_at": "2026-08-08T22:30:00+00:00",
+      "kind": "LOOKAHEAD",
+      "report_hash": "d789ac60b2e0b1bb661d26d95d6efaa593e0c15c354c9e4c098f8e17c3432b17",
+      "status": "PASS"
+    },
+    "recursive": {
+      "checked_decisions": [
+        "2025-05-26"
+      ],
+      "comparisons": 3,
+      "configuration": {
+        "method": "FULL_TRUNCATED_HISTORY_VS_WARMUP_WINDOWS",
+        "minimum_approved_history": 300,
+        "warmup_sessions": [
+          300,
+          320,
+          360
+        ]
+      },
+      "difference_count": 0,
+      "differences": [],
+      "generated_at": "2026-08-08T22:30:00+00:00",
+      "kind": "RECURSIVE",
+      "report_hash": "492f36dca03b0a2782aae48d08f05c1f1d20aeec0a72527dd65b4b0714b89ee4",
+      "status": "PASS"
+    },
+    "status": "PASS",
+    "strategy_id": "CSMOM-LS-v0.2",
+    "suite_hash": "295823b335a2edbc927aee119f717f704c8b320c8a8fdda15cbe86bdba9ea392"
+  },
+  "contaminated_controls": {
+    "future_exit_dependency": {
+      "checked_decisions": [
+        "2025-05-20"
+      ],
+      "comparisons": 1,
+      "configuration": {
+        "method": "FULL_VS_TRUNCATED_AT_DECISION"
+      },
+      "difference_count": 1,
+      "differences": [
+        {
+          "challenger_hash": "c038849a21246d1cc0719801af188daf6dfde65103bf80589bdeafbeb23835ca",
+          "challenger_label": "TRUNCATED_AT_DECISION",
+          "decision_date": "2025-05-20",
+          "kind": "LOOKAHEAD",
+          "reference_hash": "b86a25cbc41af70c57603775b9c4f08cefa3852e77832438f1b079f393373878",
+          "section": "EXITS"
+        }
+      ],
+      "generated_at": "2026-08-08T22:30:00+00:00",
+      "kind": "LOOKAHEAD",
+      "report_hash": "5971ab0a5ed436c5a3ee950da023628d1344d920e7071c82293cf6abd801a981",
+      "status": "FAIL"
+    },
+    "future_row_dependency": {
+      "checked_decisions": [
+        "2025-05-20"
+      ],
+      "comparisons": 1,
+      "configuration": {
+        "method": "FULL_VS_TRUNCATED_AT_DECISION"
+      },
+      "difference_count": 1,
+      "differences": [
+        {
+          "challenger_hash": "9669f64bedea80e9c447ea51e4a04dd66b17562b1c216a19b970aaa105fc0b8b",
+          "challenger_label": "TRUNCATED_AT_DECISION",
+          "decision_date": "2025-05-20",
+          "kind": "LOOKAHEAD",
+          "reference_hash": "07db9a46379ca59585b549325755d0597a4e280bd09a69376b242581e1382999",
+          "section": "RANKING"
+        }
+      ],
+      "generated_at": "2026-08-08T22:30:00+00:00",
+      "kind": "LOOKAHEAD",
+      "report_hash": "44e22ddca8a9798f141aefe96422d4d634d353798bc2b61b809a9e1ea31d93ea",
+      "status": "FAIL"
+    },
+    "history_start_dependency": {
+      "checked_decisions": [
+        "2025-05-26"
+      ],
+      "comparisons": 3,
+      "configuration": {
+        "method": "FULL_TRUNCATED_HISTORY_VS_WARMUP_WINDOWS",
+        "minimum_approved_history": 300,
+        "warmup_sessions": [
+          300,
+          320,
+          360
+        ]
+      },
+      "difference_count": 3,
+      "differences": [
+        {
+          "challenger_hash": "6d15c119e2ee129e240b635fe452e94f726fd35bfed1e900db2999d4a5b96aa7",
+          "challenger_label": "LAST_300_SESSIONS",
+          "decision_date": "2025-05-26",
+          "kind": "RECURSIVE",
+          "reference_hash": "fca6971d12010a47831d267057c1e8b429eb15421e1a3bdc8908c503621cb14a",
+          "section": "FEATURES"
+        },
+        {
+          "challenger_hash": "cb83025261476efce5b1909d83de3f68f17f7740d6bc4aa41da646e611a14bce",
+          "challenger_label": "LAST_320_SESSIONS",
+          "decision_date": "2025-05-26",
+          "kind": "RECURSIVE",
+          "reference_hash": "fca6971d12010a47831d267057c1e8b429eb15421e1a3bdc8908c503621cb14a",
+          "section": "FEATURES"
+        },
+        {
+          "challenger_hash": "6ea3dab5c83beac99948e7cb5b43e0a7802c134fd6844996f1a436abc8c38d15",
+          "challenger_label": "LAST_360_SESSIONS",
+          "decision_date": "2025-05-26",
+          "kind": "RECURSIVE",
+          "reference_hash": "fca6971d12010a47831d267057c1e8b429eb15421e1a3bdc8908c503621cb14a",
+          "section": "FEATURES"
+        }
+      ],
+      "generated_at": "2026-08-08T22:30:00+00:00",
+      "kind": "RECURSIVE",
+      "report_hash": "a12a0cbc6de3fe48e167d33397637b29cf829e2b2218bcc8e7da915d847dd88d",
+      "status": "FAIL"
+    }
+  },
+  "phase03_authorized": false,
+  "phase_task": "P02-PF05",
+  "procurement_authorized": false,
+  "status": "PASS",
+  "strategy_id": "CSMOM-LS-v0.2"
+}

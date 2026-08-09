@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "strategy_id": "CSMOM-LS-v0.2",
+  "clean_fixture": {
+    "symbols": 20,
+    "sessions": 365,
+    "expected_lookahead_status": "PASS",
+    "expected_recursive_status": "PASS"
+  },
+  "contaminated_fixtures": [
+    {
+      "id": "FUTURE_ROW_RANK_DEPENDENCY",
+      "analysis": "LOOKAHEAD",
+      "expected_status": "FAIL",
+      "expected_section": "RANKING"
+    },
+    {
+      "id": "ARBITRARY_HISTORY_START_DEPENDENCY",
+      "analysis": "RECURSIVE",
+      "expected_status": "FAIL",
+      "expected_section": "FEATURES"
+    },
+    {
+      "id": "FUTURE_DEPENDENT_EXIT",
+      "analysis": "LOOKAHEAD",
+      "expected_status": "FAIL",
+      "expected_section": "EXITS"
+    }
+  ]
+}

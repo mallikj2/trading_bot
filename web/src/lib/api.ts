@@ -1,4 +1,4 @@
-import type { AuditView, DataHealthView, GateView, OverviewView, PortfolioView, RiskView, TradeLeadView, WatchlistView } from './models';
+import type { AuditView, DataHealthView, GateView, OverviewView, PortfolioView, RiskView, StrategyValidationView, TradeLeadView, WatchlistView } from './models';
 
 const API = '/api/v1';
 
@@ -21,5 +21,6 @@ export const researchApi = {
   risk: () => readJson<RiskView>('/risk'),
   gates: () => readJson<GateView[]>('/gates'),
   dataHealth: () => readJson<DataHealthView[]>('/data-health'),
-  audit: () => readJson<AuditView[]>('/audit')
+  audit: () => readJson<AuditView[]>('/audit'),
+  strategyValidation: () => readJson<StrategyValidationView>('/strategy-validation')
 };
