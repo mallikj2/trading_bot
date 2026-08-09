@@ -1,0 +1,9 @@
+{
+  "scenarios": [
+    {"name": "ack_partial_fill_full_fill", "submission": "ACKNOWLEDGED"},
+    {"name": "broker_reject", "submission": "REJECTED"},
+    {"name": "cancel_ack", "submission": "ACKNOWLEDGED", "cancel": "CANCELED"},
+    {"name": "unknown_then_reconcile_ack", "submission": "UNKNOWN", "broker_truth": "ACKNOWLEDGED"},
+    {"name": "unknown_then_reconcile_reject", "submission": "UNKNOWN", "broker_truth": "REJECTED"}
+  ]
+}

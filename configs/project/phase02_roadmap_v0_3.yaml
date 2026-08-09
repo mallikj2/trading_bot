@@ -81,11 +81,21 @@ subphases:
       - tests/integration/platform/test_strategy_validation_flow.py
     - id: P02-PF06
       name: OMS_AND_SIMULATED_BROKER
-      status: NEXT
+      status: PASS
       external_account_required: false
+      evidence:
+      - docs/phases/PHASE_02_PF06_OMS_SIMULATED_BROKER.md
+      - docs/platform/OMS_SIMULATED_BROKER_CONTRACT.md
+      - src/trading_bot/platform/orders.py
+      - src/trading_bot/platform/simulated_broker.py
+      - configs/platform/oms_simulated_broker.yaml
+      - PF06_OMS_SIMULATED_BROKER_RESULTS.json
+      - tests/unit/platform/test_orders.py
+      - tests/unit/platform/test_simulated_broker.py
+      - tests/integration/platform/test_oms_simulated_broker_flow.py
     - id: P02-PF07
       name: DETERMINISTIC_SIMULATION_RUNTIME
-      status: NOT_STARTED
+      status: NEXT
       external_account_required: false
       note: Future-paper-compatible architecture only; no deployed paper/live trading
         claim.
@@ -140,5 +150,5 @@ hard_boundaries:
   frontend_strategy_logic_allowed: false
   frontend_secret_storage_allowed: false
 next_task:
-  id: P02-PF06
-  name: OMS_AND_SIMULATED_BROKER
+  id: P02-PF07
+  name: DETERMINISTIC_SIMULATION_RUNTIME

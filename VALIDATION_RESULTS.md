@@ -1,109 +1,84 @@
-# Validation Results — P02-PF05 Lookahead + Recursive Validation
+# P02-PF06 Validation Results
 
-**Date:** 2026-08-08  
-**Task:** P02-PF05  
-**Result:** PASS
+**Task:** P02-PF06 — OMS + SimulatedBroker  
+**Result:** PASS  
+**Date:** 2026-08-08
 
-## Cumulative Python regression
+## Full cumulative Python regression
 
-Pytest collected **386 tests**. The cumulative suite was executed in deterministic directory/file groups because a single long-running pytest process exceeded the sandbox wall-clock near completion. Every collected test was executed and passed.
-
-Results:
+PF06 was overlaid onto the complete PF05 repository snapshot and the full test suite was executed:
 
 ```text
-tests/unit/data            250 passed + 12 taxonomy subtests
-tests/unit/strategies       20 passed
-tests/integration/data      17 passed
-tests/unit/platform         89 passed
-tests/integration/platform  10 passed
-------------------------------------------------
-TOTAL                      386 passed + 12 taxonomy subtests
+409 passed, 12 subtests passed
 ```
 
-The cumulative suite includes all approved Phase 01 tests and all prior Phase 02 data/platform tests.
+This includes the approved Phase 01 strategy tests and all previously committed Phase 02/PF01–PF05 Python tests present in the cumulative snapshot, plus the new PF06 suite.
 
-## Focused PF05 tests
-
-New PF05 evidence contributes **15 focused tests**:
-
-- `tests/unit/platform/test_strategy_validation.py` — 12;
-- `tests/integration/platform/test_strategy_validation_flow.py` — 2;
-- PF05 read-only validation endpoint integration — 1.
-
-Mandatory positive controls:
+## PF06 focused suite
 
 ```text
-clean CSMOM lookahead analysis    PASS
-clean CSMOM recursive analysis    PASS
+23 passed
 ```
 
-Mandatory contaminated controls:
+Focused coverage includes:
+
+- deterministic OrderIntent identity/round-trip;
+- PLANNED TradeLead → OMS intent mapping;
+- LONG/SHORT open and reduction side mapping;
+- acknowledged submit;
+- partial and full fills;
+- weighted average fill price;
+- direct broker rejection;
+- cancel/cancel-unknown handling;
+- expiration;
+- UNKNOWN submission;
+- mandatory reconciliation;
+- blind resubmission rejection;
+- duplicate execution rejection;
+- overfill rejection;
+- ACTIVE/REDUCING/HALTED permission enforcement;
+- journal restart/replay equivalence;
+- deterministic simulated broker order IDs;
+- explicit no-network/no-live-broker flags.
+
+## Prior platform regression subset
+
+An independent PF01/PF03/PF04 + PF06 focused run passed:
 
 ```text
-future-row ranking dependency     FAIL AS EXPECTED
-history-start feature dependency  FAIL AS EXPECTED
-future-dependent exit             FAIL AS EXPECTED
+89 passed
 ```
 
-Machine evidence: `PF05_STRATEGY_VALIDATION_RESULTS.json`.
+## Frontend regression
 
-## Recursive numeric canonicalization
-
-A clean recursive run identified a mathematically immaterial rolling-average difference around the 12th decimal place. PF05 comparison serialization was therefore frozen at **10 decimal places**. Strategy calculations themselves were not modified.
-
-After this canonicalization, clean 300/320/360-session warm-up controls pass while deliberate recursive contamination still fails.
-
-## Frontend/API regression
-
-Results:
+Existing PF05 Research Console tests were rerun unchanged:
 
 ```text
-5 Node/TypeScript view-model tests passed
+5 Node/TypeScript tests passed
 TypeScript application validation passed
 ```
 
-Generated `OPENAPI_PF05.json` validates:
+PF06 adds no frontend mutation surface.
+
+## Static/build validation
+
+- Python compilation: PASS
+- PF06 no-network/live-broker import scan: PASS
+- YAML parse: PASS
+- JSON parse: PASS
+- Phase 02 roadmap parse/state: PASS
+- package SHA-256 verification: PASS
+- ZIP integrity verification: PASS
+
+## Governance assertions
 
 ```text
-10 paths
-GET only
-0 POST/PUT/PATCH/DELETE routes
+P02-PF06 = PASS
+P02-PF07 = NEXT
+P02-PF-GATE = BLOCKED_REMAINING_TASKS
+PROCUREMENT_AUTHORIZED = false
+PROCUREMENT_READY_FOR_MANUAL_APPROVAL = false
+PHASE03_AUTHORIZED = false
 ```
 
-The Research Console now exposes read-only PF05 validation status at:
-
-```text
-GET /api/v1/strategy-validation
-```
-
-## Structural validation
-
-- Python compilation: **PASS**
-- YAML parse validation: **22 files PASS**
-- JSON parse validation: **27 files PASS**
-- roadmap state: **PF05 PASS / PF06 NEXT**
-- procurement flags remain false: **PASS**
-- Phase 03 authorization remains false: **PASS**
-
-## Governance result
-
-PF05 introduces no:
-
-- broker connection;
-- order mutation route;
-- commercial credential;
-- deployed paper/live trading;
-- strategy-alpha modification;
-- future-data exception;
-- procurement authorization;
-- Phase 03 authorization.
-
-PF05 complements but does not replace the Phase 02 source-level point-in-time controls (`available_at`, revision history, manifests, historical universe, and provider evidence).
-
-## Final task gate
-
-**P02-PF05 = PASS**
-
-`P02-PF-GATE = BLOCKED_REMAINING_TASKS`
-
-Next: **P02-PF06 — OMS + SimulatedBroker**.
+No real broker/API/provider behavior is claimed by PF06.

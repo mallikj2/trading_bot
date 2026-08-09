@@ -1,0 +1,45 @@
+version: 0.1.0
+phase_task: P02-PF06
+mode: SIMULATED_ONLY
+network_io_enabled: false
+live_broker_connectivity_enabled: false
+live_order_submission_enabled: false
+external_credentials_required: false
+journal:
+  aggregate_type: ORDER
+  required: true
+runtime_safety:
+  ACTIVE:
+    increase_exposure: true
+    reduce_exposure: true
+    cancel_open_orders: true
+  REDUCING:
+    increase_exposure: false
+    reduce_exposure: true
+    cancel_open_orders: true
+  HALTED:
+    increase_exposure: false
+    reduce_exposure: false
+    cancel_open_orders: true
+unknown_order_policy:
+  blind_resubmit: PROHIBITED
+  required_action: RECONCILE
+order_types:
+  - MARKET
+  - LIMIT
+time_in_force:
+  - DAY
+required_lifecycle_states:
+  - CREATED
+  - RISK_APPROVED
+  - SUBMITTING
+  - SUBMITTED
+  - ACKNOWLEDGED
+  - PARTIALLY_FILLED
+  - FILLED
+  - REJECTED
+  - CANCEL_PENDING
+  - CANCELED
+  - EXPIRED
+  - UNKNOWN
+  - RECONCILING

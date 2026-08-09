@@ -1,0 +1,30 @@
+{
+  "phase_task": "P02-PF06",
+  "status": "PASS",
+  "mode": "SIMULATED_ONLY",
+  "network_io_enabled": false,
+  "live_order_submission_enabled": false,
+  "schwab_connected": false,
+  "unknown_order_blind_resubmit": false,
+  "journal_required": true,
+  "runtime_safety_integrated": true,
+  "tested_lifecycle": [
+    "CREATED",
+    "RISK_APPROVED",
+    "SUBMITTING",
+    "SUBMITTED",
+    "ACKNOWLEDGED",
+    "PARTIALLY_FILLED",
+    "FILLED",
+    "REJECTED",
+    "CANCEL_PENDING",
+    "CANCELED",
+    "EXPIRED",
+    "UNKNOWN",
+    "RECONCILING"
+  ],
+  "procurement_authorized": false,
+  "procurement_ready_for_manual_approval": false,
+  "phase03_authorized": false,
+  "next_task": "P02-PF07"
+}
